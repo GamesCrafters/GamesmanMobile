@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent" android:layout_width="fill_parent"
+	android:layout_gravity="center" android:orientation="vertical"
+	android:background="@color/white">
+	<TextView android:layout_width="wrap_content" android:id="@+id/con_optionsTitle"
+		android:text="@string/options_title" android:layout_gravity="center"
+		android:layout_marginTop="5dip" android:layout_height="wrap_content"
+		android:textSize="15pt" android:textColor="@color/black"></TextView>
+	<LinearLayout android:id="@+id/con_LinearLayout02"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:layout_gravity="center">
+		<LinearLayout android:id="@+id/con_LinearLayout01"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:orientation="vertical">
+			<TextView android:id="@+id/con_TextView01" android:layout_width="wrap_content"
+				android:layout_height="wrap_content"></TextView>
+			<TextView android:id="@+id/con_TextView01" android:layout_width="wrap_content"
+				android:layout_height="wrap_content"></TextView>
+			<TextView android:id="@+id/con_TextView01" android:layout_width="wrap_content"
+				android:layout_height="wrap_content"></TextView>
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:id="@+id/con_BoardSize"
+				android:text="  Board Size" android:textSize="9pt"></TextView>
+			<Spinner android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:id="@+id/con_choosesize"
+				android:prompt="@string/boardsize" android:layout_gravity="center"></Spinner>
+		</LinearLayout>
+
+	</LinearLayout>
+	<Button android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:text="Play the Game!"
+		android:id="@+id/con_playbutton" android:layout_gravity="center"></Button>
+
+
+
+</LinearLayout>

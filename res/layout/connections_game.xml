@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout android:id="@+id/con_LinearLayout01"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:gravity="center"
+	android:layout_gravity="center" android:addStatesFromChildren="false"
+	android:background="@color/bgblue">
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/con_title"
+		android:layout_gravity="center" android:gravity="center" android:text="Connections"
+		android:autoText="false" android:textColor="@color/solidyellow"
+		android:textSize="30dip"></TextView>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/con_winner"
+		android:text="Player 1's turn" android:textSize="8pt" android:gravity="center_horizontal"
+		android:layout_gravity="center" android:textStyle="bold" android:textColor="@color/solid_red"></TextView>
+	<TextView android:id="@+id/con_TextView01" android:layout_width="wrap_content"
+		android:layout_height="wrap_content"></TextView>
+	<TableLayout android:layout_width="fill_parent"
+		xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/con_tLayout"
+		android:shrinkColumns="*" android:layout_gravity="center"
+		android:gravity="top|center_horizontal" android:layout_height="wrap_content">
+
+
+
+
+
+
+
+
+
+
+	</TableLayout>
+	<TextView android:id="@+id/con_TextView02" android:layout_width="wrap_content"
+		android:layout_height="wrap_content"></TextView>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/con_remoteness"></TextView>
+	<TextView android:id="@+id/con_menuoptions" android:layout_width="fill_parent"
+		android:textSize="15dip" android:text="Press the MENU button for more options."
+		android:layout_height="wrap_content" android:gravity="center_horizontal" />
+
+</LinearLayout>

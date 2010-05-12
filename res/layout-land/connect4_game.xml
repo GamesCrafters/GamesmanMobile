@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Demonstrates using a relative layout to create a form -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:background="@color/bg_blue"
+	android:layout_height="fill_parent" android:orientation="vertical">
+
+	<TextView android:id="@+id/c4_logo" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:gravity="center_horizontal"
+		android:text="Connect 4" android:textColor="@color/solid_yellow"
+		android:textSize="30dip" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<RelativeLayout android:id="@+id/c4_RelativeLayout03"
+		android:layout_width="wrap_content" android:layout_height="wrap_content">
+		<LinearLayout android:id="@+id/c4_LinearLayout04"
+			android:layout_width="wrap_content" android:orientation="horizontal"
+			android:layout_height="wrap_content">
+			<RelativeLayout android:id="@+id/c4_RelativeLayout02"
+				android:layout_height="wrap_content" android:layout_width="250dip">
+				<TableLayout android:id="@+id/c4_gametable"
+					android:layout_width="fill_parent" android:shrinkColumns="*"
+					android:layout_height="wrap_content" android:paddingTop="5dip">
+
+
+
+				</TableLayout>
+			</RelativeLayout>
+			<RelativeLayout android:id="@+id/c4_RelativeLayout01"
+				android:layout_width="250dip" android:layout_height="wrap_content"
+				android:paddingTop="50dip">
+				<RelativeLayout android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:id="@+id/c4_GameOverAndTurn"
+					android:layout_marginTop="5dip">
+					<LinearLayout android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_centerHorizontal="true" android:gravity="center"
+						android:id="@+id/c4_TurnLayout">
+						<TextView android:id="@+id/c4_turn" android:layout_height="wrap_content"
+							android:textSize="18dip" android:gravity="right"
+							android:layout_below="@id/c4_gametable" android:layout_width="wrap_content" />
+						<ImageButton android:id="@+id/c4_turnImage"
+							android:layout_width="40dip" android:layout_height="40dip"
+							android:layout_toRightOf="@id/c4_turn" />
+					</LinearLayout>
+					<TextView android:id="@+id/c4_gameOver" android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:textSize="18dip"
+						android:gravity="center" android:layout_alignBaseline="@+id/c4_turn" />
+				</RelativeLayout>
+				<LinearLayout android:layout_below="@id/c4_gameOver"
+					android:id="@+id/c4_AlignBottomLayout" android:orientation="vertical"
+					android:layout_width="fill_parent" android:gravity="bottom"
+					android:layout_height="wrap_content"
+					android:layout_alignParentBottom="true"
+					android:layout_marginBottom="45dip">
+					<TextView android:id="@+id/c4_remoteness"
+						android:layout_width="fill_parent" android:layout_below="@id/c4_turn"
+						android:layout_height="wrap_content" android:gravity="center_horizontal"
+						android:textSize="18dip" />
+					<TextView android:id="@+id/c4_menuoptions"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:gravity="center_horizontal" android:textSize="15dip"
+						android:text="Press MENU for more options." />
+				</LinearLayout>
+			</RelativeLayout>
+		</LinearLayout>
+		
+	</RelativeLayout>
+
+</LinearLayout> 

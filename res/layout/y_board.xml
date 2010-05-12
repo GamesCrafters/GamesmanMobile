@@ -1,0 +1,114 @@
+<AbsoluteLayout android:layout_width="fill_parent"
+	android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/y_RootLayout">
+
+	<AbsoluteLayout android:id="@+id/y_AbsoluteLayout01"
+		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:clipToPadding="false" android:background="@drawable/y_yboardstraight">
+		<Button android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_x="0dip"
+			android:layout_y="0dip" android:id="@+id/y_Undo" android:text="Undo"></Button>
+		<Button android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/y_Replay"
+			android:layout_y="0dip" android:text="Replay" android:layout_x="240dip"></Button>
+		<Button android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_y="50dip"
+			android:id="@+id/y_Redo" android:text="Redo" android:layout_x="0dip"></Button>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="17dip"
+			android:layout_x="140dip" android:id="@+id/y_B3" android:background="@drawable/y_circle"
+			android:tag="3"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_x="205dip"
+			android:layout_y="69dip" android:id="@+id/y_B4" android:background="@drawable/y_circle"
+			android:tag="4"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="68dip"
+			android:layout_x="140dip" android:id="@+id/y_B12" android:background="@drawable/y_circle"
+			android:tag="12"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_x="75dip"
+			android:layout_y="69dip" android:id="@+id/y_B11" android:background="@drawable/y_circle"
+			android:tag="11"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="125dip"
+			android:layout_x="80dip" android:id="@+id/y_B17" android:background="@drawable/y_circle"
+			android:tag="17"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="146dip"
+			android:layout_x="28dip" android:id="@+id/y_B10" android:background="@drawable/y_circle"
+			android:tag="10"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="120dip"
+			android:layout_x="140dip" android:id="@+id/y_B0" android:background="@drawable/y_circle"
+			android:tag="0"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="127dip"
+			android:layout_x="202dip" android:id="@+id/y_B13" android:background="@drawable/y_circle"
+			android:tag="13"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="147dip"
+			android:id="@+id/y_B5" android:layout_x="250dip" android:background="@drawable/y_circle"
+			android:tag="5"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="176dip"
+			android:layout_x="108dip" android:id="@+id/y_B1" android:background="@drawable/y_circle"
+			android:tag="1"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_x="177dip"
+			android:layout_y="177dip" android:id="@+id/y_B2" android:background="@drawable/y_circle"
+			android:tag="2"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_x="223dip"
+			android:layout_y="204dip" android:id="@+id/y_B14" android:background="@drawable/y_circle"
+			android:tag="14"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_x="267dip"
+			android:layout_y="235dip" android:id="@+id/y_B6" android:background="@drawable/y_circle"
+			android:tag="6"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_x="189dip"
+			android:layout_y="263dip" android:id="@+id/y_B7" android:background="@drawable/y_circle"
+			android:tag="7"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="226dip"
+			android:layout_x="140dip" android:id="@+id/y_B15" android:background="@drawable/y_circle"
+			android:tag="15"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="264dip"
+			android:layout_x="91dip" android:id="@+id/y_B8" android:background="@drawable/y_circle"
+			android:tag="8"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="235dip"
+			android:layout_x="12dip" android:id="@+id/y_B9" android:background="@drawable/y_circle"
+			android:tag="9"></ImageButton>
+		<ImageButton android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_y="204dip"
+			android:layout_x="61dip" android:id="@+id/y_B16" android:background="@drawable/y_circle"
+			android:tag="16"></ImageButton>
+	</AbsoluteLayout>
+
+
+
+
+
+	<TextView android:id="@+id/y_TextView01" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_y="350dip"
+		android:layout_x="5dip"></TextView>
+
+	<LinearLayout android:id="@+id/y_LinearLayout01"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:gravity="bottom|left" android:layout_width="wrap_content"
+		android:layout_x="100dip" android:layout_y="380dip">
+		<TextView android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_x="54dip"
+			android:layout_y="349dip" android:textColor="#00ff00" android:id="@+id/y_Green"></TextView>
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_marginLeft="20dip"
+			android:textColor="#ff0000" android:id="@+id/y_Red"></TextView>
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/y_Yellow"
+			android:layout_marginLeft="20dip" android:textColor="#ffff00"></TextView>
+	</LinearLayout>
+
+</AbsoluteLayout>

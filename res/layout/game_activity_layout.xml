@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Demonstrates using a relative layout to create a form -->
+<RelativeLayout android:layout_width="fill_parent"
+	android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/gm_GameActivityRoot">
+	<FrameLayout android:id="@+id/gm_GameView"
+		android:layout_above="@+id/gm_BottomBar" android:layout_height="fill_parent"
+		android:layout_width="fill_parent"></FrameLayout>
+	<LinearLayout android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal" android:orientation="horizontal"
+		android:layout_width="fill_parent" android:gravity="center_horizontal"
+		android:background="@color/solid_gray" android:id="@+id/gm_BottomBar"
+		android:layout_alignParentBottom="true">
+		<ImageButton android:id="@+id/gm_undoButton"
+			android:background="@drawable/gm_step_backward"
+			android:layout_marginRight="10dip" android:hapticFeedbackEnabled="true"
+			android:soundEffectsEnabled="true" android:layout_height="45dip"
+			android:layout_width="45dip" />
+		<RelativeLayout android:layout_height="fill_parent"
+			android:gravity="center_horizontal" android:layout_width="200dip"
+			android:paddingTop="10dip">
+			<com.gamescrafters.gamesmanmobile.HorizontalSlider
+				android:id="@+id/gm_slider" android:layout_width="250dip"
+				android:layout_height="20dip" android:max="10000"
+				android:layout_centerHorizontal="true" />
+
+		</RelativeLayout>
+
+		<ImageButton android:id="@+id/gm_redoButton"
+			android:layout_toRightOf="@id/gm_undoButton" android:background="@drawable/gm_step_forward"
+			android:layout_marginLeft="10dip" android:hapticFeedbackEnabled="true"
+			android:soundEffectsEnabled="true" android:layout_height="45dip"
+			android:layout_width="45dip" />
+	</LinearLayout>
+</RelativeLayout>

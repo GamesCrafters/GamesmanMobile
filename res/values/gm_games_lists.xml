@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="my_games">
+
+<item>Connect 4</item>
+
+
+<item>Connections</item>
+<item>The Game of Y</item>
+</string-array>
+<string-array name="get_more">
+
+
+</string-array>
+</resources>

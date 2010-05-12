@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/table" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:stretchColumns="1">
+	<TextView android:id="@+id/text" />
+	<Button android:layout_height="wrap_content" android:clickable="true"
+		android:layout_width="wrap_content" android:text="Back to Connect 4"
+		android:id="@+id/BackToConnect4Button" android:layout_gravity="center_horizontal"></Button>
+
+</TableLayout>

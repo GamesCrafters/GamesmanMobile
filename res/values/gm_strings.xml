@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, HelloTabWidget!</string>
+    <string name="app_name">GamesmanMobile</string>
+<string name="lorem_ipsum">The GamesCrafters research and development group was formed in 2001 as a &quot;watering hole&quot; to gather and engage top undergraduates as they explore the fertile area of computational game theory. At the core of the project is GAMESMAN, an open-source AI architecture developed for solving, playing, and analyzing two-person abstract strategy games (e.g., Tic-Tac-Toe or Chess). Programmers can easily prototype a new game with multiple rule variants, learn the strategy via color-coded value moves (win = go = green, tie = caution = yellow, lose = stop = red), solve it (in the strong sense), and then play it perfectly and perform extended analysis.</string>
+<string name="games_tab">My Games</string>
+<string name="download_tab">Get More</string>
+<string name="about_tab">About</string>
+<string name="discover_text">More games will be available soon!</string>
+<string name="row_prompt">Number of Rows:</string>
+<string name="column_prompt">Number of Columns:</string>
+</resources>

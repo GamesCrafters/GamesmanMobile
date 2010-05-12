@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@android:id/tabhost" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:background="@color/bg_blue">
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+		<ImageView android:layout_height="wrap_content" android:src="@drawable/gm_header"
+			android:id="@+id/gm_MainTitle" android:layout_width="fill_parent"></ImageView>
+		<FrameLayout android:id="@android:id/tabcontent"
+			android:layout_width="fill_parent" android:background="@drawable/blue"
+			android:layout_height="wrap_content">
+			<ListView android:id="@+id/gm_listview1"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:entries="@array/my_games" android:choiceMode="singleChoice"
+				android:textFilterEnabled="true" android:clickable="true"></ListView>
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:id="@+id/gm_discover_content"
+				android:text="@string/discover_text"></TextView>
+			<TextView android:id="@+id/gm_textview"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:text="@string/lorem_ipsum" />
+
+		</FrameLayout>
+
+	</LinearLayout>
+	<TabWidget android:id="@android:id/tabs"
+		android:layout_width="fill_parent" android:layout_gravity="bottom"
+		android:layout_height="wrap_content">
+	</TabWidget>
+
+</TabHost>
