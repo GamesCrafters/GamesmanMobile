@@ -42,6 +42,7 @@ public class Connect4 extends GameActivity {
 	GUIGameBoard gb;
 	MoveValue[] values = null;
 	String previousValue = "win";
+	int delay;
 	Stack<Integer> previousMoves, nextMoves; // Stacks of previousMoves and nextMoves, which is used to undo and redo moves.
 
 
@@ -56,6 +57,7 @@ public class Connect4 extends GameActivity {
 		isPlayer2Computer = myIntent.getBooleanExtra("isPlayer2Computer", false);
 		int height = myIntent.getIntExtra("numRows", 4);
 		int width = myIntent.getIntExtra("numCols", 6);
+		delay = myIntent.getIntExtra("numDelay", 1);
 
 		initResources();
 
@@ -67,11 +69,7 @@ public class Connect4 extends GameActivity {
 	class CompPlays extends Handler {
 	
 		public void handleMessage(Message msg) {
-			if (isPlayer1Computer && isPlayer2Computer) {
-			Connect4.this.updateUIComp();
-			} else {
-				updateUIHvsC();
-			}
+			Connect4.this.updateUI();
 		}
 		
 		public void sleep(long delay) {
@@ -80,20 +78,10 @@ public class Connect4 extends GameActivity {
 		}
 	};
 	
-	private void updateUIComp() {
+	private void updateUI() {
 		if (!g.gameOver) {
-			compPlaying.sleep(1000);
+			compPlaying.sleep(delay*1000);
 			doComputerMove();
-		}
-	}
-	
-	private void updateUIHvsC() {
-		if (!g.gameOver) {
-			if ((g.isBlueTurn() && isPlayer1Computer) ||
-					(g.isRedTurn() && isPlayer2Computer)) {
-				compPlaying.sleep(1000);
-				doComputerMove();
-			}
 		}
 	}
 	
@@ -166,12 +154,16 @@ public class Connect4 extends GameActivity {
 		if (getLastNonConfigurationInstance() == null) {
 			values = getNextMoveValues();
 		}
-		if (values != null && values.length != 0)
-			isNetworkAvailable = true;
 		g.updateRemoteness();
 		g.updateValues();
-		clearVVH();
-		g.updateVVH();
+		if (values != null && values.length != 0) {
+			isNetworkAvailable = true;
+			previousValue = getBoardValue(values);
+			int remoteness = getRemoteness(previousValue, values);
+			clearVVH();
+			updateVVH(previousValue, remoteness, g.gameOver, g.isBlueTurn(), g.isTie());
+		}
+	//	g.updateVVH();
 
 		
 		OnTouchListener tListener = new OnTouchListener() {
@@ -206,9 +198,9 @@ public class Connect4 extends GameActivity {
 
 		//computer vs. computer
 		if (isPlayer1Computer && isPlayer2Computer) {
-				updateUIComp();
+				updateUI();
 		} else if (isPlayer1Computer) {
-			updateUIHvsC();
+			doComputerMove();
 		}
 	} 
 
@@ -407,7 +399,12 @@ public class Connect4 extends GameActivity {
 				values = getNextMoveValues();
 				updateRemoteness();
 				updateValues();
-				updateVVH();
+				if ((values != null) && (values.length != 0)) {
+					previousValue = getBoardValue(values);
+					int remoteness = getRemoteness(previousValue, values);
+					Connect4.this.updateVVH(previousValue, remoteness, gameOver, isBlueTurn(), isTie());
+				}
+				//updateVVH();
 				previousMoves.push(move);
 				currentMove++;
 				if (!isRedo) {
@@ -618,13 +615,21 @@ public class Connect4 extends GameActivity {
 				turnImage.setBackgroundDrawable(null);
 				gameOverTextView.setText("Game over.\n" + (isBlueTurn() ? "Blue" : "Red") + " wins!");
 				gameOver = true;
-				updateVVH();
+				if ((values != null) && (values.length != 0)) {
+					previousValue = getBoardValue(values);
+					int remoteness = getRemoteness(previousValue, values);
+					Connect4.this.updateVVH(previousValue, remoteness, gameOver, isBlueTurn(), isTie());
+				}
 			} else if(isTie()) {
 				turnTextView.setText("");
 				turnImage.setBackgroundDrawable(null);
 				gameOverTextView.setText("Game over.\nIt's a draw!"); 
 				gameOver = true; 
-				updateVVH();
+				if ((values != null) && (values.length != 0)) {
+					previousValue = getBoardValue(values);
+					int remoteness = getRemoteness(previousValue, values);
+					Connect4.this.updateVVH(previousValue, remoteness, gameOver, isBlueTurn(), isTie());
+				}
 			} 
 		}
 

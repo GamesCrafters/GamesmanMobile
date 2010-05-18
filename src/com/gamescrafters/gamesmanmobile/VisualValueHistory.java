@@ -289,7 +289,7 @@ class VVHView extends View {
 				/* Draw multiple lines if one or both of the nodes is a tie.
 				 * (Done before drawing circles so the circles can overlay the lines.)
 				 */
-				if (isTie(node)) {
+				if (isTie(lastNode)) {
 					if (isTie(node)) {
 						// If both are ties, connect lines between lastNode's 2 position nodes
 						// and node's 2 position nodes.

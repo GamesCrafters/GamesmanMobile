@@ -83,9 +83,13 @@
 			</RadioButton>
 		</RadioGroup>
 	</LinearLayout>
-	<Button android:layout_height="wrap_content" android:clickable="true"
+	<LinearLayout android:layout_height="wrap_content" android:id="@+id/c4_Select_Delay" android:layout_width="wrap_content" android:gravity="center_vertical|center_horizontal" android:orientation="horizontal">
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/c4_TextView01" android:text="Time Delay"></TextView>
+<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/c4_select_time" android:layout_marginLeft="10dip"></Spinner>
+</LinearLayout><Button android:layout_height="wrap_content" android:clickable="true"
 		android:layout_width="wrap_content" android:text="Play Connect 4"
 		android:id="@+id/c4_PlayConnect4Button" android:layout_gravity="center_horizontal"></Button>
+
 
 
 

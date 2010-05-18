@@ -3,6 +3,7 @@ package com.gamescrafters.gamesmanmobile;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
 
 import com.gamescrafters.connect4.Connect4;
 
@@ -198,7 +199,17 @@ public abstract class GameActivity extends Activity {
 	 * Updates the Visual Value History. Should be called at an appropriate place for each move.
 	 * @param val The MoveValue to add as a node to the VVH (i.e. the one returned by getMoveValue()).
 	 */
-	public void updateVVH(MoveValue val) {}
+	public void updateVVH (String previousValue, int remoteness,
+			boolean gameOver, boolean isBlueTurn, boolean isDraw) {
+		VVHNode node;
+			if (remoteness == -1) return;
+			if (gameOver && isDraw)
+			node = new VVHNode("gameover-tie", remoteness, !isBlueTurn);
+			else if (gameOver)
+				node = new VVHNode("gameover", remoteness, !isBlueTurn);
+			else node = new VVHNode(previousValue, remoteness, isBlueTurn);
+			VVHList.add(node);
+	}
 
 	/**
 	 * Determines the value of the current board or position.
@@ -243,6 +254,7 @@ public abstract class GameActivity extends Activity {
 	public void doComputerMove() {
 		MoveValue values[] = getNextMoveValues();
 		MoveValue bestMove = values[0];
+		Random gen = new Random();
 		for (MoveValue val : values) {
 			String bestMoveValue = bestMove.getValue();
 			String valValue = val.getValue();
@@ -250,17 +262,32 @@ public abstract class GameActivity extends Activity {
 			int bestMoveRemoteness = bestMove.getRemoteness();
 			if (valValue.equals("win")) {
 				if (((bestMoveValue.equals("win")) && 
-						(valRemoteness <= bestMoveRemoteness))
+						(valRemoteness < bestMoveRemoteness))
 						|| (!bestMoveValue.equals("win"))) {
 					bestMove = val;
+				} else if (bestMoveValue.equals("win") && (valRemoteness == bestMoveRemoteness)) {
+					double randomnum = gen.nextDouble();
+					if (randomnum >= 0.5) {
+						bestMove = val;
+					}
 				}
 			} else if (valValue.equals("tie")) {
-				if ((bestMoveValue.equals("tie")) && (valRemoteness >= bestMoveRemoteness)
+				if ((bestMoveValue.equals("tie")) && (valRemoteness > bestMoveRemoteness)
 						|| (bestMoveValue.equals("lose"))) {
 					bestMove = val;
+				} else if (bestMoveValue.equals("tie") && (valRemoteness == bestMoveRemoteness)) {
+					double randomnum = gen.nextDouble();
+					if (randomnum >= 0.5) {
+						bestMove = val;
+					}
 				}
-			} else if ((bestMoveValue.equals("lose")) && (valRemoteness >= bestMoveRemoteness)) {
+			} else if ((bestMoveValue.equals("lose")) && (valRemoteness > bestMoveRemoteness)) {
 				bestMove = val;
+			} else if (bestMoveValue.equals("lose") && (valRemoteness == bestMoveRemoteness)) {
+				double randomnum = gen.nextDouble();
+				if (randomnum >= 0.5) {
+					bestMove = val;
+				}
 			}
 		}
 		doMove(bestMove.getMove());
