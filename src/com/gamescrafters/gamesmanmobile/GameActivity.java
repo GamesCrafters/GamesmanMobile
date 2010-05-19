@@ -22,7 +22,7 @@ import android.widget.ProgressBar;
 
 /**
  * An abstract class to be extended by all games in GamesmanMobile.
- * Allows the GameController to interface with the new game.
+ * Allows the GameController to interface with the new game. 
  */
 public abstract class GameActivity extends Activity {
 	String gameName;
