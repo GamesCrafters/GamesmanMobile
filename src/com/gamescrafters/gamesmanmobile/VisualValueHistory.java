@@ -4,10 +4,16 @@ import java.util.LinkedList;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.*;
-import android.view.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log; // for debugging
+import android.view.Display;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 public class VisualValueHistory extends Activity {
 	private LinkedList<VVHNode> VVHNodes; // A LinkedList<VVHNode> containing VVHNodes, each of which is a position made in the game.

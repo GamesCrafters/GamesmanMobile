@@ -10,8 +10,6 @@ import android.widget.TableRow;
 
 import com.gamescrafters.connect4.Connect4.Game;
 import com.gamescrafters.gamesmanmobile.R;
-import com.gamescrafters.gamesmanmobile.R.drawable;
-import com.gamescrafters.gamesmanmobile.R.id;
 
 /**
  * A class representing the m x n table of tiles on which Connect 4 is played.

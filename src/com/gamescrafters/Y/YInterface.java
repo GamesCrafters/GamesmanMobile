@@ -3,7 +3,6 @@ package com.gamescrafters.Y;
 import java.util.ArrayList;
 import java.util.Random;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,15 +10,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import com.gamescrafters.gamesmanmobile.*;
 
+import com.gamescrafters.gamesmanmobile.GameActivity;
+import com.gamescrafters.gamesmanmobile.MoveValue;
 import com.gamescrafters.gamesmanmobile.R;
 
 public class YInterface extends GameActivity {

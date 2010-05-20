@@ -5,8 +5,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 
-import com.gamescrafters.connect4.Connect4;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

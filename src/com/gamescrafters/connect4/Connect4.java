@@ -8,19 +8,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.gamescrafters.gamesmanmobile.GameActivity;
-import com.gamescrafters.gamesmanmobile.HorizontalSlider;
 import com.gamescrafters.gamesmanmobile.MoveValue;
 import com.gamescrafters.gamesmanmobile.R;
-import com.gamescrafters.gamesmanmobile.VVHNode;
 
 /**
  * The Connect4 game activity handles the setup of the GUI and internal state of the Connect 4 game.
@@ -441,21 +434,21 @@ public class Connect4 extends GameActivity {
 			}
 		}
 
-		private void updateVVH () {
-			VVHNode node;
-			if ((values != null) && (values.length != 0)) {
-				previousValue = getBoardValue(values);
-				
-				int remoteness = getRemoteness(previousValue, values);
-				if (remoteness == -1) return;
-				if (gameOver && isTie())
-				node = new VVHNode("gameover-tie", remoteness, !isBlueTurn());
-				else if (gameOver)
-					node = new VVHNode("gameover", remoteness, !isBlueTurn());
-				else node = new VVHNode(previousValue, remoteness, isBlueTurn());
-				VVHList.add(node);
-			}
-		}
+//		private void updateVVH () {
+//			VVHNode node;
+//			if ((values != null) && (values.length != 0)) {
+//				previousValue = getBoardValue(values);
+//				
+//				int remoteness = getRemoteness(previousValue, values);
+//				if (remoteness == -1) return;
+//				if (gameOver && isTie())
+//				node = new VVHNode("gameover-tie", remoteness, !isBlueTurn());
+//				else if (gameOver)
+//					node = new VVHNode("gameover", remoteness, !isBlueTurn());
+//				else node = new VVHNode(previousValue, remoteness, isBlueTurn());
+//				VVHList.add(node);
+//			}
+//		}
 	
 
 

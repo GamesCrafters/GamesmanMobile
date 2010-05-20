@@ -3,7 +3,6 @@ package com.gamescrafters.connections;
 
 
 import java.util.LinkedList;
-import java.util.Random;
 import java.util.Stack;
 
 import android.content.res.Configuration;
@@ -15,7 +14,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.gamescrafters.connect4.Connect4;
 import com.gamescrafters.gamesmanmobile.MoveValue;
 import com.gamescrafters.gamesmanmobile.R;
 

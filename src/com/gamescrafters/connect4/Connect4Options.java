@@ -1,10 +1,5 @@
 package com.gamescrafters.connect4;
 
-import com.gamescrafters.gamesmanmobile.R;
-import com.gamescrafters.gamesmanmobile.R.array;
-import com.gamescrafters.gamesmanmobile.R.id;
-import com.gamescrafters.gamesmanmobile.R.layout;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +8,8 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+
+import com.gamescrafters.gamesmanmobile.R;
 
 public class Connect4Options extends Activity {
 	Spinner select_rows;
