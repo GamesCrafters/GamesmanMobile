@@ -12,6 +12,7 @@ import com.gamescrafters.gamesmanmobile.GameActivity;
 import com.gamescrafters.gamesmanmobile.MoveValue;
 import com.gamescrafters.gamesmanmobile.R;
 
+
 public class Connections extends GameActivity {
     /** Called when the activity is first created. */
     GameBoard gb; // GUI board and internal game state
@@ -30,6 +31,18 @@ public class Connections extends GameActivity {
 		
 		//initialize GameBoard which initializes both GUIBoard and internal game state
 		gb = new GameBoard(size,this);
+		
+		//VVH preparation
+		values = getNextMoveValues();
+		updatePredictionDisplay();
+		updateValuesDisplay();
+		if (values != null && values.length != 0) {
+			previousValue = getBoardValue(values);
+			int remoteness = getRemoteness(previousValue, values);
+			clearVVH();
+			updateVVH(previousValue, remoteness, gb.g.isOver, gb.g.whoseMove==2 ? true : false , false);
+		}
+		
     }
 	
 
@@ -103,14 +116,36 @@ public class Connections extends GameActivity {
 	public
 	void redoMove() {
 		// TODO Auto-generated method stub
-		
+		gb.setIsRedo(true);
+		gb.reUnDoMove(0,0);
+		gb.setIsRedo(false);
 	}
 
 	@Override
 	public
 	void undoMove() {
 		// TODO Auto-generated method stub
-		
+		gb.setIsUndo(true);
+		gb.reUnDoMove(0,0);
+		gb.setIsUndo(false);
+	}
+	
+	/**
+	 * Gets the number of moves so far. Override this to get the slider to work.
+	 * @return the number of total moves done so far (should be updated to currentMove when
+	 * undo -> doMove is done).
+	 */
+	public int getNumMovesSoFar() {
+		return gb.g.movesSoFar;
+	}
+	
+	/**
+	 * Gets the index of the current move. Override this to get the slider to work.
+	 * This is different from numMovesSoFar when undo/redo is done. Make sure to update this.
+	 * @return the index of the current move.
+	 */
+	public int getCurrentMove() {
+		return gb.g.currentMove;
 	}
 
 	@Override
@@ -145,9 +180,6 @@ public class Connections extends GameActivity {
 	@Override
 	public
 	void updateValuesDisplay() {
-		
-	
-
 	  if(isShowValues()){
 		  if(previousValues !=null){
 			  gb.revertImages(previousValues);

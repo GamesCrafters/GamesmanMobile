@@ -4,6 +4,7 @@ package com.gamescrafters.connections;
 
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.Stack;
 
 import android.content.res.Configuration;
 import android.view.Gravity;
@@ -14,6 +15,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.gamescrafters.connect4.Connect4;
 import com.gamescrafters.gamesmanmobile.MoveValue;
 import com.gamescrafters.gamesmanmobile.R;
 
@@ -22,7 +24,6 @@ public class GameBoard {
 	Connections cActivity;
 	TableLayout tLayout;
 	Game g; //Internal game state
-	
 	int size;
 
 	public GameBoard (int s,Connections c){
@@ -36,6 +37,7 @@ public class GameBoard {
 
 		//initialize GUIBoard
 		initGUIBoard();	
+		
 	}
 	public void resetGame() {
 		tLayout.removeAllViews();
@@ -46,8 +48,6 @@ public class GameBoard {
 		player.setText("Player " + g.whoseMove + "'s turn");
 		remoteTextView.setText("");
 	    player.setTextColor(cActivity.getResources().getColor(R.color.solid_red));
-	    
-		
 	}
 	
 
@@ -151,7 +151,6 @@ public class GameBoard {
 		return toReturn;
 	}
 	public void swapImages(MoveValue []mvs){
-		
 		   if(mvs== null){
 			   return;
 		   }
@@ -181,10 +180,90 @@ public class GameBoard {
 							image.setImageResource((val.equals("win"))? R.drawable.con_wv : R.drawable.con_lv);
 				
 						}
-
 					}
 		       }
+	}
 	
+	//set internal gamestate isRedo variable
+	void setIsRedo(boolean b){
+		g.isRedo = b;
+	}
+	
+	//set internal gamestate isRedo variable
+	void setIsUndo(boolean b){
+		g.isUndo = b;
+	}
+	
+	//Sets internal and gui state of the board according to whether movie is an regular move, redo, undo move
+	public void reUnDoMove(int r, int c){
+		//MoveValue[] mv = cActivity.getNextMoveValues();
+		TextView player = (TextView) cActivity.findViewById(R.id.con_winner);
+		if (!g.isOver){
+			player.setText("Player " + g.whoseMove + "'s turn");
+			if (g.whoseMove == Game.P1){
+				player.setTextColor(cActivity.getResources().getColor(R.color.solid_red));
+			} else {
+				player.setTextColor(cActivity.getResources().getColor(R.color.solid_blue));
+			}
+		} 
+		int x=r; int y=c;
+		if (g.isUndo && !g.previousMoves.isEmpty()){
+			Stack <int[]> previousMoves = g.previousMoves;
+			int[] toUndo = g.previousMoves.peek();
+			x=toUndo[0]; y=toUndo[1];
+		}
+		if (g.isRedo && !g.nextMoves.isEmpty()){
+			Stack <int[]> nextMoves = g.nextMoves;
+			int[] toRedo = g.nextMoves.peek();
+			x=toRedo[0]; y=toRedo[1];
+		}
+		if ((!g.isOver || g.isRedo || g.isUndo) && (g.undoMove() || g.doMove(r,c,g.isDo,g.isRedo))){
+			cActivity.getHSlider().updateProgress(g.currentMove, g.movesSoFar);
+			r=x;c=y;
+			TableRow tr = (TableRow) tLayout.getChildAt(r);
+   	      	ImageView v= (ImageView)tr.getChildAt(c);
+			GameBoard.this.setPieceImage((ImageView) v, g.board[r][c].getType());
+			if(g.isOver){
+				player.setText("Player " + g.whoseMove + " Wins!");
+				if (g.whoseMove == Game.P1){
+					player.setTextColor(cActivity.getResources().getColor(R.color.solid_red));
+				} else {
+					player.setTextColor(cActivity.getResources().getColor(R.color.solid_blue));
+				}
+				if(!g.isUndo){
+					if ((cActivity.values != null) && (cActivity.values.length != 0)) {
+						cActivity.previousValue = cActivity.getBoardValue(cActivity.values);
+						int remoteness = cActivity.getRemoteness(cActivity.previousValue, cActivity.values);
+						cActivity.updateVVH(cActivity.previousValue, remoteness, g.isOver, g.whoseMove==2 ? true : false, false);
+					}
+				} else {
+					cActivity.removeLastVVHNode();
+				}
+				g.switchPlayer();
+				cActivity.values = cActivity.getNextMoveValues(); //try this 
+				cActivity.updateValuesDisplay(); //updates the GUI
+				cActivity.updatePredictionDisplay();
+				return;
+			}
+			g.switchPlayer();
+			player.setText("Player " + g.whoseMove + "'s turn");
+			if (g.whoseMove == Game.P1){
+				player.setTextColor(cActivity.getResources().getColor(R.color.solid_red));
+			} else {
+				player.setTextColor(cActivity.getResources().getColor(R.color.solid_blue));
+			}
+			cActivity.values = cActivity.getNextMoveValues(); //try this 
+			cActivity.updateValuesDisplay(); //try this?
+			cActivity.updatePredictionDisplay();
+			if (!g.isUndo &&(cActivity.values != null) && (cActivity.values.length != 0)) {
+				cActivity.previousValue = cActivity.getBoardValue(cActivity.values);
+				int remoteness = cActivity.getRemoteness(cActivity.previousValue, cActivity.values);
+				cActivity.updateVVH(cActivity.previousValue, remoteness, g.isOver, g.whoseMove==2 ? true : false, false);
+			}
+			if (g.isUndo){
+				cActivity.removeLastVVHNode();
+			}
+		}
 	}
 	
 	/**
@@ -200,10 +279,14 @@ public class GameBoard {
 		}
 
 		public void onClick(View v) {
+			g.isDo=true;
+			reUnDoMove(r,c);
+			g.isDo=false;
+			/**
 			//MoveValue[] mv = cActivity.getNextMoveValues();
 			
 			TextView player = (TextView) cActivity.findViewById(R.id.con_winner);
-			if (!g.isOver()){
+			if (!g.isOver){
 				player.setText("Player " + g.whoseMove + "'s turn");
 				if (g.whoseMove == Game.P1){
 					player.setTextColor(cActivity.getResources().getColor(R.color.solid_red));
@@ -212,12 +295,12 @@ public class GameBoard {
 				}
 				
 			} 
-			if (!g.isOver() && g.doMove(r,c)){
+			if (!g.isOver && g.doMove(r,c)){
                 //cActivity.getNextMoveValues();
 				GameBoard.this.setPieceImage((ImageView) v, g.board[r][c].getType());
 				
-				if(g.isOver()){
-					player.setText("Player " + g.whoseMove + " WIns!");
+				if(g.isOver){
+					player.setText("Player " + g.whoseMove + " Wins!");
 					if (g.whoseMove == Game.P1){
 						player.setTextColor(cActivity.getResources().getColor(R.color.solid_red));
 					} else {
@@ -236,6 +319,7 @@ public class GameBoard {
 				}
 				cActivity.updateValuesDisplay(); //try this?
 			}
+			**/
 		}
 	}
 }

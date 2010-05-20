@@ -166,36 +166,6 @@ public class Connect4 extends GameActivity {
 	//	g.updateVVH();
 
 		
-		OnTouchListener tListener = new OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-
-				int action = event.getAction();
-				ProgressBar b = (ProgressBar) v;
-
-				if (action == MotionEvent.ACTION_DOWN
-						|| action == MotionEvent.ACTION_MOVE) {
-					float x_mouse = event.getX() - hSlider.getPadding();
-					float width = b.getWidth() - 2*hSlider.getPadding();
-					int progress = Math.round((float) b.getMax() * (x_mouse / width));
-					int moveNumber = Math.round((float) Connect4.this.g.getNumMovesSoFar() * (x_mouse / width));
-
-					if (progress < 0)
-						progress = 0;
-
-					hSlider.setProgress(progress);
-					Connect4.this.g.goToMoveN(moveNumber);
-
-					if (hSlider.getListener() != null)
-						hSlider.getListener().onProgressChanged(hSlider, progress);
-
-				}
-
-				return true;
-			}
-		};
-		hSlider.setOnTouchListener(tListener);
-		hSlider.updateProgress(0, 0);
-
 		//computer vs. computer
 		if (isPlayer1Computer && isPlayer2Computer) {
 				updateUI();
@@ -215,6 +185,16 @@ public class Connect4 extends GameActivity {
 	@Override
 	public String getGameName() {
 		return GAME_NAME;
+	}
+	
+	@Override
+	public int getNumMovesSoFar() {
+		return g.getNumMovesSoFar();
+	}
+	
+	@Override
+	public int getCurrentMove() {
+		return g.currentMove;
 	}
 
 	/**
@@ -375,16 +355,16 @@ public class Connect4 extends GameActivity {
 			nextMoves.push(col);
 		}
 
-		public void goToMoveN(int N) {
-			if (0 <= N && N <= movesSoFar) {
-				while (N < currentMove) {
-					undoMove();
-				}
-				while (N > currentMove) {
-					redoMove();
-				}
-			}
-		}
+//		public void goToMoveN(int N) {
+//			if (0 <= N && N <= movesSoFar) {
+//				while (N < currentMove) {
+//					undoMove();
+//				}
+//				while (N > currentMove) {
+//					redoMove();
+//				}
+//			}
+//		}
 
 		/**
 		 * Checks if the move (column number) is valid, and performs the move if it is.

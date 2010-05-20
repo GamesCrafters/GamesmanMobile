@@ -26,7 +26,12 @@ public class Game {
 	boolean isOver;
 	LinkedList<Piece> p1PossiblePaths;
 	LinkedList<Piece> p2PossiblePaths;
-
+	//Undo/Redo
+	Stack<int[]> previousMoves, nextMoves; // Stacks of previousMoves and nextMoves, which is used to undo and redo moves.
+	boolean isRedo,isUndo,isDo;
+	int movesSoFar;
+	int currentMove;
+	
 	//game constructor
 	Game(int r, int c ){
 		board = new Piece[r][c];
@@ -36,6 +41,10 @@ public class Game {
 		this.cols=c;
 		this.whoseMove=P1;
 		this.isOver=false;
+		previousMoves = new Stack<int[]>();
+		nextMoves = new Stack<int[]>();
+		isRedo = false; isUndo = false; isDo=false;
+		movesSoFar=0; currentMove=0;
 		this.initBoard();
 		//initializing p1PossiblePaths
 		for(int i=1; i < cols; i=i+2){
@@ -48,9 +57,40 @@ public class Game {
 		}
 	}
 
+	//undoMove
+	
+	boolean undoMove(){
+		if(isUndo && !previousMoves.isEmpty()){
+			int[] prevMv = previousMoves.pop();
+			nextMoves.push(prevMv);
+			Piece p = board[prevMv[0]][prevMv[1]];
+			p.setBelongsTo(NOONE);
+			p.setType(BLANK);
+			isOver = isOver();
+			currentMove--;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	// doMove
-	boolean doMove(int r,int c) {
-		if(isValid(r, c)){
+	boolean doMove(int r,int c, boolean isDo, boolean isRedo) {
+		if(isRedo){
+			if (!nextMoves.isEmpty()){
+				int[] nxtMv = nextMoves.pop();
+				previousMoves.push(nxtMv);
+				r = nxtMv[0];
+				c = nxtMv[1];
+			} else {
+				return false;
+			}
+		}
+		if((isDo || isRedo)&& isValid(r, c)){
+			if(!isRedo){
+			int[] m = createMove(r,c);
+			previousMoves.push(m);
+			}
 			board[r][c].setBelongsTo(whoseMove);
 			if (this.whoseMove==P1){
 				if ( (c % 2) == 1 ){
@@ -65,11 +105,24 @@ public class Game {
 					board[r][c].setType(P2LINEV);
 				}
 			}
+			currentMove++;
+			if (!isRedo) {
+				nextMoves.clear();
+				movesSoFar = currentMove;
+			}
+			isOver = isOver();
 			return true;
 		}
 		return false;
 	}
-
+	
+	//makes [r,c] out of r,c for undo/redo
+	int[] createMove(int r, int c){
+		int[] rtn = new int[2];
+		rtn[0]=r; rtn[1]=c;
+		return rtn;
+	}
+	
 	void switchPlayer(){
 		whoseMove = whoseMove ^ 0x3;
 	}
@@ -105,26 +158,23 @@ public class Game {
 
 	//isOver
 	boolean isOver(){
-		if (isOver){
-			return isOver;
-		}else {
+			boolean isOv = false;
 			if (whoseMove==P1){
 				for (Piece t1:p1PossiblePaths){
 					if (isPathGood(t1)) {
-						isOver = true;
+						isOv = true;
 						break;
 					}
 				}
 			} else {
 				for (Piece t2:p2PossiblePaths){
 					if (isPathGood(t2)) {
-						isOver = true;
+						isOv = true;
 						break;
 					}
 				}
 			}
-			return isOver;
-		}
+			return isOv;
 	}
 
 

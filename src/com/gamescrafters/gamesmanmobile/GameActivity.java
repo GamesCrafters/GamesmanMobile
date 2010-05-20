@@ -22,7 +22,7 @@ import android.widget.ProgressBar;
 
 /**
  * An abstract class to be extended by all games in GamesmanMobile.
- * Allows the GameController to interface with the new game. 
+ * Allows the GameController to interface with the new game.
  */
 public abstract class GameActivity extends Activity {
 	String gameName;
@@ -227,6 +227,44 @@ public abstract class GameActivity extends Activity {
 	}
 
 	/**
+	 * Gets the number of moves so far. Override this to get the slider to work.
+	 * @return the number of total moves done so far (should be updated to currentMove when
+	 * undo -> doMove is done).
+	 */
+	public int getNumMovesSoFar() {
+		return 0;
+	}
+	
+	/**
+	 * Gets the index of the current move. Override this to get the slider to work.
+	 * This is different from numMovesSoFar when undo/redo is done. Make sure to update this.
+	 * @return the index of the current move.
+	 */
+	public int getCurrentMove() {
+		return 0;
+	}
+	
+
+	/**
+	 * gets hSlider so so you can update the progress after a call to redo/undo or a regular doMove
+	 * @return the index of the current move. -added by Derrick
+	 */
+	public HorizontalSlider getHSlider() {
+		return hSlider;
+	}
+	
+	public void goToMoveN(int N) {
+		if (0 <= N && N <= getNumMovesSoFar()) {
+			while (N < getCurrentMove()) {
+				undoMove();
+			}
+			while (N > getCurrentMove()) {
+				redoMove();
+			}
+		}
+	}
+
+	/**
 	 * Calculates the remoteness of this board/position.
 	 * @param boardValue The value of the current board ("win", "lose", or "tie").
 	 * @param values The MoveValues for the children of this board (returned by getNextMoveValues()).
@@ -322,5 +360,36 @@ public abstract class GameActivity extends Activity {
 			}
 		};
 		redoButton.setOnClickListener(forwardListener);
+		
+		OnTouchListener tListener = new OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+
+				int action = event.getAction();
+				ProgressBar b = (ProgressBar) v;
+
+				if (action == MotionEvent.ACTION_DOWN
+						|| action == MotionEvent.ACTION_MOVE) {
+					float x_mouse = event.getX() - hSlider.getPadding();
+					float width = b.getWidth() - 2*hSlider.getPadding();
+					int progress = Math.round((float) b.getMax() * (x_mouse / width));
+					int moveNumber = Math.round((float) getNumMovesSoFar() * (x_mouse / width));
+
+					if (progress < 0)
+						progress = 0;
+
+					hSlider.setProgress(progress);
+					goToMoveN(moveNumber);
+
+					if (hSlider.getListener() != null)
+						hSlider.getListener().onProgressChanged(hSlider, progress);
+
+				}
+
+				return true;
+			}
+		};
+		hSlider.setOnTouchListener(tListener);
+		hSlider.updateProgress(0, 0);
+
 	}
 }
