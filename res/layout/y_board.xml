@@ -5,6 +5,7 @@
 	<AbsoluteLayout android:id="@+id/y_AbsoluteLayout01"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:clipToPadding="false" android:background="@drawable/y_yboardstraight">
+		<!-- These buttons are unnecessary 
 		<Button android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_x="0dip"
 			android:layout_y="0dip" android:id="@+id/y_Undo" android:text="Undo"></Button>
@@ -13,7 +14,7 @@
 			android:layout_y="0dip" android:text="Replay" android:layout_x="240dip"></Button>
 		<Button android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_y="50dip"
-			android:id="@+id/y_Redo" android:text="Redo" android:layout_x="0dip"></Button>
+			android:id="@+id/y_Redo" android:text="Redo" android:layout_x="0dip"></Button> -->
 		<ImageButton android:layout_height="wrap_content"
 			android:layout_width="wrap_content" android:layout_y="17dip"
 			android:layout_x="140dip" android:id="@+id/y_B3" android:background="@drawable/y_circle"

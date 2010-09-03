@@ -33,6 +33,7 @@ public abstract class GameActivity extends Activity {
 	MenuItem moves, prediction;
 	protected HorizontalSlider hSlider;
 	private ImageButton undoButton, redoButton;
+	private static final int NEW_GAME = 0, TOGGLE_MOVE_VALUES = 1, TOGGLE_PREDICTION = 2, DISPLAY_VVH = 3;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,25 +61,41 @@ public abstract class GameActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu); 
-		menu.add("New Game");
-		menu.add("Toggle Move Values");
-		menu.add("Toggle Prediction");
-		menu.add("Display Visual Value History");
+		menu.add(0, NEW_GAME, 0, "New Game");
+		menu.add(0, TOGGLE_MOVE_VALUES, 0, "Toggle Move Values");
+		menu.add(0, TOGGLE_PREDICTION, 0, "Toggle Prediction");
+		menu.add(0, DISPLAY_VVH, 0, "Display Visual\nValue History");
 		return true;
 	} 
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		CharSequence title = item.getTitle();
-		if (title.equals("New Game")) {
+//		CharSequence title = item.getTitle();
+//		if (title.equals("New Game")) {
+//			newGame();
+//		} else if (title.equals("Toggle Move Values")){
+//			isShowValues = !isShowValues;
+//			updateValuesDisplay();
+//		} else if (title.equals("Toggle Prediction")) {
+//			isShowPrediction = !isShowPrediction;
+//			updatePredictionDisplay();
+//		} else {
+//			updateVVHDisplay();
+//		}
+		switch(item.getItemId()){
+		case NEW_GAME:
 			newGame();
-		} else if (title.equals("Toggle Move Values")){
+			break;
+		case TOGGLE_MOVE_VALUES:
 			isShowValues = !isShowValues;
 			updateValuesDisplay();
-		} else if (title.equals("Toggle Prediction")) {
+			break;
+		case TOGGLE_PREDICTION:
 			isShowPrediction = !isShowPrediction;
 			updatePredictionDisplay();
-		} else {
+			break;
+		case DISPLAY_VVH:
 			updateVVHDisplay();
+			break;
 		}
 		return true; 
 	}

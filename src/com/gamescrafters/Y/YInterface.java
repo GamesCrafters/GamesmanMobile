@@ -15,6 +15,7 @@ import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gamescrafters.gamesmanmobile.GameActivity;
 import com.gamescrafters.gamesmanmobile.MoveValue;
@@ -33,6 +34,7 @@ public class YInterface extends GameActivity {
 	Activity myself = this;
 	ArrayList<View> connections = new ArrayList<View>();
 	ArrayList<View> Nodes = new ArrayList<View>();
+	int movesSoFar, currentMove;
 	//HashMap<Integer, View[]> connections = new HashMap<Integer, View[]>();
 
 	@Override
@@ -44,13 +46,15 @@ public class YInterface extends GameActivity {
 		isOver = false;
 		showmoveValues = false;
 		hasshownmoveValues = false;
+		movesSoFar = 0;
+		currentMove = 0;
 		setButtons();
-		Button undo = (Button) findViewById(R.id.y_Undo);
-		Button redo = (Button) findViewById(R.id.y_Redo);
-		redo.setOnClickListener(new RedoClickListener(b));
-		undo.setOnClickListener(new UndoClickListener(b));
-		Button Replay = (Button) findViewById(R.id.y_Replay);
-		Replay.setOnClickListener(new ReplayClickListener(b));
+		//Button undo = (Button) findViewById(R.id.y_Undo);
+		//Button redo = (Button) findViewById(R.id.y_Redo);
+		//redo.setOnClickListener(new RedoClickListener(b));
+		//undo.setOnClickListener(new UndoClickListener(b));
+		//Button Replay = (Button) findViewById(R.id.y_Replay);
+		//Replay.setOnClickListener(new ReplayClickListener(b));
 		myLayout = (AbsoluteLayout) findViewById(R.id.y_RootLayout);
 		
 	}
@@ -153,21 +157,22 @@ public class YInterface extends GameActivity {
 			this.b = b;
 		}
 		public void onClick(View v) {
-			int i = b.redo();
-			Drawable d;
-			if (i > -1) {
-				View x = findViewByTag(i);
-				if( b.currentPlayer == PieceColor.P1){
-					d = getResources().getDrawable(R.drawable.y_circlered);
-				}
-				else{
-					d = getResources().getDrawable(R.drawable.y_circleblue);	
-				}
-				x.setBackgroundDrawable(d);
-				x.setClickable(false);
-				DoMove(Integer.parseInt((String)x.getTag()));
-				//updateMoveValues();
-			}
+			redoMove();
+//			int i = b.redo();
+//			Drawable d;
+//			if (i > -1) {
+//				View x = findViewByTag(i);
+//				if( b.currentPlayer == PieceColor.P1){
+//					d = getResources().getDrawable(R.drawable.y_circlered);
+//				}
+//				else{
+//					d = getResources().getDrawable(R.drawable.y_circleblue);	
+//				}
+//				x.setBackgroundDrawable(d);
+//				x.setClickable(false);
+//				DoMove(Integer.parseInt((String)x.getTag()));
+//				//updateMoveValues();
+//			}
 		}
 	}
 
@@ -178,46 +183,51 @@ public class YInterface extends GameActivity {
 		}
 
 		public void onClick(View v) {
-			int i = b.undo();
-			if (i > -1) {
-				View x = findViewByTag(i);
-				x.setBackgroundDrawable(getResources().getDrawable(R.drawable.y_circle));
-				x.setClickable(true);
-			}
-			if (isOver) {
-				isOver = false;
-			}
-			TextView t = (TextView)findViewById(R.id.y_TextView01);  //sets textbox below to display button id.
-			t.setText("");
-			
-			//updateMoveValues();
-			View orig = findViewByTag(i);
-			int x = (orig.getLeft() + orig.getRight() )/2;
-			int y = (orig.getTop() + orig.getBottom()) /2;
-			for (int j = 0; j< connections.size(); j++) {
-				SampleView edge = (SampleView) connections.get(j);
-				if (((edge.startx == x) && (edge.starty == y)) || ((edge.endx == x) && (edge.endy == y))) {
-					myLayout.removeView(edge);
-				}
-				
-			}
+			undoMove();
+//			int i = b.undo();
+//			if (i > -1) {
+//				View x = findViewByTag(i);
+//				x.setBackgroundDrawable(getResources().getDrawable(R.drawable.y_circle));
+//				x.setClickable(true);
+//			}
+//			if (isOver) {
+//				isOver = false;
+//			}
+//			TextView t = (TextView)findViewById(R.id.y_TextView01);  //sets textbox below to display button id.
+//			t.setText("");
+//			
+//			//updateMoveValues();
+//			View orig = findViewByTag(i);
+//			int x = (orig.getLeft() + orig.getRight() )/2;
+//			int y = (orig.getTop() + orig.getBottom()) /2;
+//			for (int j = 0; j< connections.size(); j++) {
+//				SampleView edge = (SampleView) connections.get(j);
+//				if (((edge.startx == x) && (edge.starty == y)) || ((edge.endx == x) && (edge.endy == y))) {
+//					myLayout.removeView(edge);
+//				}
+//				
+//			}
 			
 		}
 	}
 
 	class ReplayClickListener implements View.OnClickListener{
+
 		Board b;
 		public ReplayClickListener(Board b) {
 			this.b = b;
 		}
 
 		public void onClick(View v) {
-			clearButtons();
-			b.Clear(b.bd);
-			isOver = false;
-			TextView t = (TextView)findViewById(R.id.y_TextView01);  //sets textbox below to display button id.
-			t.setText("");
-			updateValuesDisplay();
+			newGame();
+//			movesSoFar = currentMove = 0;
+//			hSlider.updateProgress(currentMove, movesSoFar);
+//			clearButtons();
+//			b.Clear(b.bd);
+//			isOver = false;
+//			TextView t = (TextView)findViewById(R.id.y_TextView01);  //sets textbox below to display button id.
+//			t.setText("");
+//			updateValuesDisplay();
 		}
 	}
 
@@ -228,7 +238,8 @@ public class YInterface extends GameActivity {
 			this.b = b;
 		}
 
-		public void onClick(View v) {	
+		public void onClick(View v) {
+			movesSoFar = currentMove; 
 			Drawable d;
 			if (isOver) {
 				return;
@@ -288,6 +299,11 @@ public class YInterface extends GameActivity {
 		int winner;
 		moveNum = x;
 		winner = b.makeMove(moveNum);
+		if(movesSoFar == currentMove){
+			movesSoFar++;
+			currentMove++;
+		}
+		hSlider.updateProgress(currentMove, movesSoFar);
 		if(winner!=0){
 			TextView t = (TextView)findViewById(R.id.y_TextView01);  //sets textbox below to display button id.
 			t.setText("Player " + Integer.toString(winner) + " Wins!!!11!!");
@@ -413,51 +429,61 @@ public class YInterface extends GameActivity {
 		return "y";
 	}
 	public void redoMove() {
-		int i = b.redo();
-		Drawable d;
-		if (i > -1) {
-			View x = findViewByTag(i);
-			if( b.currentPlayer == PieceColor.P1){
-				d = getResources().getDrawable(R.drawable.y_circlered);
+		if(currentMove < movesSoFar){
+			int i = b.redo();
+			Drawable d;
+			if (i > -1) {
+				View x = findViewByTag(i);
+				if( b.currentPlayer == PieceColor.P1){
+					d = getResources().getDrawable(R.drawable.y_circlered);
+				}
+				else{
+					d = getResources().getDrawable(R.drawable.y_circleblue);	
+				}
+				x.setBackgroundDrawable(d);
+				x.setClickable(false);
+				DoMove(Integer.parseInt((String)x.getTag()));
+				updateValuesDisplay();
 			}
-			else{
-				d = getResources().getDrawable(R.drawable.y_circleblue);	
-			}
-			x.setBackgroundDrawable(d);
-			x.setClickable(false);
-			DoMove(Integer.parseInt((String)x.getTag()));
-			updateValuesDisplay();
+			currentMove++;
+			hSlider.updateProgress(currentMove, movesSoFar);
 		}
 	}
 	
 	public void undoMove() {
-		int i = b.undo();
-		if (i > -1) {
-			View x = findViewByTag(i);
-			x.setBackgroundDrawable(getResources().getDrawable(R.drawable.y_circle));
-			x.setClickable(true);
-		}
-		if (isOver) {
-			isOver = false;
-		}
-		TextView t = (TextView)findViewById(R.id.y_TextView01);  //sets textbox below to display button id.
-		t.setText("");
-		
-		updateValuesDisplay();
-		View orig = findViewByTag(i);
-		int x = (orig.getLeft() + orig.getRight() )/2;
-		int y = (orig.getTop() + orig.getBottom()) /2;
-		for (int j = 0; j< connections.size(); j++) {
-			SampleView edge = (SampleView) connections.get(j);
-			if (((edge.startx == x) && (edge.starty == y)) || ((edge.endx == x) && (edge.endy == y))) {
-				myLayout.removeView(edge);
+		if(currentMove > 0){
+			int i = b.undo();
+			if (i > -1) {
+				View x = findViewByTag(i);
+				x.setBackgroundDrawable(getResources().getDrawable(R.drawable.y_circle));
+				x.setClickable(true);
 			}
+			if (isOver) {
+				isOver = false;
+			}
+			TextView t = (TextView)findViewById(R.id.y_TextView01);  //sets textbox below to display button id.
+			t.setText("");
 			
+			updateValuesDisplay();
+			View orig = findViewByTag(i);
+			int x = (orig.getLeft() + orig.getRight() )/2;
+			int y = (orig.getTop() + orig.getBottom()) /2;
+			for (int j = 0; j< connections.size(); j++) {
+				SampleView edge = (SampleView) connections.get(j);
+				if (((edge.startx == x) && (edge.starty == y)) || ((edge.endx == x) && (edge.endy == y))) {
+					myLayout.removeView(edge);
+				}
+				
+			}
+			currentMove--;
+			hSlider.updateProgress(currentMove, movesSoFar);
 		}
 	}
 	
 	public void updatePredictionDisplay() {}
 	public void newGame() {
+		currentMove = movesSoFar = 0;
+		hSlider.updateProgress(currentMove, movesSoFar);
 		clearButtons();
 		b.Clear(b.bd);
 		isOver = false;
