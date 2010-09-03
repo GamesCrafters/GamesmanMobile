@@ -22,9 +22,9 @@ public class GamesmanMobile extends TabActivity {
 
 		final TabHost mTabHost = getTabHost();
 
-		mTabHost.addTab(mTabHost.newTabSpec("GAMES").setIndicator("GAMES").setContent(R.id.gm_listview1));
-		mTabHost.addTab(mTabHost.newTabSpec("DISCOVER").setIndicator("DISCOVER").setContent(R.id.gm_discover_content));
-		mTabHost.addTab(mTabHost.newTabSpec("ABOUT").setIndicator("ABOUT").setContent(R.id.gm_textview));
+		mTabHost.addTab(mTabHost.newTabSpec("GAMES").setIndicator("Games").setContent(R.id.gm_listview1));
+		mTabHost.addTab(mTabHost.newTabSpec("DISCOVER").setIndicator("Discover").setContent(R.id.gm_discover_content));
+		mTabHost.addTab(mTabHost.newTabSpec("ABOUT").setIndicator("About").setContent(R.id.gm_textview));
 		mTabHost.setCurrentTab(0);
 		ListView lv = (ListView) findViewById(R.id.gm_listview1);
 		OnItemClickListener tttClick = new OnItemClickListener(){
