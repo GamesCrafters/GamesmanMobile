@@ -91,10 +91,14 @@ public class VisualValueHistory extends Activity {
      */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event){
-		if(keyCode == KeyEvent.KEYCODE_BACK){
-			startActivity(GameActivity.GameIntent); 
-			return true;
-		}
+// 		Zach Bush: 9/2/2010
+//		The following code causes the back button to loop
+//		between this and GameIntent. Making it very hard
+//		To change the settings or select a new game. 
+//		if(keyCode == KeyEvent.KEYCODE_BACK){
+//			startActivity(GameActivity.GameIntent); 
+//			return true;
+//		}
 		return super.onKeyDown(keyCode, event);
 	} 
     
