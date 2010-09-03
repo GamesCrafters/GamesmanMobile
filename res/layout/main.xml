@@ -3,13 +3,12 @@
 	android:id="@android:id/tabhost" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:background="@color/bg_blue">
 	<LinearLayout android:orientation="vertical"
-		android:layout_width="fill_parent" android:layout_height="wrap_content">
-
+		android:layout_width="fill_parent" android:layout_height="fill_parent">
 		<ImageView android:layout_height="wrap_content" android:src="@drawable/gm_header"
 			android:id="@+id/gm_MainTitle" android:layout_width="fill_parent"></ImageView>
 		<FrameLayout android:id="@android:id/tabcontent"
 			android:layout_width="fill_parent" android:background="@drawable/blue"
-			android:layout_height="wrap_content">
+			android:layout_height="wrap_content" android:layout_weight="1">
 			<ListView android:id="@+id/gm_listview1"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:entries="@array/my_games" android:choiceMode="singleChoice"
@@ -20,13 +19,10 @@
 			<TextView android:id="@+id/gm_textview"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:text="@string/lorem_ipsum" />
-
 		</FrameLayout>
-
+		<TabWidget android:id="@android:id/tabs"
+			android:layout_width="fill_parent" android:layout_gravity="bottom"
+			android:layout_height="wrap_content" android:layout_weight="0">
+		</TabWidget>
 	</LinearLayout>
-	<TabWidget android:id="@android:id/tabs"
-		android:layout_width="fill_parent" android:layout_gravity="bottom"
-		android:layout_height="wrap_content">
-	</TabWidget>
-
 </TabHost>
