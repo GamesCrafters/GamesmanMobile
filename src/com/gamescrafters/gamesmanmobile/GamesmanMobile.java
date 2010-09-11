@@ -12,6 +12,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.gamescrafters.Y.menu;
 import com.gamescrafters.connect4.Connect4Options;
 import com.gamescrafters.connections.ConnectionsOptions;
+import com.gamescrafters.othello.OthelloOptions;
 
 public class GamesmanMobile extends TabActivity {
 	/** Called when the activity is first created. */
@@ -42,6 +43,10 @@ public class GamesmanMobile extends TabActivity {
 					break;
 				case 2:
 					myIntent = new Intent(GamesmanMobile.this, menu.class);
+					GamesmanMobile.this.startActivity(myIntent);
+					break;
+				case 3:
+					myIntent = new Intent(GamesmanMobile.this, OthelloOptions.class);
 					GamesmanMobile.this.startActivity(myIntent);
 					break;
 				}
