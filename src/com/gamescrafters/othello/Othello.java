@@ -13,6 +13,16 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/**
+ * The Othello game activity handles the setup of the GUI and internal state of the Othello game.
+ * It communicates with the GameValueService to get move values, the GUIGameBoard to handle the board GUI,
+ * and will extend GameActivity to interact with the GameController / main frame (and through it, the VVH).
+ * @version 0.1 (11 September 2010)
+ * @author Zach Bush
+ * @author Royce Cheng-Yue
+ * @author Alex Degtiar
+ * @author Gayane Vardoyan
+ */
 public class Othello extends GameActivity {
 	static final String GAME_NAME = "othello";
 
@@ -21,12 +31,12 @@ public class Othello extends GameActivity {
 	private Drawable bluePiece, redPiece;
 	// private CompPlays compPlaying = new CompPlays();
 
-	// Game g = null;
+	Game g = null;
 	// GUIGameBoard gb;
 	MoveValue[] values = null;
 	String previousValue = "win";
 	int delay;
-	Stack<Integer> previousMoves, nextMoves; // Stacks of previousMoves and nextMoves, which is used to undo and redo moves.
+	
 
 
 	public void onCreate(Bundle savedInstanceState){
@@ -51,7 +61,7 @@ public class Othello extends GameActivity {
 	}
 	
 	/**
-	 * Initializes the internal state and GUI of the Connect 4 board. 
+	 * Initializes the internal state and GUI of the Othello board. 
 	 * @param width The width of the board to construct.
 	 * @param height The height of the board to construct.
 	 */
@@ -73,8 +83,7 @@ public class Othello extends GameActivity {
 
 	@Override
 	public String getGameName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.GAME_NAME;
 	}
 
 	@Override
@@ -91,6 +100,7 @@ public class Othello extends GameActivity {
 
 	@Override
 	public void undoMove() {
+		g.undoMove();
 		// TODO Auto-generated method stub
 
 	}
@@ -106,5 +116,65 @@ public class Othello extends GameActivity {
 		// TODO Auto-generated method stub
 
 	}
+	
+	/**
+	 * A class that contains the internal state of the Connect 4 game,
+	 * as well as accessor and modifier methods.
+	 */
+	class Game {
+		final static boolean BLUE_TURN = false;
+		final static boolean RED_TURN = true;
+		final static int RED = 1;
+		final static int BLUE = 2;
+		final static int EMPTY = 0;
 
+		private int turn = BLUE; // first player, blue
+		int board[][]; 	// The internal state of the game. Either RED, BLUE, or EMPTY.
+		int height, width;
+		boolean gameOver = false;
+		private int movesSoFar;
+		private int currentMove;
+		private Stack<int [][]> previousMoves, nextMoves; // Stacks of previousMoves and nextMoves, which is used to undo and redo moves.
+		
+		public Game(int height, int width) {
+			this.height = height;
+			this.width = width;
+			this.board = new int[height][width];
+			this.previousMoves = new Stack<int [][]>();
+			this.movesSoFar = 0;
+			this.currentMove = 0;
+			
+			this.nextMoves = new Stack<int [][]>();
+			
+		}
+		/**
+		 * Undoes a move. If no previous moves, does nothing.
+		 */
+		public void undoMove() {
+			if (this.previousMoves.isEmpty()) return;
+			this.nextMoves.push(board);
+			board = this.previousMoves.pop();
+			int[][] col = this.previousMoves.pop();
+			// Remove the last move from the VisualValueHistory.
+			removeLastVVHNode();
+			if(g.gameOver){
+				g.gameOver = false;
+				turnTextView.setText("Turn: ");
+				turnImage.setBackgroundDrawable(g.getTurn() == BLUE ? bluePiece : redPiece);
+				gameOverTextView.setText("");
+			}
+			this.currentMove--;
+			hSlider.updateProgress(currentMove, movesSoFar);
+		}
+		public int getMovesSoFar() {
+			return movesSoFar;
+		}
+
+		public int getCurrentMove() {
+			return currentMove;
+		}
+		public int getTurn() {
+			return turn;
+		}
+	}
 }
