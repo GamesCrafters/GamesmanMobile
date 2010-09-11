@@ -31,11 +31,9 @@ public class Othello extends GameActivity {
 
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState); 
-		setGameView(R.layout.othello_game);
-		
-		initResources();
-		
-		setBoard(4,4);
+		this.setGameView(R.layout.othello_game);
+		this.initResources();
+		this.setBoard(4,4);
 	}
 	
 	/**
@@ -43,13 +41,13 @@ public class Othello extends GameActivity {
 	 */
 	private void initResources(){
 		Resources res = getResources();
-		bluePiece = res.getDrawable(R.drawable.oth_bluepiece);
-		redPiece = res.getDrawable(R.drawable.oth_redpiece);
+		this.bluePiece = res.getDrawable(R.drawable.oth_bluepiece);
+		this.redPiece = res.getDrawable(R.drawable.oth_redpiece);
 
-		turnTextView = (TextView) findViewById(R.id.oth_turn); 
-		turnImage = (ImageButton) findViewById(R.id.oth_turnImage);
-		remoteTextView = (TextView) findViewById(R.id.oth_remoteness);
-		gameOverTextView = (TextView) findViewById(R.id.oth_gameOver);	
+		this.turnTextView = (TextView) findViewById(R.id.oth_turn); 
+		this.turnImage = (ImageButton) findViewById(R.id.oth_turnImage);
+		this.remoteTextView = (TextView) findViewById(R.id.oth_remoteness);
+		this.gameOverTextView = (TextView) findViewById(R.id.oth_gameOver);	
 	}
 	
 	/**

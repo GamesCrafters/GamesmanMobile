@@ -9,4 +9,5 @@
 <string name="discover_text">More games will be available soon!</string>
 <string name="row_prompt">Number of Rows:</string>
 <string name="column_prompt">Number of Columns:</string>
+<string name="in_development"><small><small><small><i>In Development</i></small></small></small></string>
 </resources>
