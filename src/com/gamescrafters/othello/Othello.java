@@ -3,6 +3,7 @@ package com.gamescrafters.othello;
 import java.util.Stack;
 
 // import com.gamescrafters.connect4.GUIGameBoard;
+import com.gamescrafters.othello.GUIGameBoard;
 import com.gamescrafters.gamesmanmobile.GameActivity;
 import com.gamescrafters.gamesmanmobile.MoveValue;
 import com.gamescrafters.gamesmanmobile.R;
@@ -32,7 +33,7 @@ public class Othello extends GameActivity {
 	// private CompPlays compPlaying = new CompPlays();
 
 	Game g = null;
-	// GUIGameBoard gb;
+	GUIGameBoard gb;
 	MoveValue[] values = null;
 	String previousValue = "win";
 	int delay;
@@ -42,8 +43,17 @@ public class Othello extends GameActivity {
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState); 
 		this.setGameView(R.layout.othello_game);
+		
+		int height = 8;
+		int width = 8;
+		g = new Game(height, width);
+		if (this.gb == null)
+			gb = new GUIGameBoard(this);
+		else
+			gb.reset(g);
+		gb.initBoard();
 		this.initResources();
-		this.setBoard(4,4);
+		this.setBoard(width, height);
 	}
 	
 	/**
@@ -175,6 +185,12 @@ public class Othello extends GameActivity {
 		}
 		public int getTurn() {
 			return turn;
+		}
+		public void doMove(int row, int col, boolean isRedo){
+			
+		}
+		public boolean isBlueTurn(){
+			return turn == BLUE;
 		}
 	}
 }
