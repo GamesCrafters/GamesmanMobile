@@ -157,6 +157,11 @@ public class Othello extends GameActivity {
 			this.nextMoves = new Stack<int [][]>();
 			
 		}
+		
+		int coordToMove(int row, int col){
+			return ((row - 1) * this.width + col - 1);
+		}
+		
 		/**
 		 * Undoes a move. If no previous moves, does nothing.
 		 */
@@ -186,7 +191,7 @@ public class Othello extends GameActivity {
 		public int getTurn() {
 			return turn;
 		}
-		public void doMove(int row, int col, boolean isRedo){
+		public void doMove(int move, boolean isRedo){
 			
 		}
 		public boolean isBlueTurn(){

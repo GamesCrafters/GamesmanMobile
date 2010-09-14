@@ -90,13 +90,13 @@ public class GUIGameBoard {
 		public void onClick(View v) {
 			if (!(a.isPlayer1Computer && a.isPlayer2Computer)) {
 				if (!g.gameOver && g.isBlueTurn()){
-					g.doMove(row, column, false);
+					g.doMove(g.coordToMove(row, column), false);
 					//if game is still not over, and it's a computer's turn, computer moves
 					if (!g.gameOver && a.isPlayer2Computer) {
 						a.doComputerMove();
 					}
 				} else {
-					g.doMove(row, column, false);
+					g.doMove(g.coordToMove(row, column), false);
 					if (!g.gameOver && a.isPlayer1Computer) {
 						a.doComputerMove();
 					}
