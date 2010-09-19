@@ -1,5 +1,6 @@
 package com.gamescrafters.othello;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,10 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
 
 import com.gamescrafters.gamesmanmobile.R;
 
@@ -56,20 +61,22 @@ public class GUIGameBoard {
 	 * Initializes the board for Othello.
 	 */
 	public void initBoard() {
-		int max_height = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 270 : 200;
-		int new_height = max_height / height;
+		
+		int size = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 275 : 200;
+		int new_size = (int)Math.floor((double)size / (double)height);
 		for (int row=height-1; row>=0; row--) {
 			TableRow tr = new TableRow(a);
 			tr.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			for (int col=0; col<width; col++) {
-				ImageView iv = new ImageView(a);
-				iv.setImageResource(tile);
-				iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-				iv.setAdjustViewBounds(true);
-				iv.setMaxHeight(new_height);
-				iv.setId(getID(row, col));
-				iv.setOnClickListener(new PieceClickListener(col, row));
-				tr.addView(iv);
+				TileView tv = new TileView(a, row, col);
+				//ImageView iv = new ImageView(a);
+				//iv.setImageResource(tile);
+				//tv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+				//tv.setAdjustViewBounds(true);
+				//tv.setMaxHeight(new_height);
+				tv.setId(getID(row, col));
+				tv.setOnClickListener(new PieceClickListener(col, row));
+				tr.addView(tv, new_size, new_size);
 			}
 			table.addView(tr);
 		}
@@ -105,4 +112,31 @@ public class GUIGameBoard {
 		}
 
 	}
+	public class TileView extends View{
+
+		int x,y;
+		public TileView(Context context, int x, int y) {
+			super(context);
+			this.x = x;
+			this.y = y;
+		}
+		
+		@Override
+		protected void onDraw(Canvas canvas){
+			super .onDraw(canvas);
+			
+			Paint p = new Paint();
+			p.setStyle(Paint.Style.FILL);
+			p.setColor(Color.TRANSPARENT);
+			canvas.drawPaint(p);
+			p.setColor(Color.WHITE);
+			p.setStyle(Style.STROKE);
+			canvas.drawLine(0, 0, 0, getHeight()-1, p);
+			canvas.drawLine(0, 0, getWidth()-1, 0, p);
+			canvas.drawLine(getWidth()-1, 0, getWidth()-1, getHeight()-1, p);
+			canvas.drawLine(0, getHeight()-1, getWidth()-1, getHeight()-1, p);
+		}
+		
+	}
+
 }

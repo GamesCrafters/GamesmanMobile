@@ -2,15 +2,20 @@ package com.gamescrafters.othello;
 
 import java.util.Stack;
 
-// import com.gamescrafters.connect4.GUIGameBoard;
 import com.gamescrafters.othello.GUIGameBoard;
 import com.gamescrafters.gamesmanmobile.GameActivity;
 import com.gamescrafters.gamesmanmobile.MoveValue;
 import com.gamescrafters.gamesmanmobile.R;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -39,13 +44,13 @@ public class Othello extends GameActivity {
 	int delay;
 	
 
-
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState); 
 		this.setGameView(R.layout.othello_game);
 		
 		int height = 8;
 		int width = 8;
+		
 		g = new Game(height, width);
 		if (this.gb == null)
 			gb = new GUIGameBoard(this);
@@ -198,4 +203,6 @@ public class Othello extends GameActivity {
 			return turn == BLUE;
 		}
 	}
+	
+	
 }

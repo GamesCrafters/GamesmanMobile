@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 	<!-- Demonstrates using a relative layout to create a form -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:background="@color/bg_blue"
-	android:layout_height="fill_parent" android:orientation="vertical">
+	android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical" android:background="@color/bg_blue" >
 
 	<TextView android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:gravity="center_horizontal"
 		android:textColor="@color/solid_yellow"
 		android:textSize="30dip" android:id="@+id/oth_logo" android:text="Othello" android:visibility="visible"/>
 	<TableLayout android:id="@+id/oth_gametable"
-		android:layout_width="fill_parent" android:shrinkColumns="*"
-		android:paddingTop="5dip" android:layout_height="275dip"
+		android:shrinkColumns="*"
+		android:layout_height="275dip"
 		android:layout_centerHorizontal="true" android:layout_centerVertical="true"
-		android:gravity="center_vertical|center_horizontal">
+		android:gravity="center_vertical|center_horizontal" android:background="@drawable/oth_felt" android:layout_width="275dip" android:layout_gravity="center">
 
 
 
-	</TableLayout>
+	
+</TableLayout>
 	<RelativeLayout android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:id="@+id/oth_GameOverAndTurn"
 		android:paddingTop="5dip">
