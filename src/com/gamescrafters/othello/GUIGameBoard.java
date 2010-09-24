@@ -71,13 +71,8 @@ public class GUIGameBoard {
 		for (int row=height-1; row>=0; row--) {
 			TableRow tr = new TableRow(a);
 			tr.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-			for (int col=0; col<width; col++) {
+			for (int col=width-1; col>=0; col--) {
 				TileView tv = new TileView(a, row, col, Color.WHITE);
-				//ImageView iv = new ImageView(a);
-				//iv.setImageResource(tile);
-				//tv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-				//tv.setAdjustViewBounds(true);
-				//tv.setMaxHeight(new_height);
 				tv.setId(getID(row, col));
 				tv.setOnClickListener(new PieceClickListener(col, row, tv));
 				tr.addView(tv, new_size, new_size);
@@ -101,7 +96,11 @@ public class GUIGameBoard {
 		}
 
 		public void onClick(View v) {
-			piece.flipHorizontal(1000);
+			if(column == row){
+				piece.flipDiagonal(1000);
+			}else{
+				piece.flipVertical(1000);
+			}
 			if (!(a.isPlayer1Computer && a.isPlayer2Computer)) {
 				if (!g.gameOver && g.isBlueTurn()){
 					g.doMove(g.coordToMove(row, column), false);
@@ -124,12 +123,17 @@ public class GUIGameBoard {
 		int x,y;
 		int tColor;
 		Animation horizontalFlip, verticalFlip, horizontalOpen, verticalOpen, rotate45;
+		AnimationSet diagonalFlip1, openDiag1;
 		public TileView(Context context, int x, int y, int c) {
 			super(context);
 			this.x = x;
 			this.y = y;
 			this.tColor = c;
 			
+		
+			
+			rotate45 = new RotateAnimation(45f,45f,
+					Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
 			horizontalFlip = new ScaleAnimation(1f, 0f, 1f, 1f,
 					Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
 			verticalFlip = new ScaleAnimation(1f, 1f, 1f, 0f,
@@ -138,15 +142,35 @@ public class GUIGameBoard {
 					Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
 			verticalOpen = new ScaleAnimation(1f, 1f, 0f, 1f,
 					Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
-			horizontalFlip.setAnimationListener(new TileAnimation(this, horizontalOpen));
-			
+			diagonalFlip1 = new AnimationSet(true);
+			diagonalFlip1.addAnimation(horizontalFlip);
+			diagonalFlip1.addAnimation(rotate45);
+			openDiag1 = new AnimationSet(true);
+			openDiag1.addAnimation(horizontalOpen);
+			openDiag1.addAnimation(rotate45);
 			flipHorizontal(5000);
 		}
 		
 		void flipHorizontal(long time){
+			horizontalFlip.setAnimationListener(new TileAnimation(this, horizontalOpen));
 			horizontalFlip.setDuration(time/2);
 			horizontalOpen.setDuration(time/2);
 			this.startAnimation(horizontalFlip);
+		}		
+		
+		void flipVertical(long time){
+			verticalFlip.setAnimationListener(new TileAnimation(this, verticalOpen));
+			verticalFlip.setDuration(time/2);
+			verticalOpen.setDuration(time/2);
+			this.startAnimation(verticalFlip);
+		}
+		
+		void flipDiagonal(long time){
+			horizontalFlip.setAnimationListener(new TileAnimation(this, openDiag1));
+			horizontalFlip.setDuration(time/2);
+			horizontalOpen.setDuration(time/2);
+			rotate45.setDuration(time/2);
+			this.startAnimation(diagonalFlip1);			
 		}
 		
 		public void swapColor(){
@@ -166,7 +190,7 @@ public class GUIGameBoard {
 			canvas.drawPaint(p);
 			p.setColor(this.tColor);
 			p.setStyle(Style.FILL);
-			canvas.drawCircle(getWidth()/2, getHeight()/2, getWidth()/2, p);
+			canvas.drawCircle(getWidth()/2, getHeight()/2, (((getWidth()/2)*80)/100), p);
 			//canvas.drawLine(0, 0, 0, getHeight()-1, p);
 			//canvas.drawLine(0, 0, getWidth()-1, 0, p);
 			//canvas.drawLine(getWidth()-1, 0, getWidth()-1, getHeight()-1, p);
