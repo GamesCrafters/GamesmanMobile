@@ -12,6 +12,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.RotateAnimation;
+import android.view.animation.AnimationSet;
 
 import com.gamescrafters.gamesmanmobile.R;
 
@@ -68,14 +72,14 @@ public class GUIGameBoard {
 			TableRow tr = new TableRow(a);
 			tr.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			for (int col=0; col<width; col++) {
-				TileView tv = new TileView(a, row, col);
+				TileView tv = new TileView(a, row, col, Color.WHITE);
 				//ImageView iv = new ImageView(a);
 				//iv.setImageResource(tile);
 				//tv.setScaleType(ImageView.ScaleType.FIT_CENTER);
 				//tv.setAdjustViewBounds(true);
 				//tv.setMaxHeight(new_height);
 				tv.setId(getID(row, col));
-				tv.setOnClickListener(new PieceClickListener(col, row));
+				tv.setOnClickListener(new PieceClickListener(col, row, tv));
 				tr.addView(tv, new_size, new_size);
 			}
 			table.addView(tr);
@@ -88,13 +92,16 @@ public class GUIGameBoard {
 	 */
 	class PieceClickListener implements View.OnClickListener {
 		int column, row;
-
-		public PieceClickListener(int col_num, int row_num) {
+		TileView piece;
+		
+		public PieceClickListener(int col_num, int row_num, TileView piece) {
 			column = col_num;
 			row = row_num;
+			this.piece = piece;
 		}
 
 		public void onClick(View v) {
+			piece.flipHorizontal(1000);
 			if (!(a.isPlayer1Computer && a.isPlayer2Computer)) {
 				if (!g.gameOver && g.isBlueTurn()){
 					g.doMove(g.coordToMove(row, column), false);
@@ -115,26 +122,72 @@ public class GUIGameBoard {
 	public class TileView extends View{
 
 		int x,y;
-		public TileView(Context context, int x, int y) {
+		int tColor;
+		Animation horizontalFlip, verticalFlip, horizontalOpen, verticalOpen, rotate45;
+		public TileView(Context context, int x, int y, int c) {
 			super(context);
 			this.x = x;
 			this.y = y;
+			this.tColor = c;
+			
+			horizontalFlip = new ScaleAnimation(1f, 0f, 1f, 1f,
+					Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
+			verticalFlip = new ScaleAnimation(1f, 1f, 1f, 0f,
+					Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
+			horizontalOpen = new ScaleAnimation(0f, 1f, 1f, 1f,
+					Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
+			verticalOpen = new ScaleAnimation(1f, 1f, 0f, 1f,
+					Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
+			horizontalFlip.setAnimationListener(new TileAnimation(this, horizontalOpen));
+			
+			flipHorizontal(5000);
+		}
+		
+		void flipHorizontal(long time){
+			horizontalFlip.setDuration(time/2);
+			horizontalOpen.setDuration(time/2);
+			this.startAnimation(horizontalFlip);
+		}
+		
+		public void swapColor(){
+			if(this.tColor == Color.BLACK){
+				this.tColor = Color.WHITE;
+				return;
+			}
+			this.tColor = Color.BLACK;
 		}
 		
 		@Override
 		protected void onDraw(Canvas canvas){
 			super .onDraw(canvas);
-			
 			Paint p = new Paint();
 			p.setStyle(Paint.Style.FILL);
 			p.setColor(Color.TRANSPARENT);
 			canvas.drawPaint(p);
-			p.setColor(Color.WHITE);
-			p.setStyle(Style.STROKE);
-			canvas.drawLine(0, 0, 0, getHeight()-1, p);
-			canvas.drawLine(0, 0, getWidth()-1, 0, p);
-			canvas.drawLine(getWidth()-1, 0, getWidth()-1, getHeight()-1, p);
-			canvas.drawLine(0, getHeight()-1, getWidth()-1, getHeight()-1, p);
+			p.setColor(this.tColor);
+			p.setStyle(Style.FILL);
+			canvas.drawCircle(getWidth()/2, getHeight()/2, getWidth()/2, p);
+			//canvas.drawLine(0, 0, 0, getHeight()-1, p);
+			//canvas.drawLine(0, 0, getWidth()-1, 0, p);
+			//canvas.drawLine(getWidth()-1, 0, getWidth()-1, getHeight()-1, p);
+			//canvas.drawLine(0, getHeight()-1, getWidth()-1, getHeight()-1, p);
+		}
+		
+		class TileAnimation implements Animation.AnimationListener{
+			TileView parent;
+			Animation nextAni;
+			public TileAnimation(TileView t, Animation subsequent){
+				this.parent = t;
+				this.nextAni = subsequent;
+			}
+			public void onAnimationEnd(Animation animation) {
+				this.parent.swapColor();
+				this.parent.startAnimation(this.nextAni);
+			}
+
+			public void onAnimationRepeat(Animation animation) {}
+
+			public void onAnimationStart(Animation animation) {}
 		}
 		
 	}

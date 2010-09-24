@@ -48,8 +48,8 @@ public class Othello extends GameActivity {
 		super.onCreate(savedInstanceState); 
 		this.setGameView(R.layout.othello_game);
 		
-		int height = 8;
-		int width = 8;
+		int height = 4;
+		int width = 4;
 		
 		g = new Game(height, width);
 		if (this.gb == null)
