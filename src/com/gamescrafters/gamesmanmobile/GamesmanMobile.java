@@ -13,6 +13,7 @@ import com.gamescrafters.Y.menu;
 import com.gamescrafters.connect4.Connect4Options;
 import com.gamescrafters.connections.ConnectionsOptions;
 import com.gamescrafters.othello.OthelloOptions;
+import com.gamescrafters.tictactoe.TicTacToeOptions;
 
 public class GamesmanMobile extends TabActivity {
 	/** Called when the activity is first created. */
@@ -47,6 +48,10 @@ public class GamesmanMobile extends TabActivity {
 					break;
 				case 3:
 					myIntent = new Intent(GamesmanMobile.this, OthelloOptions.class);
+					GamesmanMobile.this.startActivity(myIntent);
+					break;
+				case 4:
+					myIntent = new Intent(GamesmanMobile.this, TicTacToeOptions.class);
 					GamesmanMobile.this.startActivity(myIntent);
 					break;
 				}

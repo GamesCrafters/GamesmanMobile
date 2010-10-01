@@ -24,6 +24,8 @@
 <activity android:name="com.gamescrafters.Y.YInterface"></activity>
 <activity android:name="com.gamescrafters.othello.OthelloOptions"></activity>
 <activity android:name="com.gamescrafters.othello.Othello"></activity>
+<activity android:name="com.gamescrafters.tictactoe.TicTacToeOptions"></activity>
+
 </application>
 	<uses-sdk android:minSdkVersion="4" />
 
