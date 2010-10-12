@@ -1,6 +1,8 @@
 package com.gamescrafters.othello;
 
 import java.util.Stack;
+import java.util.Queue;
+import java.util.LinkedList;
 
 import com.gamescrafters.othello.GUIGameBoard;
 import com.gamescrafters.gamesmanmobile.GameActivity;
@@ -49,9 +51,9 @@ public class Othello extends GameActivity {
 		this.setGameView(R.layout.othello_game);
 		
 		int height = 4;
-		int width = 4;
+		int width = height;
 		
-		g = new Game(height, width);
+		g = new Game(height, width, this);
 		if (this.gb == null)
 			gb = new GUIGameBoard(this);
 		else
@@ -136,30 +138,44 @@ public class Othello extends GameActivity {
 	 * A class that contains the internal state of the Connect 4 game,
 	 * as well as accessor and modifier methods.
 	 */
-	class Game {
+	public class Game {
 		final static boolean BLUE_TURN = false;
 		final static boolean RED_TURN = true;
-		final static int RED = 1;
-		final static int BLUE = 2;
+		final static int BLACK = 1;
+		final static int WHITE = 2;
 		final static int EMPTY = 0;
+		
+		final static int	UP = 1<<0,
+							DOWN = 1<<1,
+							LEFT = 1<<2,
+							RIGHT = 1<<3;
+		
 
-		private int turn = BLUE; // first player, blue
-		int board[][]; 	// The internal state of the game. Either RED, BLUE, or EMPTY.
+		private int turn = BLACK; // first player,black
+		int board[][]; 	// The internal state of the game. Either BLACK, WHITE, or EMPTY.
 		int height, width;
 		boolean gameOver = false;
 		private int movesSoFar;
 		private int currentMove;
 		private Stack<int [][]> previousMoves, nextMoves; // Stacks of previousMoves and nextMoves, which is used to undo and redo moves.
+		GUIGameBoard.TileView tiles[][];
+		Othello parent;
 		
-		public Game(int height, int width) {
+		public Game(int height, int width, Othello parent) {
+			this.parent = parent;
 			this.height = height;
 			this.width = width;
 			this.board = new int[height][width];
+			this.tiles = new GUIGameBoard.TileView[height][width];
 			this.previousMoves = new Stack<int [][]>();
 			this.movesSoFar = 0;
 			this.currentMove = 0;
 			
 			this.nextMoves = new Stack<int [][]>();
+			this.board[height/2][width/2] = BLACK;
+			this.board[height/2-1][width/2] = WHITE;
+			this.board[height/2][width/2-1] = WHITE;
+			this.board[height/2-1][width/2-1] = BLACK;
 			
 		}
 		
@@ -174,13 +190,13 @@ public class Othello extends GameActivity {
 			if (this.previousMoves.isEmpty()) return;
 			this.nextMoves.push(board);
 			board = this.previousMoves.pop();
-			int[][] col = this.previousMoves.pop();
+			//int[][] col = this.previousMoves.pop();
 			// Remove the last move from the VisualValueHistory.
 			removeLastVVHNode();
 			if(g.gameOver){
 				g.gameOver = false;
 				turnTextView.setText("Turn: ");
-				turnImage.setBackgroundDrawable(g.getTurn() == BLUE ? bluePiece : redPiece);
+				//turnImage.setBackgroundDrawable(g.getTurn() == BLACK ? bluePiece : redPiece);
 				gameOverTextView.setText("");
 			}
 			this.currentMove--;
@@ -196,13 +212,141 @@ public class Othello extends GameActivity {
 		public int getTurn() {
 			return turn;
 		}
-		public void doMove(int move, boolean isRedo){
-			
+		public void doMove(int row, int column, boolean isRedo){
+			this.previousMoves.push(this.board);
+			//this.tiles[row-1][column-1].setSmallColor((turn == BLACK) ? Color.YELLOW : Color.CYAN);
+			this.tiles[row-1][column-1].setColor((turn == BLACK) ? Color.BLACK : Color.WHITE);
+			this.tiles[row-1][column-1].invalidate();
+			traverseFlip(row, column, UP | LEFT);
+			traverseFlip(row, column, UP);
+			traverseFlip(row, column, UP | RIGHT);
+			traverseFlip(row, column, LEFT);
+			traverseFlip(row, column, RIGHT);
+			traverseFlip(row, column, DOWN | LEFT);
+			traverseFlip(row, column, DOWN);
+			traverseFlip(row, column, DOWN | RIGHT);
+			this.board[row-1][column-1] = turn;
+			if(turn == BLACK)
+				turn = WHITE;
+			else
+				turn = BLACK;
+			updatePreviews();
 		}
-		public boolean isBlueTurn(){
-			return turn == BLUE;
+		public boolean isBlackTurn(){
+			return (turn == BLACK);
+		}
+
+		public void updatePreviews(){
+			for(int i = 0; i < this.width; i++){
+				for(int j = 0; j < this.height; j++){
+					this.tiles[i][j].setSmallColor(previewColor(i+1, j+1));
+					this.tiles[i][j].invalidate();
+				}
+			}
+		}
+		public int previewColor(int row, int column){
+			if(this.moveValid(row, column)){
+				if(this.parent.isShowValues()){
+					
+				}else{
+					return Color.MAGENTA;
+				}
+			}
+			return Color.TRANSPARENT;
+		}
+		public boolean moveValid(int row, int column) {
+			if(this.board[row-1][column-1] == EMPTY){
+				if(		!checkTraverse(row, column, UP | LEFT) &&
+						!checkTraverse(row, column, UP) &&
+						!checkTraverse(row, column, UP | RIGHT) &&
+						!checkTraverse(row, column, LEFT) &&
+						!checkTraverse(row, column, RIGHT) &&
+						!checkTraverse(row, column, DOWN | LEFT) &&
+						!checkTraverse(row, column, DOWN) &&
+						!checkTraverse(row, column, DOWN | RIGHT))
+					return false;			
+
+				return true;
+			}
+			return false;
+		}
+		
+		private void traverseFlip(int row, int column, int direction){
+			flipTiles(traverse(true, row, column, direction), direction);
+		}
+		private void flipTiles(Queue<Integer> toFlip, int direction){
+			Integer currentX, currentY;
+			int aniSpeed = 500;
+			while((currentX = toFlip.poll()) != null && (currentY = toFlip.poll()) != null){
+				if(turn == BLACK){
+					this.board[currentX][currentY] = BLACK;
+				}else{
+					this.board[currentX][currentY] = WHITE;
+				}
+				if((direction & UP) != 0){
+					if((direction & LEFT) != 0)
+						this.tiles[currentX][currentY].flipDiagonal1(aniSpeed);						
+					else if((direction & RIGHT) != 0)
+						this.tiles[currentX][currentY].flipDiagonal2(aniSpeed);
+					else
+						this.tiles[currentX][currentY].flipVertical(aniSpeed);
+				}else if((direction & DOWN) != 0){
+					if((direction & LEFT) != 0)
+						this.tiles[currentX][currentY].flipDiagonal2(aniSpeed);						
+					else if((direction & RIGHT) != 0)
+						this.tiles[currentX][currentY].flipDiagonal1(aniSpeed);
+					else
+						this.tiles[currentX][currentY].flipVertical(aniSpeed);
+				}else if((direction & LEFT) != 0 || ((direction & RIGHT) != 0)){
+					this.tiles[currentX][currentY].flipHorizontal(aniSpeed);
+				}
+			}
+		}
+		
+		private boolean checkTraverse(int row, int column, int direction){
+			if(traverse(false, row, column, direction).isEmpty()){
+				return false;
+			}
+			return true;
+		}
+		private Queue<Integer> traverse(boolean flip, int row, int column, int direction){
+			Queue<Integer> toFlip=new LinkedList<Integer>();
+			int currentRow = row-1, currentColumn = column-1;
+			while(true){
+				if((direction & UP) != 0)
+					currentRow--;
+				if((direction & DOWN) != 0)
+					currentRow++;
+				if((direction & LEFT) != 0)
+					currentColumn--;
+				if((direction & RIGHT) != 0)
+					currentColumn++;
+				if(	(currentColumn < 0 || currentRow < 0) ||
+					(currentColumn >= this.width || currentRow >= this.height) ||
+					board[currentRow][currentColumn] == 0){
+					toFlip.clear();
+					return toFlip;
+				}
+				if(this.turn == BLACK){
+					if(board[currentRow][currentColumn] == BLACK){
+						break;
+					}else if(board[currentRow][currentColumn] == WHITE){
+						toFlip.add(currentRow);
+						toFlip.add(currentColumn);
+						continue;
+					}
+				}else if(this.turn == WHITE){
+					if(board[currentRow][currentColumn] == WHITE){
+						break;
+					}else if(board[currentRow][currentColumn] == BLACK){						
+						toFlip.add(currentRow);
+						toFlip.add(currentColumn);
+						continue;
+					}
+				}
+			}
+			
+			return toFlip;
 		}
 	}
-	
-	
 }
