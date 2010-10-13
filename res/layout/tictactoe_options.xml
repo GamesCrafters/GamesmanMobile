@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_gravity="top|fill_vertical" android:orientation="vertical"
-	android:layout_width="fill_parent" android:tag="ttto" android:id="@+id/c4_LinearLayout03"
+	android:layout_width="fill_parent" android:tag="ttto" android:id="@+id/ttt_LinearLayout03"
 	android:layout_height="fill_parent" android:background="@color/bg_blue">
 	<TextView android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:textSize="12pt"
-		android:id="@+id/c4_OptionsTitle" android:text="Tic Tac Toe Options"
+		android:id="@+id/ttt_OptionsTitle" android:text="Tic Tac Toe Options"
 		android:layout_gravity="center" android:layout_marginTop="5dip">
 	</TextView>
 
 	<LinearLayout android:layout_height="wrap_content"
-		android:id="@+id/c4_Board_Dimensions" android:layout_width="fill_parent">
+		android:id="@+id/ttt_Board_Dimensions" android:layout_width="fill_parent">
 		<LinearLayout android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:id="@+id/c4_PickColumns"
+			android:layout_height="wrap_content" android:id="@+id/ttt_PickColumns"
 			android:orientation="vertical" android:gravity="center_vertical|center_horizontal"
 			android:layout_marginLeft="10dip">
-			<TextView android:id="@+id/c4_TextView03"
+			<TextView android:id="@+id/ttt_TextView03"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:text="Number of Columns"></TextView>
-			<Spinner android:layout_height="wrap_content" android:id="@+id/c4_select_columns"
+			<Spinner android:layout_height="wrap_content" android:id="@+id/ttt_select_columns"
 				android:drawSelectorOnTop="true" android:prompt="@string/column_prompt"
 				android:layout_width="wrap_content"></Spinner>
 
 
 		</LinearLayout>
 		<LinearLayout android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:id="@+id/c4_PickRows"
+			android:layout_height="wrap_content" android:id="@+id/ttt_PickRows"
 			android:orientation="vertical" android:gravity="center_vertical|center_horizontal"
 			android:layout_gravity="right" android:layout_marginLeft="35dip">
-			<TextView android:id="@+id/c4_TextView02"
+			<TextView android:id="@+id/ttt_TextView02"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:text="Number of Rows"></TextView>
 			<Spinner android:layout_height="wrap_content" android:prompt="@string/row_prompt"
-				android:id="@+id/c4_select_rows" android:layout_width="wrap_content"></Spinner>
+				android:id="@+id/ttt_select_rows" android:layout_width="wrap_content"></Spinner>
 
 
 
@@ -44,20 +44,20 @@
 	</LinearLayout>
 
 	<LinearLayout android:layout_height="wrap_content"
-		android:orientation="horizontal" android:id="@+id/c4_PickPlayer1"
+		android:orientation="horizontal" android:id="@+id/ttt_PickPlayer1"
 		android:layout_width="fill_parent">
 		<RadioGroup android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="horizontal"
-			android:id="@+id/c4_group1">
-			<TextView android:id="@+id/c4_TextView01"
+			android:id="@+id/ttt_group1">
+			<TextView android:id="@+id/ttt_TextView01"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:text="Player 1:           ">
 			</TextView>
-			<RadioButton android:id="@+id/c4_RadioButtonHuman1"
+			<RadioButton android:id="@+id/ttt_RadioButtonHuman1"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:clickable="true" android:text="Human" android:checked="true">
 			</RadioButton>
-			<RadioButton android:id="@+id/c4_RadioButtonComputer1"
+			<RadioButton android:id="@+id/ttt_RadioButtonComputer1"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:text="Computer" android:clickable="true">
 			</RadioButton>
@@ -65,30 +65,30 @@
 	</LinearLayout>
 
 	<LinearLayout android:layout_height="wrap_content"
-		android:orientation="horizontal" android:id="@+id/c4_PickPlayer2"
+		android:orientation="horizontal" android:id="@+id/ttt_PickPlayer2"
 		android:layout_width="fill_parent">
 		<RadioGroup android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="horizontal"
-			android:id="@+id/c4_group2">
-			<TextView android:id="@+id/c4_TextView01"
+			android:id="@+id/ttt_group2">
+			<TextView android:id="@+id/ttt_TextView01"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:text="Player 2:           ">
 			</TextView>
-			<RadioButton android:id="@+id/c4_RadioButtonHuman2"
+			<RadioButton android:id="@+id/ttt_RadioButtonHuman2"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:clickable="true" android:text="Human" android:checked="true"></RadioButton>
-			<RadioButton android:id="@+id/c4_RadioButtonComputer2"
+			<RadioButton android:id="@+id/ttt_RadioButtonComputer2"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:text="Computer" android:clickable="true">
 			</RadioButton>
 		</RadioGroup>
 	</LinearLayout>
-	<LinearLayout android:layout_height="wrap_content" android:id="@+id/c4_Select_Delay" android:layout_width="wrap_content" android:gravity="center_vertical|center_horizontal" android:orientation="horizontal">
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/c4_TextView01" android:text="Time Delay"></TextView>
-<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/c4_select_time" android:layout_marginLeft="10dip"></Spinner>
+	<LinearLayout android:layout_height="wrap_content" android:id="@+id/ttt_Select_Delay" android:layout_width="wrap_content" android:gravity="center_vertical|center_horizontal" android:orientation="horizontal">
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/ttt_TextView01" android:text="Time Delay"></TextView>
+<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/ttt_select_time" android:layout_marginLeft="10dip"></Spinner>
 </LinearLayout><Button android:layout_height="wrap_content" android:clickable="true"
 		android:layout_width="wrap_content" android:text="Play Tic Tac Toe"
-		android:id="@+id/c4_PlayConnect4Button" android:layout_gravity="center_horizontal"></Button>
+		android:id="@+id/ttt_PlayConnect4Button" android:layout_gravity="center_horizontal"></Button>
 
 		<!--  Need to change above line to actually connect to TicTacToe game. -->
 

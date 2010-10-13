@@ -25,6 +25,7 @@
 <activity android:name="com.gamescrafters.othello.OthelloOptions"></activity>
 <activity android:name="com.gamescrafters.othello.Othello"></activity>
 <activity android:name="com.gamescrafters.tictactoe.TicTacToeOptions"></activity>
+<activity android:name="com.gamescrafters.tictactoe.TicTacToe"></activity>
 
 </application>
 	<uses-sdk android:minSdkVersion="4" />
