@@ -5,6 +5,7 @@ import java.util.Queue;
 import java.util.LinkedList;
 
 import com.gamescrafters.othello.GUIGameBoard;
+import com.gamescrafters.connect4.Connect4;
 import com.gamescrafters.gamesmanmobile.GameActivity;
 import com.gamescrafters.gamesmanmobile.MoveValue;
 import com.gamescrafters.gamesmanmobile.R;
@@ -44,14 +45,15 @@ public class Othello extends GameActivity {
 	MoveValue[] values = null;
 	String previousValue = "win";
 	int delay;
+	int height,width;
 	
 
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState); 
 		this.setGameView(R.layout.othello_game);
 		
-		int height = 4;
-		int width = height;
+		height = 4;
+		width = height;
 		
 		g = new Game(height, width, this);
 		if (this.gb == null)
@@ -94,8 +96,34 @@ public class Othello extends GameActivity {
 
 	@Override
 	public String getBoardString() {
-		// TODO Auto-generated method stub
-		return null;
+		int[][] boardRep = g.board;
+		StringBuffer board = new StringBuffer();
+		for(int i = 0; i < height; i++){
+			for(int j = 0; j < width; j++){
+				int elem = boardRep[i][j];
+				switch(elem){
+				case Game.BLACK:
+					board.append("O");
+					break;
+				case Game.WHITE:
+					board.append("X");
+					break;
+				default:
+					board.append("%20");
+					break;
+				}
+			}
+		}
+		board.append(";width=");
+		board.append(width);
+		board.append(";height=");
+		board.append(height);
+		
+		// Why are these here?
+		//board.append(";");
+		//board.append("pieces=4");
+		
+		return board.toString();
 	}
 
 	@Override
@@ -105,21 +133,19 @@ public class Othello extends GameActivity {
 
 	@Override
 	public void newGame() {
-		// TODO Auto-generated method stub
-
+		g = new Game(this.height, this.width, this);
+		gb.reset(g);
+		gb.initBoard();
 	}
 
 	@Override
 	public void redoMove() {
-		// TODO Auto-generated method stub
-
+		g.redoMove();
 	}
 
 	@Override
 	public void undoMove() {
 		g.undoMove();
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -179,6 +205,17 @@ public class Othello extends GameActivity {
 			
 		}
 		
+		public void redoMove() {
+			if(this.nextMoves.isEmpty()) return;
+			this.previousMoves.push(this.copyBoard());
+			board = this.nextMoves.pop();
+			this.currentMove++;
+			hSlider.updateProgress(currentMove, movesSoFar);
+			swapMove();
+			drawCurrentBoard();
+			
+		}
+
 		int coordToMove(int row, int col){
 			return ((row - 1) * this.width + col - 1);
 		}
@@ -188,7 +225,7 @@ public class Othello extends GameActivity {
 		 */
 		public void undoMove() {
 			if (this.previousMoves.isEmpty()) return;
-			this.nextMoves.push(board);
+			this.nextMoves.push(copyBoard());
 			board = this.previousMoves.pop();
 			//int[][] col = this.previousMoves.pop();
 			// Remove the last move from the VisualValueHistory.
@@ -201,6 +238,18 @@ public class Othello extends GameActivity {
 			}
 			this.currentMove--;
 			hSlider.updateProgress(currentMove, movesSoFar);
+			swapMove();
+			drawCurrentBoard();
+		}
+		public void drawCurrentBoard(){
+			for(int i = 0; i < this.width; i++){
+				for(int j = 0; j < this.height; j++){
+					this.tiles[i][j].setColor(
+							(board[i][j] == EMPTY) ? Color.TRANSPARENT : ((board[i][j] == BLACK) ? Color.BLACK : Color.WHITE));
+					this.tiles[i][j].invalidate();
+				}
+			}
+			updatePreviews();
 		}
 		public int getMovesSoFar() {
 			return movesSoFar;
@@ -212,9 +261,24 @@ public class Othello extends GameActivity {
 		public int getTurn() {
 			return turn;
 		}
+		public int[][] copyBoard(){
+			int[][] retval = new int[this.height][this.width];
+			for(int i = 0; i < this.height; i++){
+				for(int j = 0; j < this.width; j++){
+					retval[i][j] = this.board[i][j];
+				}
+			}
+			return retval;
+		}
+		private void swapMove(){
+			if(turn == BLACK)
+				turn = WHITE;
+			else
+				turn = BLACK;
+		}
 		public void doMove(int row, int column, boolean isRedo){
-			this.previousMoves.push(this.board);
-			//this.tiles[row-1][column-1].setSmallColor((turn == BLACK) ? Color.YELLOW : Color.CYAN);
+			this.previousMoves.push(copyBoard());
+			this.nextMoves.empty();
 			this.tiles[row-1][column-1].setColor((turn == BLACK) ? Color.BLACK : Color.WHITE);
 			this.tiles[row-1][column-1].invalidate();
 			traverseFlip(row, column, UP | LEFT);
@@ -226,10 +290,10 @@ public class Othello extends GameActivity {
 			traverseFlip(row, column, DOWN);
 			traverseFlip(row, column, DOWN | RIGHT);
 			this.board[row-1][column-1] = turn;
-			if(turn == BLACK)
-				turn = WHITE;
-			else
-				turn = BLACK;
+			swapMove();
+			this.currentMove++;
+			this.movesSoFar = this.currentMove;
+			hSlider.updateProgress(currentMove, movesSoFar);
 			updatePreviews();
 		}
 		public boolean isBlackTurn(){
