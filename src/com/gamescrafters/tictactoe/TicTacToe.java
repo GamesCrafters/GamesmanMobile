@@ -40,8 +40,8 @@ public class TicTacToe extends GameActivity {
 		Intent myIntent = GameIntent = getIntent();
 		isPlayer1Computer = myIntent.getBooleanExtra("isPlayer1Computer", false);
 		isPlayer2Computer = myIntent.getBooleanExtra("isPlayer2Computer", false);
-		int height = myIntent.getIntExtra("numRows", 4);
-		int width = myIntent.getIntExtra("numCols", 6);
+		int height = myIntent.getIntExtra("numRows", 3);
+		int width = myIntent.getIntExtra("numCols", 3);
 		delay = myIntent.getIntExtra("numDelay", 1);
 
 		initResources();
@@ -109,8 +109,9 @@ public class TicTacToe extends GameActivity {
 	 */
 	private void initResources(){
 		Resources res = getResources();
-		bluePiece = res.getDrawable(R.drawable.c4_bluepiece);
-		redPiece = res.getDrawable(R.drawable.c4_redpiece);
+		//bluePiece = res.getDrawable(R.drawable.c4_bluepiece);
+		bluePiece = res.getDrawable(R.drawable.ttt_bluex);
+		redPiece = res.getDrawable(R.drawable.ttt_circlered);
 
 		turnTextView = (TextView) findViewById(R.id.c4_turn); 
 		turnImage = (ImageButton) findViewById(R.id.c4_turnImage);

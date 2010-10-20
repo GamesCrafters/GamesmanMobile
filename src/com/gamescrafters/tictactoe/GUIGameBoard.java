@@ -25,8 +25,10 @@ public class GUIGameBoard {
 	
 	int tile = R.drawable.c4_tile;
 	int toptile = R.drawable.c4_toptile;
-	int blue_tile = R.drawable.c4_blue_tile;
-	int red_tile = R.drawable.c4_red_tile;
+	//int blue_tile = R.drawable.c4_blue_tile;
+	//int red_tile = R.drawable.c4_red_tile;
+	int blue_tile = R.drawable.ttt_bluex;
+	int red_tile = R.drawable.ttt_circlered;
 	int top_tile_ids[] = {R.drawable.c4_toptile, R.drawable.c4_toptile_green, 
 			R.drawable.c4_toptile_yellow, R.drawable.c4_toptile_red,
 			R.drawable.c4_blue_top, R.drawable.c4_blue_top_green,
