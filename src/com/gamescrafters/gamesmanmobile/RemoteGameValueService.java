@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -81,4 +82,28 @@ public class RemoteGameValueService  {
         }    
         return str;        
     }
+	
+	/**
+	 * Check for database connectivity.
+	 */
+	public static boolean isInternetAvailable()
+	{
+		try {
+			URL url = new URL("http://nyc.cs.berkeley.edu");
+			HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
+			urlc.setRequestProperty("User-Agent", "GamesmanMobile");
+			urlc.setRequestProperty("Connection", "close");
+			urlc.setConnectTimeout(1000 * 5);
+			urlc.connect();
+			if (urlc.getResponseCode() == 200)
+			{
+				return true;
+			}
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		return false;
+	}
 }

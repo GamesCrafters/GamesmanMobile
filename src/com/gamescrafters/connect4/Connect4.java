@@ -2,6 +2,8 @@ package com.gamescrafters.connect4;
 
 import java.util.Stack;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import com.gamescrafters.gamesmanmobile.GameActivity;
 import com.gamescrafters.gamesmanmobile.MoveValue;
 import com.gamescrafters.gamesmanmobile.R;
+import com.gamescrafters.gamesmanmobile.RemoteGameValueService;
 
 /**
  * The Connect4 game activity handles the setup of the GUI and internal state of the Connect 4 game.
@@ -30,12 +33,13 @@ public class Connect4 extends GameActivity {
 	private ImageButton turnImage;
 	private Drawable bluePiece, redPiece;
 	private CompPlays compPlaying = new CompPlays();
-
+	
 	Game g = null;
 	GUIGameBoard gb;
 	MoveValue[] values = null;
 	String previousValue = "win";
 	int delay;
+	AlertDialog.Builder builder;
 	Stack<Integer> previousMoves, nextMoves; // Stacks of previousMoves and nextMoves, which is used to undo and redo moves.
 
 
@@ -52,11 +56,34 @@ public class Connect4 extends GameActivity {
 		int width = myIntent.getIntExtra("numCols", 6);
 		delay = myIntent.getIntExtra("numDelay", 1);
 
+		/*
+		 * Initialize dialog boxes and popups here
+		 */
+		builder = new AlertDialog.Builder(this);
+		builder.setCancelable(true);
+		builder.setTitle("Warning!");
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which)
+			{
+				dialog.dismiss();
+			}
+				});
+		
 		initResources();
-
-		setBoard(width, height);
-
-
+		
+		if (RemoteGameValueService.isInternetAvailable())
+		{
+			setBoard(width, height);
+		} else {
+			playWithoutInternet(width, height);
+			/*
+			 * Play game without database. If any of the players is a computer,
+			 * random moves will be chosen on the turns.
+			 */
+			AlertDialog alert = builder.create();
+			alert.setMessage(getTitle() + " is not currently connected to a database. Move and remoteness values may not be available.");
+			alert.show();
+		}
 	}
 	
 	class CompPlays extends Handler {
@@ -125,6 +152,26 @@ public class Connect4 extends GameActivity {
 		remoteTextView = (TextView) findViewById(R.id.c4_remoteness);
 		gameOverTextView = (TextView) findViewById(R.id.c4_gameOver);	
 	}
+	
+	/**
+	 * Allows user to play Connect4 without Internet.
+	 * No remoteness or game values are available.
+	 * Computers play randomly. If Internet connection comes
+	 * back on, values and remoteness will automatically become
+	 * available and computer players will no longer play random.
+	 */
+	private void playWithoutInternet(int width, int height)
+	{
+		g = new Game(height, width);
+		if (gb == null)
+			gb = new GUIGameBoard(this);
+		else gb.reset(g);
+		gb.initBoard();
+		
+		turnTextView.setText("Turn:" );
+		turnImage.setBackgroundDrawable(bluePiece);
+		turnImage.setEnabled(false);
+	}
 
 	/**
 	 * Initializes the internal state and GUI of the Connect 4 board. 
@@ -156,15 +203,17 @@ public class Connect4 extends GameActivity {
 			clearVVH();
 			updateVVH(previousValue, remoteness, g.gameOver, g.isBlueTurn(), g.isTie());
 		}
-	//	g.updateVVH();
-
 		
 		//computer vs. computer
-		if (isPlayer1Computer && isPlayer2Computer) {
+		if (isNetworkAvailable)
+		{
+			if (isPlayer1Computer && isPlayer2Computer) {
 				updateUI();
-		} else if (isPlayer1Computer) {
-			doComputerMove();
+			} else if (isPlayer1Computer) {
+				doComputerMove();
+			}
 		}
+		//g.updateVVH();
 	} 
 
 	@Override
