@@ -205,6 +205,46 @@ public class Othello extends GameActivity {
 			
 		}
 		
+		public int getTurn() {
+			return turn;
+		}
+
+		public int getMovesSoFar() {
+			return movesSoFar;
+		}
+
+		public int getCurrentMove() {
+			return currentMove;
+		}
+
+		public boolean isBlackTurn(){
+			return (turn == BLACK);
+		}
+
+		public boolean moveValid(int row, int column) {
+			if(this.board[row-1][column-1] == EMPTY){
+				if(		!checkTraverse(row, column, UP | LEFT) &&
+						!checkTraverse(row, column, UP) &&
+						!checkTraverse(row, column, UP | RIGHT) &&
+						!checkTraverse(row, column, LEFT) &&
+						!checkTraverse(row, column, RIGHT) &&
+						!checkTraverse(row, column, DOWN | LEFT) &&
+						!checkTraverse(row, column, DOWN) &&
+						!checkTraverse(row, column, DOWN | RIGHT))
+					return false;			
+		
+				return true;
+			}
+			return false;
+		}
+
+		private void swapMove(){
+			if(turn == BLACK)
+				turn = WHITE;
+			else
+				turn = BLACK;
+		}
+
 		public void redoMove() {
 			if(this.nextMoves.isEmpty()) return;
 			this.previousMoves.push(this.copyBoard());
@@ -216,10 +256,6 @@ public class Othello extends GameActivity {
 			
 		}
 
-		int coordToMove(int row, int col){
-			return ((row - 1) * this.width + col - 1);
-		}
-		
 		/**
 		 * Undoes a move. If no previous moves, does nothing.
 		 */
@@ -233,7 +269,6 @@ public class Othello extends GameActivity {
 			if(g.gameOver){
 				g.gameOver = false;
 				turnTextView.setText("Turn: ");
-				//turnImage.setBackgroundDrawable(g.getTurn() == BLACK ? bluePiece : redPiece);
 				gameOverTextView.setText("");
 			}
 			this.currentMove--;
@@ -241,41 +276,7 @@ public class Othello extends GameActivity {
 			swapMove();
 			drawCurrentBoard();
 		}
-		public void drawCurrentBoard(){
-			for(int i = 0; i < this.width; i++){
-				for(int j = 0; j < this.height; j++){
-					this.tiles[i][j].setColor(
-							(board[i][j] == EMPTY) ? Color.TRANSPARENT : ((board[i][j] == BLACK) ? Color.BLACK : Color.WHITE));
-					this.tiles[i][j].invalidate();
-				}
-			}
-			updatePreviews();
-		}
-		public int getMovesSoFar() {
-			return movesSoFar;
-		}
 
-		public int getCurrentMove() {
-			return currentMove;
-		}
-		public int getTurn() {
-			return turn;
-		}
-		public int[][] copyBoard(){
-			int[][] retval = new int[this.height][this.width];
-			for(int i = 0; i < this.height; i++){
-				for(int j = 0; j < this.width; j++){
-					retval[i][j] = this.board[i][j];
-				}
-			}
-			return retval;
-		}
-		private void swapMove(){
-			if(turn == BLACK)
-				turn = WHITE;
-			else
-				turn = BLACK;
-		}
 		public void doMove(int row, int column, boolean isRedo){
 			this.previousMoves.push(copyBoard());
 			this.nextMoves.empty();
@@ -296,8 +297,26 @@ public class Othello extends GameActivity {
 			hSlider.updateProgress(currentMove, movesSoFar);
 			updatePreviews();
 		}
-		public boolean isBlackTurn(){
-			return (turn == BLACK);
+
+		public int[][] copyBoard(){
+			int[][] retval = new int[this.height][this.width];
+			for(int i = 0; i < this.height; i++){
+				for(int j = 0; j < this.width; j++){
+					retval[i][j] = this.board[i][j];
+				}
+			}
+			return retval;
+		}
+
+		public void drawCurrentBoard(){
+			for(int i = 0; i < this.width; i++){
+				for(int j = 0; j < this.height; j++){
+					this.tiles[i][j].setColor((board[i][j] == EMPTY) ? Color.TRANSPARENT : 
+						((board[i][j] == BLACK) ? Color.BLACK : Color.WHITE));
+					this.tiles[i][j].invalidate();
+				}
+			}
+			updatePreviews();
 		}
 
 		public void updatePreviews(){
@@ -308,36 +327,42 @@ public class Othello extends GameActivity {
 				}
 			}
 		}
+
+		/**
+		 * Gets the color of the specified empty space, MAGENTA if show volues are not enabled, and RED/YELLOW/RED otherwise. 
+		 * @param row The specified row
+		 * @param column The specified column
+		 * @return The appropriate color for the preview dot.
+		 */
 		public int previewColor(int row, int column){
 			if(this.moveValid(row, column)){
 				if(this.parent.isShowValues()){
-					
+					// TODO: server code, get move values if the user wants.
 				}else{
 					return Color.MAGENTA;
 				}
 			}
 			return Color.TRANSPARENT;
 		}
-		public boolean moveValid(int row, int column) {
-			if(this.board[row-1][column-1] == EMPTY){
-				if(		!checkTraverse(row, column, UP | LEFT) &&
-						!checkTraverse(row, column, UP) &&
-						!checkTraverse(row, column, UP | RIGHT) &&
-						!checkTraverse(row, column, LEFT) &&
-						!checkTraverse(row, column, RIGHT) &&
-						!checkTraverse(row, column, DOWN | LEFT) &&
-						!checkTraverse(row, column, DOWN) &&
-						!checkTraverse(row, column, DOWN | RIGHT))
-					return false;			
 
-				return true;
-			}
-			return false;
-		}
+//		int coordToMove(int row, int col){
+//			return ((row - 1) * this.width + col - 1);
+//		}
 		
+		/**
+		 * Flip tiles in the appropriate direction after traversing a row.
+		 * @param row The current row of the new tile 
+		 * @param column The current column of the new tile
+		 * @param direction The direction of traversal (Determines flip direction)
+		 */
 		private void traverseFlip(int row, int column, int direction){
-			flipTiles(traverse(true, row, column, direction), direction);
+			flipTiles(traverse(row, column, direction), direction);
 		}
+		/**
+		 * Flips the tiles discovered during the traversal
+		 * @param toFlip The queue of coordinates x,y,x,y,x,y,... to flip
+		 * @param direction The direction of traversal (Determines flip direction)
+		 */
 		private void flipTiles(Queue<Integer> toFlip, int direction){
 			Integer currentX, currentY;
 			int aniSpeed = 500;
@@ -366,14 +391,29 @@ public class Othello extends GameActivity {
 				}
 			}
 		}
-		
+
+		/**
+		 * Simply checks if there are any tiles to flip in the specified direction.
+		 * @param row The current row of the new tile
+		 * @param column The current column of the new tile
+		 * @param direction The direction of traversal
+		 * @return whether or not there are any tiles to flip
+		 */
 		private boolean checkTraverse(int row, int column, int direction){
-			if(traverse(false, row, column, direction).isEmpty()){
+			if(traverse(row, column, direction).isEmpty()){
 				return false;
 			}
 			return true;
 		}
-		private Queue<Integer> traverse(boolean flip, int row, int column, int direction){
+		
+		/**
+		 * Goes through from a new tile in a certain direction to find which tiles to flip.
+		 * @param row The row of the new tile
+		 * @param column The column of the new tile
+		 * @param direction The direction of traversal (there are eight)
+		 * @return A Queue of tile coordinates to be flipped.
+		 */
+		private Queue<Integer> traverse(int row, int column, int direction){
 			Queue<Integer> toFlip=new LinkedList<Integer>();
 			int currentRow = row-1, currentColumn = column-1;
 			while(true){
