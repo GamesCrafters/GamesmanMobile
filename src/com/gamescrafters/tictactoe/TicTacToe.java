@@ -83,7 +83,7 @@ public class TicTacToe extends GameActivity {
 		isShowPrediction = old.isShowPrediction;
 		moveValues = old.moveValues;
 		for (int m : old.previousMoves) {
-			g.doMove(m, false);
+			g.doMove(m, 0, false);
 		}
 		nextMoves = old.nextMoves;
 		/*isPlayer1Computer = old.isPlayer1Computer;
@@ -216,7 +216,7 @@ public class TicTacToe extends GameActivity {
 	 */
 	@Override
 	public void doMove(String move) {
-		g.doMove(Integer.parseInt(move), false);
+		g.doMove(Integer.parseInt(move), 0, false);
 	}	
 
 	/**
@@ -257,7 +257,7 @@ public class TicTacToe extends GameActivity {
 	private void redoHelper() {
 		if (!nextMoves.isEmpty()) {
 			int col = nextMoves.pop();
-			g.doMove(col, true);
+			g.doMove(col, 0, true);
 		}
 	}
 
@@ -356,9 +356,10 @@ public class TicTacToe extends GameActivity {
 		 * Checks if the move (column number) is valid, and performs the move if it is.
 		 * Assume nextMoves stack is not empty.
 		 * @param move The column number of the piece to drop.
+		 * @param row 
 		 * @param isRedo Boolean if move is a redo move (true) or not (false).
 		 */
-		public void doMove(int move, boolean isRedo) {
+		public void doMove(int move, int row, boolean isRedo) {
 			if (!(isFull(move) || gameOver)) {
 				updateGameState(move); 
 				switchTurn();

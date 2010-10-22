@@ -37,7 +37,7 @@ public class GUIGameBoard {
 			R.drawable.c4_red_top_yellow, R.drawable.c4_red_top_red};; // {T,G,Y,R, BT,BG,BY,BR, RT,RG,RY,RR}
 
 	public GUIGameBoard (TicTacToe a) {
-		this.table = (TableLayout) a.findViewById(R.id.c4_gametable);
+		this.table = (TableLayout) a.findViewById(R.id.ttt_gametable);
 		this.a = a;
 		this.g = a.g;
 		width = g.width;
@@ -70,18 +70,20 @@ public class GUIGameBoard {
 	public void initBoard() {
 		int max_height = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 270 : 200;
 		int new_height = max_height / height;
-		for (int row=height-1; row>=0; row--) {
+		for (int row = height-1; row>=0; row--) {
 			TableRow tr = new TableRow(a);
 			tr.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			for (int col=0; col<width; col++) {
 				ImageView iv = new ImageView(a);
-				iv.setImageResource(row==height-1 ? toptile : tile);
-				iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-				iv.setAdjustViewBounds(true);
-				iv.setMaxHeight(new_height);
+				// iv.setImageResource(row==height-1 ? toptile : tile);
+				//iv.setImageResource(R.drawable.ttt_bluex);
+				//iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+				//iv.setAdjustViewBounds(true);
+				//iv.setMaxHeight(new_height);
+				//iv.setMaxWidth (new_height);
 				iv.setId(getID(row, col));
-				iv.setOnClickListener(new ColumnClickListener(col));
-				tr.addView(iv);
+				iv.setOnClickListener(new PieceClickListener(col, row));
+				tr.addView(iv,new_height,new_height);
 			}
 			table.addView(tr);
 		}
@@ -117,7 +119,7 @@ public class GUIGameBoard {
 		if (piece == TicTacToe.Game.RED) i+=8;
 		else if (piece == TicTacToe.Game.BLUE) i+=4;
 
-		((ImageView) table.findViewById(getID(height-1,column))).setImageResource(top_tile_ids[i]);
+		//((ImageView) table.findViewById(getID(height-1,column))).setImageResource(top_tile_ids[i]);
 	}
 
 	/**
@@ -143,23 +145,25 @@ public class GUIGameBoard {
 	 * An OnClickListener that is attached to the tile image elements.
 	 * Calls doMove (or computerMove) on a click.
 	 */
-	class ColumnClickListener implements View.OnClickListener {
+	class PieceClickListener implements View.OnClickListener {
 		int column;
-
-		public ColumnClickListener(int col_num) {
+		int row;
+		
+		public PieceClickListener(int col_num, int row_num) {
 			column = col_num;
+			row = row_num;
 		}
 
 		public void onClick(View v) {
 			if (!(a.isPlayer1Computer && a.isPlayer2Computer)) {
 				if (!g.gameOver && g.isBlueTurn()){
-					g.doMove(column, false);
+					g.doMove(column, row, false);
 					//if game is still not over, and it's a computer's turn, computer moves
 					if (!g.gameOver && a.isPlayer2Computer) {
 						a.doComputerMove();
 					}
 				} else {
-					g.doMove(column, false);
+					g.doMove(column, row, false);
 					if (!g.gameOver && a.isPlayer1Computer) {
 						a.doComputerMove();
 					}

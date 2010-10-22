@@ -8,15 +8,13 @@
 		android:layout_height="wrap_content" android:gravity="center_horizontal"
 		android:text="Tic Tac Toe" android:textColor="@color/solid_yellow"
 		android:textSize="30dip" />
-	<TableLayout android:id="@+id/c4_gametable"
-		android:layout_width="fill_parent" android:shrinkColumns="*"
-		android:paddingTop="5dip" android:layout_height="275dip"
+	<TableLayout android:id="@+id/ttt_gametable"
+		android:shrinkColumns="*"
+		android:layout_height="275dip"
 		android:layout_centerHorizontal="true" android:layout_centerVertical="true"
-		android:gravity="center_vertical|center_horizontal">
+		android:gravity="center_vertical|center_horizontal" android:background="@drawable/ttt_board" android:layout_width="275dip" android:layout_gravity="center">	
+    </TableLayout>
 
-
-
-	</TableLayout>
 	<RelativeLayout android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:id="@+id/c4_GameOverAndTurn"
 		android:paddingTop="5dip">

@@ -12,10 +12,6 @@
 		android:layout_height="275dip"
 		android:layout_centerHorizontal="true" android:layout_centerVertical="true"
 		android:gravity="center_vertical|center_horizontal" android:background="@drawable/oth_felt" android:layout_width="275dip" android:layout_gravity="center">
-
-
-
-	
 </TableLayout>
 	<RelativeLayout android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:id="@+id/oth_GameOverAndTurn"
