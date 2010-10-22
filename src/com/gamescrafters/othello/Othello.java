@@ -54,7 +54,7 @@ public class Othello extends GameActivity {
 		this.setGameView(R.layout.othello_game);
 		
 		// Crashes...
-		// this.isPlayer2Computer = true;
+		this.isPlayer2Computer = true;
 		
 		height = 4;
 		width = height;
@@ -94,52 +94,59 @@ public class Othello extends GameActivity {
 	
 	@Override
 	public void doMove(String move) {
-		// TODO Auto-generated method stub
-
+		if(!move.equals("P")){
+			int col = move.charAt(0) - 'a';
+			int row = move.charAt(1) - '1';
+			g.doMove((this.height - row), col+1, false);
+		}else{
+			g.swapMove();
+		}
 	}
 	
 	@Override
 	public void doComputerMove() {
 		MoveValue values[] = getNextMoveValues();
-		
-		MoveValue bestMove = values[0];
-		Random gen = new Random();
-		for (MoveValue val : values) {
-			String bestMoveValue = bestMove.getValue();
-			String valValue = val.getValue();
-			int valRemoteness = val.getRemoteness();
-			int bestMoveRemoteness = bestMove.getRemoteness();
-			if (valValue.equals("win")) {
-				if (((bestMoveValue.equals("win")) && 
-						(valRemoteness < bestMoveRemoteness))
-						|| (!bestMoveValue.equals("win"))) {
+		if(values.length > 0){
+			
+			MoveValue bestMove = values[0];
+			Random gen = new Random();
+			for (MoveValue val : values) {
+				String bestMoveValue = bestMove.getValue();
+				String valValue = val.getValue();
+				int valRemoteness = val.getRemoteness();
+				int bestMoveRemoteness = bestMove.getRemoteness();
+				if (valValue.equals("win")) {
+					if (((bestMoveValue.equals("win")) && 
+							(valRemoteness < bestMoveRemoteness))
+							|| (!bestMoveValue.equals("win"))) {
+						bestMove = val;
+					} else if (bestMoveValue.equals("win") && (valRemoteness == bestMoveRemoteness)) {
+						double randomnum = gen.nextDouble();
+						if (randomnum >= 0.5) {
+							bestMove = val;
+						}
+					}
+				} else if (valValue.equals("tie")) {
+					if ((bestMoveValue.equals("tie")) && (valRemoteness > bestMoveRemoteness)
+							|| (bestMoveValue.equals("lose"))) {
+						bestMove = val;
+					} else if (bestMoveValue.equals("tie") && (valRemoteness == bestMoveRemoteness)) {
+						double randomnum = gen.nextDouble();
+						if (randomnum >= 0.5) {
+							bestMove = val;
+						}
+					}
+				} else if ((bestMoveValue.equals("lose")) && (valRemoteness > bestMoveRemoteness)) {
 					bestMove = val;
-				} else if (bestMoveValue.equals("win") && (valRemoteness == bestMoveRemoteness)) {
+				} else if (bestMoveValue.equals("lose") && (valRemoteness == bestMoveRemoteness)) {
 					double randomnum = gen.nextDouble();
 					if (randomnum >= 0.5) {
 						bestMove = val;
 					}
-				}
-			} else if (valValue.equals("tie")) {
-				if ((bestMoveValue.equals("tie")) && (valRemoteness > bestMoveRemoteness)
-						|| (bestMoveValue.equals("lose"))) {
-					bestMove = val;
-				} else if (bestMoveValue.equals("tie") && (valRemoteness == bestMoveRemoteness)) {
-					double randomnum = gen.nextDouble();
-					if (randomnum >= 0.5) {
-						bestMove = val;
-					}
-				}
-			} else if ((bestMoveValue.equals("lose")) && (valRemoteness > bestMoveRemoteness)) {
-				bestMove = val;
-			} else if (bestMoveValue.equals("lose") && (valRemoteness == bestMoveRemoteness)) {
-				double randomnum = gen.nextDouble();
-				if (randomnum >= 0.5) {
-					bestMove = val;
 				}
 			}
+			doMove(bestMove.getMove());
 		}
-		doMove(bestMove.getMove());
 	}
 
 	@Override
@@ -151,21 +158,24 @@ public class Othello extends GameActivity {
 				int elem = boardRep[i][j];
 				switch(elem){
 				case Game.BLACK:
-					board.append("O");
+					board.append("B");
 					break;
 				case Game.WHITE:
-					board.append("X");
+					board.append("W");
 					break;
 				default:
-					board.append("%20");
+					board.append("_");
 					break;
 				}
 			}
 		}
-		board.append(";width=");
-		board.append(width);
-		board.append(";height=");
-		board.append(height);
+		board.append(";player=");
+		board.append((this.g.getTurn() == this.g.BLACK) ? "1" : "2");
+		//board.append(";width=");
+		//board.append(width);
+		//board.append(";height=");
+		//board.append(height);
+		board.append(";option=136");
 		
 		// Why are these here?
 		//board.append(";");
@@ -377,7 +387,7 @@ public class Othello extends GameActivity {
 		}
 
 		/**
-		 * Gets the color of the specified empty space, MAGENTA if show volues are not enabled, and RED/YELLOW/RED otherwise. 
+		 * Gets the color of the specified empty space, MAGENTA if show values are not enabled, and RED/YELLOW/RED otherwise. 
 		 * @param row The specified row
 		 * @param column The specified column
 		 * @return The appropriate color for the preview dot.
