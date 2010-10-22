@@ -1,5 +1,6 @@
 package com.gamescrafters.othello;
 
+import java.util.Random;
 import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
@@ -52,6 +53,9 @@ public class Othello extends GameActivity {
 		super.onCreate(savedInstanceState); 
 		this.setGameView(R.layout.othello_game);
 		
+		// Crashes...
+		// this.isPlayer2Computer = true;
+		
 		height = 4;
 		width = height;
 		
@@ -92,6 +96,50 @@ public class Othello extends GameActivity {
 	public void doMove(String move) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public void doComputerMove() {
+		MoveValue values[] = getNextMoveValues();
+		
+		MoveValue bestMove = values[0];
+		Random gen = new Random();
+		for (MoveValue val : values) {
+			String bestMoveValue = bestMove.getValue();
+			String valValue = val.getValue();
+			int valRemoteness = val.getRemoteness();
+			int bestMoveRemoteness = bestMove.getRemoteness();
+			if (valValue.equals("win")) {
+				if (((bestMoveValue.equals("win")) && 
+						(valRemoteness < bestMoveRemoteness))
+						|| (!bestMoveValue.equals("win"))) {
+					bestMove = val;
+				} else if (bestMoveValue.equals("win") && (valRemoteness == bestMoveRemoteness)) {
+					double randomnum = gen.nextDouble();
+					if (randomnum >= 0.5) {
+						bestMove = val;
+					}
+				}
+			} else if (valValue.equals("tie")) {
+				if ((bestMoveValue.equals("tie")) && (valRemoteness > bestMoveRemoteness)
+						|| (bestMoveValue.equals("lose"))) {
+					bestMove = val;
+				} else if (bestMoveValue.equals("tie") && (valRemoteness == bestMoveRemoteness)) {
+					double randomnum = gen.nextDouble();
+					if (randomnum >= 0.5) {
+						bestMove = val;
+					}
+				}
+			} else if ((bestMoveValue.equals("lose")) && (valRemoteness > bestMoveRemoteness)) {
+				bestMove = val;
+			} else if (bestMoveValue.equals("lose") && (valRemoteness == bestMoveRemoteness)) {
+				double randomnum = gen.nextDouble();
+				if (randomnum >= 0.5) {
+					bestMove = val;
+				}
+			}
+		}
+		doMove(bestMove.getMove());
 	}
 
 	@Override

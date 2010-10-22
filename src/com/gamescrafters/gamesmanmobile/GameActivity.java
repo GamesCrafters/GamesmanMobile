@@ -151,6 +151,7 @@ public abstract class GameActivity extends Activity {
 	 * @return The MoveValues of the boards reachable by a move from this board.
 	 */
 	public MoveValue[] getNextMoveValues() {
+		
 		String board = getBoardString();
 		MoveValue[] mvs = moveValues.get(board);
 		if (mvs == null){
