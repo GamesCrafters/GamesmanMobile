@@ -359,9 +359,13 @@ public class TicTacToe extends GameActivity {
 		 * @param row 
 		 * @param isRedo Boolean if move is a redo move (true) or not (false).
 		 */
+
+		
+
 		public void doMove(int column, int row, boolean isRedo) {
 			if (!(isFull(column, row) || gameOver)) {
 				updateGameState(column, row); 
+
 				switchTurn();
 				values = getNextMoveValues();
 				updateRemoteness();
@@ -507,26 +511,16 @@ public class TicTacToe extends GameActivity {
 			
 			if (isRedTurn()) {
 				board[col][row] = RED;
+				gb.updateTile(RED, row, col);
 			}
 			else if (isBlueTurn()){
 				board[col][row] = BLUE;
+				gb.updateTile(BLUE, row, col);
 			}
 			else {
 				System.out.println("asdfasdf");
 			}
-/*			for (currentY = 0; currentY < height; currentY++) {
-				if (board[currentY][col] == EMPTY) {
-					break;
-				}
-			}
-			if (isRedTurn()) {
-				board[currentY][col] = RED;
-				gb.updateTile(RED, currentY, col);
-			} else {
-				board[currentY][col] = BLUE;
-				gb.updateTile(BLUE, currentY, col);
-			}
-			checkBoard(currentY, col);*/
+			checkBoard(row, col);
 		}
 
 		/**
@@ -536,47 +530,28 @@ public class TicTacToe extends GameActivity {
 		 * @param N The number of pieces to check.
 		 * @return Whether there were N in a row or not.
 		 */
-		private boolean isNInRow(int row, int col, int N) {
+		private boolean isPrimitive(int row, int col) {
 			int value = getTurn();
 			int vertInRow = 1, horizInRow = 1, DRInRow = 1, DLInRow = 1;
-
-			for(int y=row-1; y>=0; y--)  { 		//check rows below 
-				if (board[y][col] == value) vertInRow++;
-				else break;
-			}
-			for(int y=row+1; y<height; y++)  { //check rows above 
-				if (board[y][col] == value) vertInRow++;
-				else break;
-			}
-
-			for(int x=col-1; x>=0; x--)  {		//check columns left
-				if (board[row][x] == value) horizInRow++;
-				else break;
-			}
-			for(int x=col+1; x<width; x++)  {	//check columns right
-				if (board[row][x] == value) horizInRow++;
-				else break;
-			}
-
-			for(int y=row+1, x=col-1; y<height && x>= 0; y++, x--) { //check diagonal up-left
-				if (board[y][x] == value) DRInRow++;
-				else break;
-			}
-			for(int y=row-1, x=col+1; y>=0 && x<width; y--, x++) { //check diagonal down-right
-				if (board[y][x] == value) DRInRow++;
-				else break;
-			}
-
-			for(int y=row-1, x=col-1; y>=0 && x>= 0; y--, x--) { //check diagonal down-left
-				if (board[y][x] == value) DLInRow++;
-				else break;
-			}
-			for(int y=row+1, x=col+1; y<height && x<width; y++, x++) { //check diagonal up-right
-				if (board[y][x] == value) DLInRow++;
-				else break;
-			}
-
-			return vertInRow >= N || horizInRow >= N || DRInRow >= N || DLInRow >= N;
+		
+			if (board[0][0] == value && board [1][0] == value && board [2][0] ==value)
+				return true;
+			else if (board[0][1] == value && board [1][1] == value && board [2][1] ==value)
+				return true;
+			else if (board[0][2] == value && board [1][2] == value && board [2][2] ==value)
+				return true;
+			else if (board[0][0] == value && board [0][1] == value && board [0][2] ==value)
+				return true;
+			else if (board[1][0] == value && board [1][1] == value && board [1][2] ==value)
+				return true;
+			else if (board[2][0] == value && board [2][1] == value && board [2][2] ==value)
+				return true;
+			else if (board[0][0] == value && board [1][1] == value && board [2][2] ==value)
+				return true;
+			else if (board[2][0] == value && board [1][1] == value && board [0][2] ==value)
+				return true;
+			else 
+				return false;	
 		}
 
 		/**
@@ -585,7 +560,7 @@ public class TicTacToe extends GameActivity {
 		 * @param col The column of the piece placed.
 		 */
 		private void checkBoard(int row, int col) {
-			if (isNInRow(row, col, 4)) {
+			if (isPrimitive(row, col)) {
 				turnTextView.setText("");
 				turnImage.setBackgroundDrawable(null);
 				gameOverTextView.setText("Game over.\n" + (isBlueTurn() ? "Blue" : "Red") + " wins!");
@@ -612,14 +587,13 @@ public class TicTacToe extends GameActivity {
 		 * @return Whether or not the game is a tie.
 		 */
 		private boolean isTie() { 
-			for(int j=0; j<width; j++) { 
-				if(board[g.height-1][j]==EMPTY) { 
-					return false; 
-				} 
+			for(int j=0; j<3; j++) {
+				for (int i=0;i<3;i++) {
+					if (board [i][j] == EMPTY)
+						return false;
+				}
 			}
 			return true;
 		}
-
-
 	}
 } 
