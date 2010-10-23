@@ -23,7 +23,7 @@ public class GUIGameBoard {
 	TicTacToe a;
 	Game g;
 	
-	int tile = R.drawable.c4_tile;
+	int tile = R.drawable.ttt_empty;
 	int toptile = R.drawable.c4_toptile;
 	//int blue_tile = R.drawable.c4_blue_tile;
 	//int red_tile = R.drawable.c4_red_tile;

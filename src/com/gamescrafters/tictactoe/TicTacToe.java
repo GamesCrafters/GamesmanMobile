@@ -28,7 +28,8 @@ public class TicTacToe extends GameActivity {
 	MoveValue[] values = null;
 	String previousValue = "win";
 	int delay;
-	Stack<Integer> previousMoves, nextMoves; // Stacks of previousMoves and nextMoves, which is used to undo and redo moves.
+	Stack<int []> previousMoves;
+	Stack <Integer> nextMoves; // Stacks of previousMoves and nextMoves, which is used to undo and redo moves.
 
 
 	/** Called when the activity is first created. */
@@ -82,8 +83,8 @@ public class TicTacToe extends GameActivity {
 		isShowValues = old.isShowValues;
 		isShowPrediction = old.isShowPrediction;
 		moveValues = old.moveValues;
-		for (int m : old.previousMoves) {
-			g.doMove(m, 0, false);
+		for (int [ ] m : old.previousMoves) {
+			g.doMove(m[0], m[1], false);
 		}
 		nextMoves = old.nextMoves;
 		/*isPlayer1Computer = old.isPlayer1Computer;
@@ -303,7 +304,7 @@ public class TicTacToe extends GameActivity {
 			this.height = height;
 			this.width = width;
 			board = new int[height][width];
-			previousMoves = new Stack<Integer>();
+			previousMoves = new Stack< int []>();
 			movesSoFar = 0;
 			currentMove = 0;
 			
@@ -316,7 +317,33 @@ public class TicTacToe extends GameActivity {
 		 */
 		public void undoMove() {
 			if (previousMoves.isEmpty()) return;
-			int col = previousMoves.pop();
+			int []position = previousMoves.pop();
+			int col = position[0];
+			int row = position[1];
+			
+			// Remove the last move from the VisualValueHistory.
+			removeLastVVHNode();
+			
+			if (g.board[col][row] != EMPTY) { // find first available piece in col to remove
+				if (g.gameOver) { // primitive position undo
+					g.gameOver = false;
+					turnTextView.setText("Turn: ");
+					turnImage.setBackgroundDrawable(g.getTurn() == BLUE ? bluePiece : redPiece);
+					gameOverTextView.setText("");
+				}
+				board[col][row] = EMPTY;
+				gb.updateTile(EMPTY, row, col);
+				values = getNextMoveValues();
+				updateRemoteness();
+				updateValues();
+			}
+
+			currentMove--;
+			hSlider.updateProgress(currentMove, movesSoFar);
+			switchTurn();
+			nextMoves.push(col);
+		
+			/*
 			// Remove the last move from the VisualValueHistory.
 			removeLastVVHNode();
 			for (int i = height - 1; i >= 0; i--) {
@@ -327,8 +354,8 @@ public class TicTacToe extends GameActivity {
 						turnImage.setBackgroundDrawable(g.getTurn() == BLUE ? bluePiece : redPiece);
 						gameOverTextView.setText("");
 					}
-					board[i][col] = EMPTY;
-					gb.updateTile(EMPTY, i, col);
+					board[col][row] = EMPTY;
+					gb.updateTile(EMPTY, row, col);
 					values = getNextMoveValues();
 					updateRemoteness();
 					updateValues();
@@ -339,6 +366,7 @@ public class TicTacToe extends GameActivity {
 			hSlider.updateProgress(currentMove, movesSoFar);
 			switchTurn();
 			nextMoves.push(col);
+			*/
 		}
 
 //		public void goToMoveN(int N) {
@@ -376,7 +404,7 @@ public class TicTacToe extends GameActivity {
 					TicTacToe.this.updateVVH(previousValue, remoteness, gameOver, isBlueTurn(), isTie());
 				}
 				//updateVVH();
-				previousMoves.push(column);
+				previousMoves.push(new int [ ] {column, row});
 				currentMove++;
 				if (!isRedo) {
 					nextMoves.clear();
@@ -518,7 +546,7 @@ public class TicTacToe extends GameActivity {
 				gb.updateTile(BLUE, row, col);
 			}
 			else {
-				System.out.println("asdfasdf");
+				System.out.println("Error");
 			}
 			checkBoard(row, col);
 		}
