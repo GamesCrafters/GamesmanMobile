@@ -359,9 +359,9 @@ public class TicTacToe extends GameActivity {
 		 * @param row 
 		 * @param isRedo Boolean if move is a redo move (true) or not (false).
 		 */
-		public void doMove(int move, int row, boolean isRedo) {
-			if (!(isFull(move) || gameOver)) {
-				updateGameState(move); 
+		public void doMove(int column, int row, boolean isRedo) {
+			if (!(isFull(column, row) || gameOver)) {
+				updateGameState(column, row); 
 				switchTurn();
 				values = getNextMoveValues();
 				updateRemoteness();
@@ -372,7 +372,7 @@ public class TicTacToe extends GameActivity {
 					TicTacToe.this.updateVVH(previousValue, remoteness, gameOver, isBlueTurn(), isTie());
 				}
 				//updateVVH();
-				previousMoves.push(move);
+				previousMoves.push(column);
 				currentMove++;
 				if (!isRedo) {
 					nextMoves.clear();
@@ -450,8 +450,8 @@ public class TicTacToe extends GameActivity {
 		 * @param colnum The column number to check (0->width-1).
 		 * @return true or false, whether a column is full.
 		 */
-		private boolean isFull(int colnum) {
-			return board[height-1][colnum] != EMPTY;
+		private boolean isFull(int col, int row) {
+			return board[col][row] != EMPTY; 
 		}
 
 		/**
@@ -503,10 +503,18 @@ public class TicTacToe extends GameActivity {
 		 * Updates the gamestate given a column in which a piece was placed.
 		 * @param col The column in which the piece was placed.
 		 */
-		private void updateGameState(int col) { 
-			int currentY;
-
-			for (currentY = 0; currentY < height; currentY++) {
+		private void updateGameState(int col, int row) { 
+			
+			if (isRedTurn()) {
+				board[col][row] = RED;
+			}
+			else if (isBlueTurn()){
+				board[col][row] = BLUE;
+			}
+			else {
+				System.out.println("asdfasdf");
+			}
+/*			for (currentY = 0; currentY < height; currentY++) {
 				if (board[currentY][col] == EMPTY) {
 					break;
 				}
@@ -518,7 +526,7 @@ public class TicTacToe extends GameActivity {
 				board[currentY][col] = BLUE;
 				gb.updateTile(BLUE, currentY, col);
 			}
-			checkBoard(currentY, col);
+			checkBoard(currentY, col);*/
 		}
 
 		/**
