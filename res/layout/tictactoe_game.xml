@@ -12,7 +12,7 @@
 		android:shrinkColumns="*"
 		android:layout_height="275dip"
 		android:layout_centerHorizontal="true" android:layout_centerVertical="true"
-		android:gravity="center_vertical|center_horizontal" android:background="@drawable/ttt_board" android:layout_width="275dip" android:layout_gravity="center">	
+		android:gravity="center_vertical|center_horizontal" android:background="@drawable/ttt_bluex" android:layout_width="275dip" android:layout_gravity="center">	
     </TableLayout>
 
 	<RelativeLayout android:layout_width="wrap_content"

@@ -5,9 +5,11 @@ import android.content.res.Configuration;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.RelativeLayout;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,6 +20,7 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.os.Handler;
 
 import com.gamescrafters.gamesmanmobile.R;
 
@@ -35,11 +38,14 @@ public class GUIGameBoard {
 	int tile = R.drawable.oth_tile;
 	int blue_tile = R.drawable.oth_tile_blue;
 	int red_tile = R.drawable.oth_tile_red;
+	Handler h;
 
 	public GUIGameBoard (Othello a) {
 		this.table = (TableLayout) a.findViewById(R.id.oth_gametable);
 		this.a = a;
 		this.g = a.g;
+		h = new Handler();
+
 		width = g.width;
 		height = g.height;
 	}
@@ -68,7 +74,10 @@ public class GUIGameBoard {
 	 */
 	public void initBoard() {
 		int size = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 275 : 200;
-		int new_size = (int)Math.floor((double)size / (double)height);
+		size = a.getWindowManager().getDefaultDisplay().getWidth();
+		int new_hei = (int)Math.floor((double)table.getHeight() / (double)width);
+		int new_wid = (int)Math.floor((double)size / (double)height);
+		
 		for (int row=1; row<=height; row++) {
 			TableRow tr = new TableRow(a);
 			tr.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -79,14 +88,24 @@ public class GUIGameBoard {
 				else if(g.board[row-1][col-1] == Othello.Game.WHITE)
 					c = Color.WHITE;
 				TileView tv = new TileView(a, row, col, c);
-				tv.setSmallColor(g.previewColor(row, col));
+				tv.setSmallColor(g.previewColor(row, col,true));
 				tv.setId(getID(row, col));
 				tv.setOnClickListener(new PieceClickListener(col, row, tv));
-				tr.addView(tv, new_size, new_size);
+				PositionView pv = new PositionView(a);
+				ImageView iv = new ImageView(a);
+				iv.setImageResource(R.drawable.oth_felt);
+				RelativeLayout rl = new RelativeLayout(a);
+				rl.addView(iv);
+				rl.addView(pv);
+				rl.addView(tv);
+				tr.addView(rl, new_wid, new_wid);
 				g.tiles[row-1][col-1] = tv;
 			}
 			table.addView(tr);
 		}
+		LevelsView lv = new LevelsView(a);
+		g.levels = lv;
+		table.addView(lv,size,15);
 	}
 	
 	/**
@@ -107,14 +126,15 @@ public class GUIGameBoard {
 			if (!(a.isPlayer1Computer && a.isPlayer2Computer)) {
 				if(g.moveValid(row,column) && !g.gameOver){
 					if(g.isBlackTurn()){
-						g.doMove(row, column, false);
+						g.doMove(row, column, false, false);
 						if(a.isPlayer2Computer){
-							a.doComputerMove();
+							g.clearPreviews();
+							h.postDelayed(a.c, a.moveDelay);
 						}
 					}else{
-						g.doMove(row, column, false);
+						g.doMove(row, column, false, false);
 						if(a.isPlayer1Computer){
-							a.doComputerMove();
+							h.postDelayed(a.c, a.moveDelay);
 						}
 					}
 				}
@@ -130,6 +150,7 @@ public class GUIGameBoard {
 		int pColor;
 		private Animation horizontalFlip, verticalFlip, horizontalOpen, verticalOpen, rotate45;
 		private AnimationSet diagonalFlip1, openDiag1, diagonalFlip2, openDiag2;
+		public Runnable dF1, dF2, h, v;
 		public TileView(Context context, int x, int y, int c) {
 			super(context);
 			this.x = x;
@@ -174,6 +195,27 @@ public class GUIGameBoard {
 			openDiag2 = new AnimationSet(false);
 			openDiag2.addAnimation(verticalOpen);
 			openDiag2.addAnimation(rotate45);
+			
+			this.dF1 = new Runnable(){
+				public void run(){
+					flipDiagonal1(250);
+				}
+			};
+			this.dF2 = new Runnable(){
+				public void run(){
+					flipDiagonal2(250);
+				}
+			};
+			this.h = new Runnable(){
+				public void run(){
+					flipHorizontal(250);
+				}
+			};
+			this.v = new Runnable(){
+				public void run(){
+					flipVertical(250);
+				}
+			};
 		}
 		
 		public void flipHorizontal(long time){
@@ -257,5 +299,59 @@ public class GUIGameBoard {
 			public void onAnimationStart(Animation animation) {}
 		}
 		
+	}
+	public class PositionView extends View{
+
+		public PositionView(Context context) {
+			super(context);
+		}
+		
+		@Override
+		protected void onDraw(Canvas canvas){
+			super .onDraw(canvas);
+			Paint p = new Paint();
+			p.setColor(Color.TRANSPARENT);
+			p.setStyle(Paint.Style.FILL);
+			canvas.drawPaint(p);
+			p.setStyle(Paint.Style.STROKE);
+			p.setStrokeWidth(1);
+			p.setColor(Color.BLACK);
+			canvas.drawLine(0, 0, getWidth(), 0, p);
+			canvas.drawLine(0, 0, 0, getHeight(), p);
+			canvas.drawLine(getWidth(), 0, getWidth(), getHeight(), p);
+			canvas.drawLine(0, getHeight(), getWidth(), getHeight(), p);
+		}
+		
+	}
+	public class LevelsView extends View{
+
+		private int black,white;
+		public LevelsView(Context context) {
+			super(context);
+			black = 2;
+			white = 2;
+			// TODO Auto-generated constructor stub
+		}
+		
+		public void updateBlacks(int b){
+			black = b;
+		}
+		
+		public void updateWhites(int w){
+			white = w;
+		}
+		@Override
+		protected void onDraw(Canvas canvas){
+			super .onDraw(canvas);
+			Paint p = new Paint();
+			p.setColor(Color.BLACK);
+			p.setStyle(Paint.Style.FILL);
+			canvas.drawPaint(p);
+			int width = getWidth();
+			float level = (float)white/(float)(white + black);
+			width = (int)((float)width * level);
+			p.setColor(Color.WHITE);
+			canvas.drawRect(0, 0, width, getHeight(), p);
+		}
 	}
 }
