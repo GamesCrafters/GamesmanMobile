@@ -39,6 +39,7 @@ public class Connect4 extends GameActivity {
 	MoveValue[] values = null;
 	String previousValue = "win";
 	int delay;
+	boolean isDatabaseAvailable;
 	AlertDialog.Builder builder;
 	Stack<Integer> previousMoves, nextMoves; // Stacks of previousMoves and nextMoves, which is used to undo and redo moves.
 
@@ -70,8 +71,8 @@ public class Connect4 extends GameActivity {
 				});
 		
 		initResources();
-		
-		if (RemoteGameValueService.isInternetAvailable())
+		isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
+		if (isDatabaseAvailable)
 		{
 			setBoard(width, height);
 		} else {
@@ -418,13 +419,16 @@ public class Connect4 extends GameActivity {
 			if (!(isFull(move) || gameOver)) {
 				updateGameState(move); 
 				switchTurn();
-				values = getNextMoveValues();
-				updateRemoteness();
-				updateValues();
-				if ((values != null) && (values.length != 0)) {
-					previousValue = getBoardValue(values);
-					int remoteness = getRemoteness(previousValue, values);
-					Connect4.this.updateVVH(previousValue, remoteness, gameOver, isBlueTurn(), isTie());
+				if (isDatabaseAvailable)
+				{
+					values = getNextMoveValues();
+					updateRemoteness();
+					updateValues();
+					if ((values != null) && (values.length != 0)) {
+						previousValue = getBoardValue(values);
+						int remoteness = getRemoteness(previousValue, values);
+						Connect4.this.updateVVH(previousValue, remoteness, gameOver, isBlueTurn(), isTie());
+					}
 				}
 				//updateVVH();
 				previousMoves.push(move);
