@@ -20,6 +20,7 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.os.Handler;
 
 import com.gamescrafters.gamesmanmobile.R;
@@ -169,11 +170,15 @@ public class GUIGameBoard {
 			verticalOpen = new ScaleAnimation(1f, 1f, 0f, 1f,
 					Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
 			
+			float interpFactor = 1.0f; 
+			
 			// Set Interpolators
-			horizontalFlip.setInterpolator(new AccelerateInterpolator(1.1f));
-			verticalFlip.setInterpolator(new AccelerateInterpolator(1.1f));
-			horizontalFlip.setInterpolator(new DecelerateInterpolator(1.1f));
-			verticalFlip.setInterpolator(new DecelerateInterpolator(1.1f));
+			horizontalFlip.setInterpolator(new AccelerateInterpolator(interpFactor));
+			verticalFlip.setInterpolator(new AccelerateInterpolator(interpFactor));
+//			horizontalOpen.setInterpolator(new DecelerateInterpolator(interpFactor));
+//			verticalOpen.setInterpolator(new DecelerateInterpolator(interpFactor));
+			horizontalOpen.setInterpolator(new OvershootInterpolator(interpFactor));
+			verticalOpen.setInterpolator(new OvershootInterpolator(interpFactor));
 			
 			// Prepare diagaonal Flips
 			// flip 1
@@ -196,24 +201,34 @@ public class GUIGameBoard {
 			openDiag2.addAnimation(verticalOpen);
 			openDiag2.addAnimation(rotate45);
 			
+			// Set Interpolators
+			diagonalFlip1.setInterpolator(new AccelerateInterpolator(interpFactor));
+			diagonalFlip2.setInterpolator(new AccelerateInterpolator(interpFactor));
+//			openDiag1.setInterpolator(new DecelerateInterpolator(interpFactor));
+//			openDiag2.setInterpolator(new DecelerateInterpolator(interpFactor));
+			openDiag1.setInterpolator(new OvershootInterpolator(interpFactor));
+			openDiag2.setInterpolator(new OvershootInterpolator(interpFactor));
+			
+			final int delay = 1000;
+			
 			this.dF1 = new Runnable(){
 				public void run(){
-					flipDiagonal1(250);
+					flipDiagonal1(delay);
 				}
 			};
 			this.dF2 = new Runnable(){
 				public void run(){
-					flipDiagonal2(250);
+					flipDiagonal2(delay);
 				}
 			};
 			this.h = new Runnable(){
 				public void run(){
-					flipHorizontal(250);
+					flipHorizontal(delay);
 				}
 			};
 			this.v = new Runnable(){
 				public void run(){
-					flipVertical(250);
+					flipVertical(delay);
 				}
 			};
 		}

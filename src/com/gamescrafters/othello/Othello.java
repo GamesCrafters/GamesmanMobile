@@ -57,8 +57,8 @@ public class Othello extends GameActivity {
 		super.onCreate(savedInstanceState); 
 		this.setGameView(R.layout.othello_game);
 		
-		// Crashes...
-		this.isPlayer2Computer = true;
+
+//		this.isPlayer2Computer = true;
 		this.moveDelay = 1000;
 		
 		height = 4;
@@ -537,7 +537,7 @@ public class Othello extends GameActivity {
 		 */
 		private void flipTiles(Queue<Integer> toFlip, int direction){
 			Integer currentX, currentY;
-			int aniSpeed = 500;
+			int aniSpeed = 1000;
 			int del = 0;
 			while((currentX = toFlip.poll()) != null && (currentY = toFlip.poll()) != null){
 				if(turn == BLACK){
