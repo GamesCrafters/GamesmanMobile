@@ -14,9 +14,10 @@ import android.widget.TextView;
 import com.gamescrafters.gamesmanmobile.GameActivity;
 import com.gamescrafters.gamesmanmobile.MoveValue;
 import com.gamescrafters.gamesmanmobile.R;
+import com.gamescrafters.gamesmanmobile.RemoteGameValueService;
 
 public class TicTacToe extends GameActivity {
-	static final String GAME_NAME = "tictactoe";
+	static final String GAME_NAME = "ttt";
 
 	private TextView turnTextView, remoteTextView, gameOverTextView;
 	private ImageButton turnImage;
@@ -48,8 +49,6 @@ public class TicTacToe extends GameActivity {
 		initResources();
 
 		setBoard(width, height);
-
-
 	}
 	
 	class CompPlays extends Handler {
@@ -127,10 +126,12 @@ public class TicTacToe extends GameActivity {
 	 */
 	private void setBoard(int width, int height) { 
 		g = new Game(height, width);
+		
 		if (gb == null)
 			gb = new GUIGameBoard(this);
 		else
 			gb.reset(g);
+		
 		gb.initBoard();
 
 		turnTextView.setText("Turn: ");
@@ -138,11 +139,15 @@ public class TicTacToe extends GameActivity {
 		turnImage.setEnabled(false);
 		
 		gameOverTextView.setText("");
+
 		if (getLastNonConfigurationInstance() == null) {
-			values = getNextMoveValues();
+			//values = getMoveValue();
+			 values = getNextMoveValues();
 		}
+		
 		g.updateRemoteness();
 		g.updateValues();
+		
 		if (values != null && values.length != 0) {
 			isNetworkAvailable = true;
 			previousValue = getBoardValue(values);
@@ -155,10 +160,12 @@ public class TicTacToe extends GameActivity {
 		
 		//computer vs. computer
 		if (isPlayer1Computer && isPlayer2Computer) {
-				updateUI();
-		} else if (isPlayer1Computer) {
+			updateUI();
+		} 
+		else if (isPlayer1Computer) {
 			doComputerMove();
 		}
+		
 	} 
 
 	@Override
@@ -191,24 +198,24 @@ public class TicTacToe extends GameActivity {
 	public String getBoardString() {
 		int[][] boardRep = g.board;
 		StringBuffer board = new StringBuffer();
-		for (int i=0; i < boardRep.length; i++) { //height
-			for (int j = 0; j < boardRep[0].length; j++) { //width
-				int currentElem = boardRep[i][j];
+		
+		for (int j = 0; j < 3; j++) { 
+			for (int i = 0; i < 3; i++) { 
+				int currentElem = boardRep [i][j];
 				if (currentElem == TicTacToe.Game.RED) {
-					board.append("O");
-				} else if (currentElem == TicTacToe.Game.BLUE) {
-					board.append("X");
-				} else {
-					board.append("%20");
+					board.append("o");
+				} 
+				else if (currentElem == TicTacToe.Game.BLUE) {
+					board.append("x");
+				} 
+				else {
+					board.append("_");
 				}
 			}
 		}
-		board.append(";width=");
-		board.append(boardRep[0].length);
-		board.append(";height=");
-		board.append(boardRep.length);
+		
 		board.append(";");
-		board.append("pieces=4");
+		board.append("option=3");
 		return board.toString();
 	}
 
@@ -217,7 +224,14 @@ public class TicTacToe extends GameActivity {
 	 */
 	@Override
 	public void doMove(String move) {
-		g.doMove(Integer.parseInt(move), 0, false);
+		int mov = Integer.parseInt(move);
+		int row, col = 0;
+		
+		col = (mov - 1) % 3;
+		row = (mov - 1) / 3;
+			
+		g.doMove(col, row, false);
+		// g.doMove(Integer.parseInt(move), 0, false);
 	}	
 
 	/**
@@ -430,8 +444,9 @@ public class TicTacToe extends GameActivity {
 				for (int col=0; col<width; col++) { // no fill for columns without values
 					if (!has_value[col]) gb.setColumnValue(col, "noval");
 				}
-			} else {
-				for (int col=0; col<width; col++) {
+			} 
+			else {
+				for (int col = 0; col<width; col++) {
 					gb.setColumnValue(col, "noval");
 				}
 			}
@@ -444,18 +459,21 @@ public class TicTacToe extends GameActivity {
 
 			if (!isShowPrediction()) {
 				remoteTextView.setText("");
-			} else if ((values != null) && (values.length != 0)) {
-				previousValue = getBoardValue(values);
-
+			}
+			else if ((values != null) && (values.length != 0)) {
 				
+				previousValue = getBoardValue(values);
 				int remoteness = getRemoteness(previousValue, values);
-
+				
 				if (remoteness != -1)
 					remoteTextView.setText(previousValue + " in " + (remoteness+1) + " moves");
-				else remoteTextView.setText("Prediction not available.");
-			} else if (!isNetworkAvailable) {
+				else
+					remoteTextView.setText("Prediction not available.");
+			} 
+			else if (!isNetworkAvailable) {
 				remoteTextView.setText("Prediction not available.");
-			} else {
+			} 
+			else {
 				remoteTextView.setText((previousValue.equals("win") ? "lose" : "tie") + " in 0 moves");
 			}
 		}
