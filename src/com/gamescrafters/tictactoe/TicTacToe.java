@@ -1,5 +1,6 @@
 package com.gamescrafters.tictactoe;
 
+import java.util.Random;
 import java.util.Stack;
 
 import android.content.Intent;
@@ -294,6 +295,52 @@ public class TicTacToe extends GameActivity {
 		else {
 			g.undoMove();
 		}
+	}
+		
+	public void doComputerMove() {
+		MoveValue values[] = getNextMoveValues();
+		MoveValue bestMove = values[0];
+		Random gen = new Random();
+		
+		for (MoveValue val : values) {
+			String bestMoveValue = bestMove.getValue();
+			String valValue = val.getValue();
+			int valRemoteness = val.getRemoteness();
+			int bestMoveRemoteness = bestMove.getRemoteness();
+			
+			if (valValue.equals("lose")) {
+				if (((bestMoveValue.equals("lose")) && (valRemoteness > bestMoveRemoteness))	|| (!bestMoveValue.equals("lose"))) {
+					bestMove = val;
+				} 
+				else if (bestMoveValue.equals("lose") && (valRemoteness == bestMoveRemoteness)) {
+					double randomnum = gen.nextDouble();
+					if (randomnum >= 0.5) {
+						bestMove = val;
+					}
+				}
+			} 
+			else if (valValue.equals("tie")) {
+				if ((bestMoveValue.equals("tie")) && (valRemoteness < bestMoveRemoteness) || (bestMoveValue.equals("win"))) {
+					bestMove = val;
+				} 
+				else if (bestMoveValue.equals("tie") && (valRemoteness == bestMoveRemoteness)) {
+					double randomnum = gen.nextDouble();
+					if (randomnum >= 0.5) {
+						bestMove = val;
+					}
+				}
+			} 
+			else if ((bestMoveValue.equals("win")) && (valRemoteness < bestMoveRemoteness)) {
+				bestMove = val;
+			} 
+			else if (bestMoveValue.equals("win") && (valRemoteness == bestMoveRemoteness)) {
+				double randomnum = gen.nextDouble();
+				if (randomnum >= 0.5) {
+					bestMove = val;
+				}
+			}
+		}
+		doMove(bestMove.getMove());
 	}
 
 	/**
