@@ -60,7 +60,7 @@
 				android:text="Player 1:" android:textSize="8pt" android:textColor="#ffe303"></TextView>
 			<RadioButton android:id="@+id/y_RadioButton01"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:text="Human" android:layout_marginLeft="5dip"></RadioButton>
+				android:text="Human" android:layout_marginLeft="5dip" android:checked="true"></RadioButton>
 			<RadioButton android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:id="@+id/y_RadioButton02"
 				android:text="Computer" android:layout_marginLeft="5dip"></RadioButton>
@@ -87,7 +87,7 @@
 				android:text="Player 2: " android:textSize="8pt" android:textColor="#ffe303"></TextView>
 			<RadioButton android:id="@+id/y_RadioButton03"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:text="Human"></RadioButton>
+				android:text="Human" android:checked="true"></RadioButton>
 			<RadioButton android:id="@+id/y_RadioButton04"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:text="Computer" android:layout_marginLeft="5dip"></RadioButton>
