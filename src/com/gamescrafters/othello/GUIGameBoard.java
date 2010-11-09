@@ -41,6 +41,8 @@ public class GUIGameBoard {
 	int red_tile = R.drawable.oth_tile_red;
 	Handler h;
 
+	int animsRunning;
+
 	public GUIGameBoard (Othello a) {
 		this.table = (TableLayout) a.findViewById(R.id.oth_gametable);
 		this.a = a;
@@ -75,7 +77,9 @@ public class GUIGameBoard {
 	 */
 	public void initBoard() {
 		int size = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 275 : 200;
-		size = a.getWindowManager().getDefaultDisplay().getWidth();
+		size = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 
+				a.getWindowManager().getDefaultDisplay().getWidth() :
+				a.getWindowManager().getDefaultDisplay().getHeight();
 		int new_hei = (int)Math.floor((double)table.getHeight() / (double)width);
 		int new_wid = (int)Math.floor((double)size / (double)height);
 		
@@ -304,14 +308,29 @@ public class GUIGameBoard {
 				this.parent = t;
 				this.nextAni = subsequent;
 			}
+			
 			public void onAnimationEnd(Animation animation) {
+				
 				this.parent.swapColor();
+				this.nextAni.setAnimationListener(new Animation.AnimationListener() {
+					
+					public void onAnimationStart(Animation animation) {	}
+					
+					public void onAnimationRepeat(Animation animation) {}
+					
+					public void onAnimationEnd(Animation animation) {
+						animsRunning--;
+						
+					}
+				});
 				this.parent.startAnimation(this.nextAni);
 			}
 
 			public void onAnimationRepeat(Animation animation) {}
 
-			public void onAnimationStart(Animation animation) {}
+			public void onAnimationStart(Animation animation) {
+				animsRunning++;
+			}
 		}
 		
 	}

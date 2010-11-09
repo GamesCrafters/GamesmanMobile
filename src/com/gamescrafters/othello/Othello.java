@@ -19,12 +19,16 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 /**
  * The Othello game activity handles the setup of the GUI and internal state of the Othello game.
@@ -57,8 +61,7 @@ public class Othello extends GameActivity {
 		super.onCreate(savedInstanceState); 
 		this.setGameView(R.layout.othello_game);
 		
-
-//		this.isPlayer2Computer = true;
+		this.isPlayer2Computer = true;
 		this.moveDelay = 1000;
 		
 		height = 4;
@@ -75,9 +78,46 @@ public class Othello extends GameActivity {
 		this.setBoard(width, height);
 		c = new Runnable(){
 			public void run() {
-				doComputerMove();
+				if(gb.animsRunning <= 0){
+					doComputerMove();
+				}else{
+					g.h.postDelayed(this, 100);
+				}
 			}	
 		};
+		
+		TextView skip = (TextView)this.findViewById(R.id.oth_skipTurnText);
+		skip.setGravity(Gravity.RIGHT);
+		skip.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				g.swapMove();
+				if(g.getTurn() == Game.WHITE){
+					if(isPlayer2Computer){
+						doComputerMove();
+					}
+				}else{
+					if(isPlayer1Computer){
+						doComputerMove();
+					}
+				}
+				g.updatePreviews(false);
+				g.checkSkip();
+				
+				Thread server = new Thread(new Runnable(){
+					public void run() {
+						values = getNextMoveValues();
+						if((values != null) && (values.length > 0)){
+							previousValue = getBoardValue(values);
+							int remoteness = getRemoteness(previousValue, values);
+							updateVVH(previousValue, remoteness, false, g.isBlackTurn(), false);
+						}
+						g.updatePreviews(true);					
+					}
+				});
+				server.start();
+			}
+		});
 	}
 	
 	/**
@@ -87,8 +127,6 @@ public class Othello extends GameActivity {
 		Resources res = getResources();
 		this.whitePiece = res.getDrawable(R.drawable.oth_whitepiece);
 		this.blackPiece = res.getDrawable(R.drawable.oth_blackpiece);
-		//this.bluePiece = res.getDrawable(R.drawable.oth_bluepiece);
-		//this.redPiece = res.getDrawable(R.drawable.oth_redpiece);
 
 		this.turnTextView = (TextView) findViewById(R.id.oth_turn); 
 		this.turnImage = (ImageButton) findViewById(R.id.oth_turnImage);
@@ -116,6 +154,26 @@ public class Othello extends GameActivity {
 			g.doMove((this.height - row), col+1, false, true);
 		}else{
 			g.swapMove();
+			g.updatePreviews(true);
+			if(g.checkWin() == g.EMPTY){
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage("Are you sure you want to exit?")
+				       .setCancelable(false)
+				       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				                Othello.this.finish();
+				           }
+				       })
+				       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				                dialog.cancel();
+				           }
+				       });
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
+				
+				
 		}
 	}
 	
@@ -162,6 +220,8 @@ public class Othello extends GameActivity {
 				}
 			}
 			doMove(bestMove.getMove());
+		}else{
+			g.checkWin();
 		}
 	}
 
@@ -241,9 +301,11 @@ public class Othello extends GameActivity {
 	public class Game {
 		final static boolean BLUE_TURN = false;
 		final static boolean RED_TURN = true;
-		final static int BLACK = 1;
-		final static int WHITE = 2;
-		final static int EMPTY = 0;
+		static final int BLACK = 1;
+		static final int WHITE = 2;
+		static final int TIE = 3;
+		
+		static final int EMPTY = 0;
 		
 		final static int	UP = 1<<0,
 							DOWN = 1<<1,
@@ -293,6 +355,54 @@ public class Othello extends GameActivity {
 			
 		}
 		
+		public int checkWin() {
+			int black,white;
+			black = white = 0;
+			for(int i = 0; i < this.height; i++){
+				int[] current = this.board[i];
+				for(int j = 0; j < this.width; j++){
+					switch(current[j]){
+					case EMPTY:
+						break;
+					case BLACK:
+						black++;
+						break;
+					case WHITE:
+						white++;
+						break;
+					}
+					if(this.moveValid(i+1, j+1)){
+						return EMPTY;
+					}
+					swapMove(true);
+					if(this.moveValid(i+1,j+1)){
+						swapMove(true);
+						return EMPTY;
+					}
+				}
+			}
+			if(black > white){
+				return BLACK;
+			}else if(white > black){
+				return WHITE;
+			}else{
+				return TIE;
+			}
+		}
+
+		public void checkSkip() {
+			for(int i = 0; i < this.parent.height; i++){
+				for(int j = 0; j < this.parent.width; j++){
+					if(this.moveValid(i+1, j+1)){
+						((TextView)this.parent.findViewById(R.id.oth_skipTurnText)).setVisibility(View.INVISIBLE);
+						return;
+					}
+				}
+			}
+			((TextView)this.parent.findViewById(R.id.oth_skipTurnText)).setVisibility(View.VISIBLE);
+			return;
+		}
+
 		public int getTurn() {
 			return turn;
 		}
@@ -327,11 +437,15 @@ public class Othello extends GameActivity {
 		}
 
 		private void swapMove(){
+			swapMove(false);
+		}
+		private void swapMove(boolean quiet){
 			if(turn == BLACK)
 				turn = WHITE;
 			else
 				turn = BLACK;
-			turnImage.setBackgroundDrawable((turn == BLACK) ? this.parent.blackPiece : this.parent.whitePiece);
+			if(!quiet)
+				turnImage.setBackgroundDrawable((turn == BLACK) ? this.parent.blackPiece : this.parent.whitePiece);
 			
 		}
 		
@@ -366,7 +480,7 @@ public class Othello extends GameActivity {
 				}
 			});
 			server.start();
-			
+			checkSkip();
 		}
 
 		/**
@@ -400,6 +514,7 @@ public class Othello extends GameActivity {
 				}
 			});
 			server.start();
+			checkSkip();
 		}
 
 		public void doMove(int row, int column, boolean isRedo, boolean isComputer){
@@ -437,7 +552,8 @@ public class Othello extends GameActivity {
 		
 			currentMove++;
 			movesSoFar = currentMove;
-			hSlider.updateProgress(currentMove, movesSoFar);		
+			hSlider.updateProgress(currentMove, movesSoFar);	
+			checkSkip();
 		}
 
 		public int[][] copyBoard(){
@@ -496,16 +612,18 @@ public class Othello extends GameActivity {
 				if(this.parent.isShowValues() && serverColor){
 					if(values == null)
 						values = getNextMoveValues();
-					for(MoveValue val : values){
-						String move = val.getMove();
-						if(move.equalsIgnoreCase(current)){
-							String color = val.getValue();
-							if(color.equals("lose")){
-								return Color.GREEN;
-							}else if(color.equals("win")){
-								return Color.RED;
-							}else if(color.equals("tie")){
-								return Color.YELLOW;
+					if(values != null){
+						for(MoveValue val : values){
+							String move = val.getMove();
+							if(move.equalsIgnoreCase(current)){
+								String color = val.getValue();
+								if(color.equals("lose")){
+									return Color.GREEN;
+								}else if(color.equals("win")){
+									return Color.RED;
+								}else if(color.equals("tie")){
+									return Color.YELLOW;
+								}
 							}
 						}
 					}
