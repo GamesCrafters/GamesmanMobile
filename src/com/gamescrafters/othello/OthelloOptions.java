@@ -8,6 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.RadioButton;
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
+
 
 public class OthelloOptions extends Activity{
 	/** Called when the activity is first created. */
@@ -15,11 +19,19 @@ public class OthelloOptions extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.othello_options);
-		
+
 		findViewById(R.id.oth_PlayOthelloButton).setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				Intent myIntent = new Intent(OthelloOptions.this, Othello.class);
+				
+				myIntent.putExtra("isPlayer1Computer", ((RadioButton) findViewById(R.id.oth_compP1)).isChecked()); 
+				myIntent.putExtra("isPlayer2Computer", ((RadioButton) findViewById(R.id.oth_compP2)).isChecked());
+				myIntent.putExtra("dimension", ((Spinner)findViewById(R.id.oth_selectBoardSize)).getSelectedItem().toString());
+
 				OthelloOptions.this.startActivity(myIntent);
+				
+				
+				
 			}
 		});
 

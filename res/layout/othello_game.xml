@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 	<!-- Demonstrates using a relative layout to create a form -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical" android:background="@color/bg_blue" >
+	android:layout_width="fill_parent" android:layout_height="fill_parent" android:background="@color/bg_blue" android:id="@+id/oth_global" android:orientation="vertical">
 
-	<TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:textColor="@color/solid_yellow" android:id="@+id/oth_logo" android:text="Othello" android:visibility="visible" android:textSize="20dip"/>
-	<RelativeLayout android:id="@+id/RelativeLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content"><TableLayout android:id="@+id/oth_gametable" android:shrinkColumns="*" android:layout_centerHorizontal="true" android:layout_centerVertical="true" android:gravity="center_vertical|center_horizontal" android:layout_gravity="center" android:layout_width="fill_parent" android:scrollbars="vertical|horizontal" android:layout_height="335dip" android:onClick="g.swapTurn()">
-
-</TableLayout></RelativeLayout>
 	
-	<RelativeLayout android:layout_height="wrap_content" android:id="@+id/oth_GameOverAndTurn"
-		android:paddingTop="5dip" android:layout_width="fill_parent"><TableRow android:layout_height="wrap_content" android:layout_toLeftOf="@+id/oth_gameOver" android:id="@+id/TableRow01" android:layout_alignBaseline="@+id/oth_turn" android:layout_width="fill_parent"><LinearLayout android:layout_height="wrap_content" android:id="@+id/oth_TurnLayout" android:layout_width="match_parent">
+	<TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:textColor="@color/solid_yellow" android:id="@+id/oth_logo" android:text="Othello" android:visibility="visible" android:textSize="20dip" /><LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:id="@+id/oth_placementLayout"><RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/oth_boardLayout"><TableLayout android:id="@+id/oth_gametable" android:shrinkColumns="*" android:layout_centerHorizontal="true" android:layout_centerVertical="true" android:gravity="center_vertical|center_horizontal" android:layout_gravity="center" android:scrollbars="vertical|horizontal" android:onClick="g.swapTurn()" android:layout_width="wrap_content" android:layout_height="wrap_content">
+
+
+</TableLayout></RelativeLayout><LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/oth_horizontalItems" android:orientation="vertical"></LinearLayout></LinearLayout><RelativeLayout android:layout_height="wrap_content" android:id="@+id/oth_GameOverAndTurn" android:paddingTop="5dip" android:layout_width="fill_parent"><TableRow android:layout_height="wrap_content" android:layout_toLeftOf="@+id/oth_gameOver" android:id="@+id/TableRow01" android:layout_alignBaseline="@+id/oth_turn" android:layout_width="fill_parent"><LinearLayout android:layout_height="wrap_content" android:id="@+id/oth_TurnLayout" android:layout_width="match_parent">
 			<TextView android:id="@+id/oth_turn" android:layout_height="wrap_content" android:textSize="18dip" android:gravity="right" android:layout_below="@id/oth_gametable" android:layout_width="wrap_content" />
 			<ImageButton android:id="@+id/oth_turnImage" android:layout_toRightOf="@id/oth_turn" android:layout_height="35dip" android:layout_width="35dip" /><TextView android:layout_height="wrap_content" android:id="@+id/oth_skipTurnText" android:layout_width="match_parent" android:gravity="right" android:text="Click Here to Skip Your Turn" android:visibility="invisible"></TextView>
 		
@@ -21,7 +19,10 @@
 
 
 
-</RelativeLayout><TextView android:id="@+id/oth_gameOver" android:layout_width="fill_parent" android:layout_height="wrap_content" android:textSize="18dip" android:gravity="center" android:layout_alignBaseline="@+id/oth_turn" /><Button android:layout_centerVertical="true" android:layout_centerInParent="true" android:layout_width="200dip" android:id="@+id/oth_skipTurnButton" android:visibility="visible" android:typeface="sans" android:text="Skip Turn" android:height="25dip" android:layout_height="15dip"></Button>
+</RelativeLayout><TextView android:id="@+id/oth_gameOver" android:layout_width="fill_parent" android:layout_height="wrap_content" android:textSize="18dip" android:gravity="center" android:layout_alignBaseline="@+id/oth_turn" />
 	
+	
+	
+
 
 </LinearLayout> 

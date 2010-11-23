@@ -22,8 +22,8 @@
 <activity android:name="com.gamescrafters.connections.Connections"></activity>
 <activity android:name="com.gamescrafters.Y.menu"></activity>
 <activity android:name="com.gamescrafters.Y.YInterface"></activity>
-<activity android:name="com.gamescrafters.othello.OthelloOptions"></activity>
-<activity android:name="com.gamescrafters.othello.Othello"></activity>
+<activity android:name="com.gamescrafters.othello.OthelloOptions" android:screenOrientation="portrait"></activity>
+<activity android:name="com.gamescrafters.othello.Othello" android:configChanges="keyboardHidden|orientation"></activity>
 <activity android:name="com.gamescrafters.tictactoe.TicTacToeOptions"></activity>
 <activity android:name="com.gamescrafters.tictactoe.TicTacToe"></activity>
 

@@ -10,6 +10,8 @@ import com.gamescrafters.connect4.Connect4;
 import com.gamescrafters.gamesmanmobile.GameActivity;
 import com.gamescrafters.gamesmanmobile.MoveValue;
 import com.gamescrafters.gamesmanmobile.R;
+import android.content.res.Configuration;
+import android.content.Intent;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -61,11 +63,21 @@ public class Othello extends GameActivity {
 		super.onCreate(savedInstanceState); 
 		this.setGameView(R.layout.othello_game);
 		
-		this.isPlayer2Computer = true;
+		Intent thisIntent = getIntent();
+		String dim = thisIntent.getStringExtra("dimension");
+		height = 4;
+		if(dim.equals("4x4"))
+			height = 4;
+		else if(dim.equals("6x6"))
+			height = 6;
+		else if(dim.equals("8x8"))
+			height = 8;
+		width = height;
+		//this.isPlayer2Computer = true;
 		this.moveDelay = 1000;
 		
-		height = 4;
-		width = height;
+	
+		
 		this.initResources();
 		
 		this.isShowValues = true;
@@ -74,7 +86,9 @@ public class Othello extends GameActivity {
 			gb = new GUIGameBoard(this);
 		else
 			gb.reset(g);
+
 		gb.initBoard();
+
 		this.setBoard(width, height);
 		c = new Runnable(){
 			public void run() {
@@ -91,6 +105,11 @@ public class Othello extends GameActivity {
 		skip.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				g.previousMoves.push(g.copyBoard());
+				g.nextMoves.empty();
+				g.currentMove++;
+				g.movesSoFar = g.currentMove;
+				hSlider.updateProgress(g.currentMove, g.movesSoFar);
 				g.swapMove();
 				if(g.getTurn() == Game.WHITE){
 					if(isPlayer2Computer){
@@ -120,6 +139,11 @@ public class Othello extends GameActivity {
 		});
 	}
 	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig){
+		super.onConfigurationChanged(newConfig);
+		gb.updateOrient(newConfig.orientation);
+	}
 	/**
 	 * Initializes the GUI elements used for the tiles, etc.
 	 */
@@ -155,25 +179,7 @@ public class Othello extends GameActivity {
 		}else{
 			g.swapMove();
 			g.updatePreviews(true);
-			if(g.checkWin() == g.EMPTY){
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage("Are you sure you want to exit?")
-				       .setCancelable(false)
-				       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				                Othello.this.finish();
-				           }
-				       })
-				       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				                dialog.cancel();
-				           }
-				       });
-				AlertDialog alert = builder.create();
-				alert.show();
-			}
-				
-				
+
 		}
 	}
 	
@@ -221,7 +227,11 @@ public class Othello extends GameActivity {
 			}
 			doMove(bestMove.getMove());
 		}else{
-			g.checkWin();
+			if(g.checkWin() != g.EMPTY){
+				this.findViewById(R.id.oth_GameOverAndTurn).setVisibility(View.INVISIBLE);
+				((TextView)this.findViewById(R.id.oth_gameOver)).setText((g.checkWin() == g.BLACK) ? "BLACK Wins!" : "White Wins");
+			}
+				
 		}
 	}
 
@@ -379,6 +389,7 @@ public class Othello extends GameActivity {
 						swapMove(true);
 						return EMPTY;
 					}
+					swapMove(true);
 				}
 			}
 			if(black > white){
@@ -554,6 +565,22 @@ public class Othello extends GameActivity {
 			movesSoFar = currentMove;
 			hSlider.updateProgress(currentMove, movesSoFar);	
 			checkSkip();
+			int winner;
+			if((winner = g.checkWin()) != EMPTY){
+			
+				AlertDialog.Builder builder = new AlertDialog.Builder(this.parent);
+				builder.setMessage("Game over, " + ((winner == BLACK) ? "black" : "white") + " wins!")
+				       .setCancelable(false).setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+						
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+							
+						}
+				       });
+				AlertDialog alert = builder.create();
+				alert.show();
+				
+			}	
 		}
 
 		public int[][] copyBoard(){
@@ -655,7 +682,7 @@ public class Othello extends GameActivity {
 		 */
 		private void flipTiles(Queue<Integer> toFlip, int direction){
 			Integer currentX, currentY;
-			int aniSpeed = 1000;
+			int aniSpeed = 500;
 			int del = 0;
 			while((currentX = toFlip.poll()) != null && (currentY = toFlip.poll()) != null){
 				if(turn == BLACK){

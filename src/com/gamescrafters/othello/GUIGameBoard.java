@@ -2,18 +2,22 @@ package com.gamescrafters.othello;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Rect;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.RotateAnimation;
@@ -22,6 +26,8 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.os.Handler;
+import android.content.res.Configuration;
+
 
 import com.gamescrafters.gamesmanmobile.R;
 
@@ -76,15 +82,18 @@ public class GUIGameBoard {
 	 * Initializes the board for Othello.
 	 */
 	public void initBoard() {
-		int size = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 275 : 200;
-		size = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 
+		Window w = a.getWindow();
+		Rect r = new Rect();
+		w.getDecorView().getWindowVisibleDisplayFrame(r);
+		int size = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ?
 				a.getWindowManager().getDefaultDisplay().getWidth() :
-				a.getWindowManager().getDefaultDisplay().getHeight();
+					a.getWindowManager().getDefaultDisplay().getHeight() - r.top - a.findViewById(R.id.gm_undoButton).getHeight() - 15;
 		int new_hei = (int)Math.floor((double)table.getHeight() / (double)width);
 		int new_wid = (int)Math.floor((double)size / (double)height);
 		
 		for (int row=1; row<=height; row++) {
 			TableRow tr = new TableRow(a);
+			tr.setId(row+1024);
 			tr.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			for (int col=1; col<=width; col++) {
 				int c = Color.TRANSPARENT;
@@ -93,13 +102,15 @@ public class GUIGameBoard {
 				else if(g.board[row-1][col-1] == Othello.Game.WHITE)
 					c = Color.WHITE;
 				TileView tv = new TileView(a, row, col, c);
-				tv.setSmallColor(g.previewColor(row, col,true));
-				tv.setId(getID(row, col));
+				tv.setSmallColor(g.previewColor(row, col,false));
+				//tv.setId(getID(row, col));
 				tv.setOnClickListener(new PieceClickListener(col, row, tv));
+				table.findViewById(getID(row,col));
 				PositionView pv = new PositionView(a);
 				ImageView iv = new ImageView(a);
 				iv.setImageResource(R.drawable.oth_felt);
 				RelativeLayout rl = new RelativeLayout(a);
+				rl.setId(getID(row,col));
 				rl.addView(iv);
 				rl.addView(pv);
 				rl.addView(tv);
@@ -111,6 +122,83 @@ public class GUIGameBoard {
 		LevelsView lv = new LevelsView(a);
 		g.levels = lv;
 		table.addView(lv,size,15);
+		if(a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+			updateOrient(Configuration.ORIENTATION_LANDSCAPE);
+		}
+		Thread previews = new Thread(){
+			public void run(){
+				g.updatePreviews(true);
+			}
+		};
+		previews.start();
+	}
+	
+	public void updateOrient(int orientation){
+		Window w = a.getWindow();
+		Rect r = new Rect();
+		w.getDecorView().getWindowVisibleDisplayFrame(r);
+		int size = orientation == Configuration.ORIENTATION_PORTRAIT ?
+				a.getWindowManager().getDefaultDisplay().getWidth() :
+					a.getWindowManager().getDefaultDisplay().getHeight() - r.top - a.findViewById(R.id.gm_undoButton).getHeight() - 15;		
+//		int size = orientation == Configuration.ORIENTATION_PORTRAIT ?
+//				a.getWindowManager().getDefaultDisplay().getWidth() :
+//				table.getHeight() - a.findViewById(R.id.gm_undoButton).getHeight()
+//				- a.findViewById(R.id.oth_logo).getHeight();
+//		int size = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 
+//				a.getWindowManager().getDefaultDisplay().getWidth() :
+//				a.getWindowManager().getDefaultDisplay().getHeight() - a.findViewById(R.id.gm_undoButton).getHeight()
+//				- a.findViewById(R.id.oth_logo).getHeight();
+		int new_hei = (int)Math.floor((double)table.getHeight() / (double)width);
+		int new_wid = (int)Math.floor((double)size / (double)height);
+
+		table.removeView(g.levels);
+		table.addView(g.levels,size,15);
+		LinearLayout orient = (LinearLayout)a.findViewById(R.id.oth_horizontalItems);
+		LinearLayout global = (LinearLayout)a.findViewById(R.id.oth_global);
+		if(orientation == Configuration.ORIENTATION_LANDSCAPE){
+			table.setGravity(Gravity.LEFT);
+			View move = a.findViewById(R.id.oth_GameOverAndTurn);
+			View title = a.findViewById(R.id.oth_logo);
+			View goText = a.findViewById(R.id.oth_gameOver);
+			if(move != null){
+				global.removeView(move);
+				global.removeView(title);
+				global.removeView(goText);
+				orient.addView(title);
+				orient.addView(move);
+				orient.addView(goText);
+			}
+			//orient.addView(a.findViewById(R.id.oth_GameOverAndTurn));
+			//global.setOrientation(LinearLayout.HORIZONTAL);
+		}else{
+			table.setGravity(Gravity.CENTER_HORIZONTAL);
+			View move = a.findViewById(R.id.oth_GameOverAndTurn);
+			View table = a.findViewById(R.id.oth_boardLayout);
+			View title = a.findViewById(R.id.oth_logo);
+			View goText = a.findViewById(R.id.oth_gameOver);
+			if(move != null){
+				orient.removeView(move);
+				orient.removeView(title);
+				orient.removeView(goText);
+				
+				//global.removeView(table);
+				global.addView(title,0);
+//				global.addView(table);
+				global.addView(move);
+				global.addView(goText);
+				
+			}
+		}
+		
+		
+		for(int row=1; row <= height; row++){
+			TableRow tr = (TableRow)table.findViewById(row+1024);
+			for(int col = 1; col <= width; col++){	
+				RelativeLayout rl = (RelativeLayout)tr.findViewById(getID(row,col));
+				tr.removeViewAt(0);
+				tr.addView(rl, new_wid, new_wid);
+			}
+		}
 	}
 	
 	/**
@@ -213,7 +301,7 @@ public class GUIGameBoard {
 			openDiag1.setInterpolator(new OvershootInterpolator(interpFactor));
 			openDiag2.setInterpolator(new OvershootInterpolator(interpFactor));
 			
-			final int delay = 1000;
+			final int delay = 500;
 			
 			this.dF1 = new Runnable(){
 				public void run(){
@@ -286,6 +374,23 @@ public class GUIGameBoard {
 		@Override
 		protected void onDraw(Canvas canvas){
 			super .onDraw(canvas);
+//			Paint p = new Paint();
+//			p.setStyle(Paint.Style.FILL);
+//			p.setColor(Color.TRANSPARENT);
+//			canvas.drawPaint(p);
+//			if(this.tColor != Color.TRANSPARENT){
+//				if(this.tColor == Color.BLACK){
+//					this.setImageResource(R.drawable.oth_tileblack);
+//				}else{
+//					this.setImageResource(R.drawable.oth_tilewhite);
+//				}
+//			}else if(this.pColor != Color.TRANSPARENT && this.small){
+//				//this.setImageResource(R.drawable.oth_felt);
+//				p.setColor(this.pColor);
+//				p.setStyle(Style.FILL);
+//				canvas.drawCircle(getWidth()/2, getHeight()/2, (((getWidth()/2)*30)/100), p);
+//			}
+			//this.setImageResource(R.drawable.oth_tilewhite);
 			Paint p = new Paint();
 			p.setStyle(Paint.Style.FILL);
 			p.setColor(Color.TRANSPARENT);
@@ -310,36 +415,26 @@ public class GUIGameBoard {
 			}
 			
 			public void onAnimationEnd(Animation animation) {
-				
 				this.parent.swapColor();
-				this.nextAni.setAnimationListener(new Animation.AnimationListener() {
-					
-					public void onAnimationStart(Animation animation) {	}
-					
-					public void onAnimationRepeat(Animation animation) {}
-					
+				this.nextAni.setAnimationListener(new Animation.AnimationListener() {					
+					public void onAnimationStart(Animation animation) {	}				
+					public void onAnimationRepeat(Animation animation) {}				
 					public void onAnimationEnd(Animation animation) {
 						animsRunning--;
-						
 					}
 				});
 				this.parent.startAnimation(this.nextAni);
 			}
-
 			public void onAnimationRepeat(Animation animation) {}
-
 			public void onAnimationStart(Animation animation) {
 				animsRunning++;
 			}
-		}
-		
+		}	
 	}
 	public class PositionView extends View{
-
 		public PositionView(Context context) {
 			super(context);
-		}
-		
+		}	
 		@Override
 		protected void onDraw(Canvas canvas){
 			super .onDraw(canvas);
@@ -355,22 +450,18 @@ public class GUIGameBoard {
 			canvas.drawLine(getWidth(), 0, getWidth(), getHeight(), p);
 			canvas.drawLine(0, getHeight(), getWidth(), getHeight(), p);
 		}
-		
 	}
 	public class LevelsView extends View{
-
 		private int black,white;
 		public LevelsView(Context context) {
 			super(context);
 			black = 2;
 			white = 2;
 			// TODO Auto-generated constructor stub
-		}
-		
+		}	
 		public void updateBlacks(int b){
 			black = b;
 		}
-		
 		public void updateWhites(int w){
 			white = w;
 		}
