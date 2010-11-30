@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.widget.Toast;
+
 /**
  * A class that allows games to query the online database for moveValues.
  * @author AlexD
@@ -73,15 +75,18 @@ public class GameValueService {
 	 * @throws JSONException
 	 */
 	private static MoveValue[] getNextMoveValuesFromURL(String urlResponse) throws JSONException {
-		JSONObject response = new JSONObject(urlResponse);
-		JSONArray jarray = response.getJSONArray("response");
-		MoveValue[] values = new MoveValue[jarray.length()];
-		if (values != null && values.length != 0) {
-			for (int i=0; i < values.length; i++){
-				values[i] = new MoveValue(jarray.getJSONObject(i));
+		if(urlResponse != ""){
+			JSONObject response = new JSONObject(urlResponse);
+			JSONArray jarray = response.getJSONArray("response");
+			MoveValue[] values = new MoveValue[jarray.length()];
+			if (values != null && values.length != 0) {
+				for (int i=0; i < values.length; i++){
+					values[i] = new MoveValue(jarray.getJSONObject(i));
+				}
 			}
+			return values;
 		}
-		return values;
+		return null;
 	}
 	
 	/**

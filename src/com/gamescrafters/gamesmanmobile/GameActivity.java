@@ -7,6 +7,7 @@ import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +52,12 @@ public abstract class GameActivity extends Activity {
 		VVHIntent.setFlags(131072);
 		// Create a new VVHList.
 		VVHList = new LinkedList<VVHNode>();
+		
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig){
+		super.onConfigurationChanged(newConfig);
 	}
 
 	protected void setPlayers(boolean player1, boolean player2) {

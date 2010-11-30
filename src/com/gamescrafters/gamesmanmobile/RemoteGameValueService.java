@@ -61,26 +61,28 @@ public class RemoteGameValueService  {
             e1.printStackTrace();
             return "";
         }
-        
-        InputStreamReader isr = new InputStreamReader(in);
-        int charRead;
-          String str = "";
-          char[] inputBuffer = new char[BUFFER_SIZE];          
-        try {
-            while ((charRead = isr.read(inputBuffer))>0)
-            {                    
-                //---convert the chars to a String---
-                String readString = 
-                    String.copyValueOf(inputBuffer, 0, charRead);                    
-                str += readString;
-                inputBuffer = new char[BUFFER_SIZE];
-            }
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }    
-        return str;        
+        if(in != null){
+	        InputStreamReader isr = new InputStreamReader(in);
+	        int charRead;
+	          String str = "";
+	          char[] inputBuffer = new char[BUFFER_SIZE];          
+	        try {
+	            while ((charRead = isr.read(inputBuffer))>0)
+	            {                    
+	                //---convert the chars to a String---
+	                String readString = 
+	                    String.copyValueOf(inputBuffer, 0, charRead);                    
+	                str += readString;
+	                inputBuffer = new char[BUFFER_SIZE];
+	            }
+	            in.close();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            return "";
+	        }    
+	        return str; 
+        }
+        return "";
     }
 	
 	/**

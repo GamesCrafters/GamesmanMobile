@@ -26,10 +26,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ImageView.ScaleType;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 
 /**
@@ -37,6 +40,7 @@ import android.content.DialogInterface;
  * It communicates with the GameValueService to get move values, the GUIGameBoard to handle the board GUI,
  * and will extend GameActivity to interact with the GameController / main frame (and through it, the VVH).
  * @version 0.1 (11 September 2010)
+ * @version 1.0 (26 November 2010)
  * @author Zach Bush
  * @author Royce Cheng-Yue
  * @author Alex Degtiar
@@ -57,7 +61,7 @@ public class Othello extends GameActivity {
 	int delay;
 	int height,width;
 	int moveDelay;
-	Runnable c;
+	Runnable c, swapMove, checkSkip;
 
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState); 
@@ -76,6 +80,9 @@ public class Othello extends GameActivity {
 		//this.isPlayer2Computer = true;
 		this.moveDelay = 1000;
 		
+		this.isPlayer1Computer = thisIntent.getBooleanExtra("isPlayer1Computer", this.isPlayer1Computer);
+		this.isPlayer2Computer = thisIntent.getBooleanExtra("isPlayer2Computer", this.isPlayer2Computer);
+		
 	
 		
 		this.initResources();
@@ -88,6 +95,7 @@ public class Othello extends GameActivity {
 			gb.reset(g);
 
 		gb.initBoard();
+		
 
 		this.setBoard(width, height);
 		c = new Runnable(){
@@ -100,43 +108,29 @@ public class Othello extends GameActivity {
 			}	
 		};
 		
+		swapMove = new Runnable(){
+			public void run(){
+				g.swapMove();
+			}
+		};
+		
+		checkSkip = new Runnable(){
+			public void run(){
+				g.checkSkip();
+			}
+		};
 		TextView skip = (TextView)this.findViewById(R.id.oth_skipTurnText);
 		skip.setGravity(Gravity.RIGHT);
 		skip.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				g.previousMoves.push(g.copyBoard());
-				g.nextMoves.empty();
-				g.currentMove++;
-				g.movesSoFar = g.currentMove;
-				hSlider.updateProgress(g.currentMove, g.movesSoFar);
-				g.swapMove();
-				if(g.getTurn() == Game.WHITE){
-					if(isPlayer2Computer){
-						doComputerMove();
-					}
-				}else{
-					if(isPlayer1Computer){
-						doComputerMove();
-					}
-				}
-				g.updatePreviews(false);
-				g.checkSkip();
-				
-				Thread server = new Thread(new Runnable(){
-					public void run() {
-						values = getNextMoveValues();
-						if((values != null) && (values.length > 0)){
-							previousValue = getBoardValue(values);
-							int remoteness = getRemoteness(previousValue, values);
-							updateVVH(previousValue, remoteness, false, g.isBlackTurn(), false);
-						}
-						g.updatePreviews(true);					
-					}
-				});
-				server.start();
+				g.skipMove();
 			}
 		});
+		
+		if(this.isPlayer1Computer)
+			g.h.post(c);
+
 	}
 	
 	@Override
@@ -177,62 +171,158 @@ public class Othello extends GameActivity {
 			int row = move.charAt(1) - '1';
 			g.doMove((this.height - row), col+1, false, true);
 		}else{
-			g.swapMove();
-			g.updatePreviews(true);
-
+			g.skipMove();
 		}
 	}
 	
-	@Override
-	public void doComputerMove() {
-		MoveValue values[] = getNextMoveValues();
-		if(values.length > 0){
-			
-			MoveValue bestMove = values[0];
-			Random gen = new Random();
-			for (MoveValue val : values) {
-				String bestMoveValue = bestMove.getValue();
-				String valValue = val.getValue();
-				int valRemoteness = val.getRemoteness();
-				int bestMoveRemoteness = bestMove.getRemoteness();
-				if (valValue.equals("lose")) {
-					if (((bestMoveValue.equals("lose")) && 
-							(valRemoteness < bestMoveRemoteness))
-							|| (!bestMoveValue.equals("lose"))) {
+	class movesRun implements Runnable{
+		private ProgressDialog p;
+		
+		movesRun(ProgressDialog progress){
+			super();
+			this.p = progress;
+		}
+		public void run() {
+			values = getNextMoveValues();	
+			if(values != null && values.length > 0){
+				
+				MoveValue bestMove = values[0];
+				Random gen = new Random();
+				for (MoveValue val : values) {
+					String bestMoveValue = bestMove.getValue();
+					String valValue = val.getValue();
+					int valRemoteness = val.getRemoteness();
+					int bestMoveRemoteness = bestMove.getRemoteness();
+					if (valValue.equals("lose")) {
+						if (((bestMoveValue.equals("lose")) && 
+								(valRemoteness < bestMoveRemoteness))
+								|| (!bestMoveValue.equals("lose"))) {
+							bestMove = val;
+						} else if (bestMoveValue.equals("lose") && (valRemoteness == bestMoveRemoteness)) {
+							double randomnum = gen.nextDouble();
+							if (randomnum >= 0.5) {
+								bestMove = val;
+							}
+						}
+					} else if (valValue.equals("tie")) {
+						if ((bestMoveValue.equals("tie")) && (valRemoteness > bestMoveRemoteness)
+								|| (bestMoveValue.equals("lose"))) {
+							bestMove = val;
+						} else if (bestMoveValue.equals("tie") && (valRemoteness == bestMoveRemoteness)) {
+							double randomnum = gen.nextDouble();
+							if (randomnum >= 0.5) {
+								bestMove = val;
+							}
+						}
+					} else if ((bestMoveValue.equals("win")) && (valRemoteness > bestMoveRemoteness)) {
 						bestMove = val;
-					} else if (bestMoveValue.equals("lose") && (valRemoteness == bestMoveRemoteness)) {
+					} else if (bestMoveValue.equals("win") && (valRemoteness == bestMoveRemoteness)) {
 						double randomnum = gen.nextDouble();
 						if (randomnum >= 0.5) {
 							bestMove = val;
 						}
 					}
-				} else if (valValue.equals("tie")) {
-					if ((bestMoveValue.equals("tie")) && (valRemoteness > bestMoveRemoteness)
-							|| (bestMoveValue.equals("lose"))) {
-						bestMove = val;
-					} else if (bestMoveValue.equals("tie") && (valRemoteness == bestMoveRemoteness)) {
-						double randomnum = gen.nextDouble();
-						if (randomnum >= 0.5) {
-							bestMove = val;
-						}
-					}
-				} else if ((bestMoveValue.equals("win")) && (valRemoteness > bestMoveRemoteness)) {
-					bestMove = val;
-				} else if (bestMoveValue.equals("win") && (valRemoteness == bestMoveRemoteness)) {
-					double randomnum = gen.nextDouble();
-					if (randomnum >= 0.5) {
-						bestMove = val;
+				}
+				p.dismiss();
+				doMove(bestMove.getMove());	
+			}else{
+				if(!g.gameOverHandler()){
+					//Toast.makeText(Othello.this, "Playing Randomly", Toast.LENGTH_SHORT).show();
+					Stack< int[] > moves = g.listValid();
+					int num = moves.size();
+					if(num > 0){
+						Random gen = new Random();
+						int random = gen.nextInt(num);
+						int[] play = moves.get(random);
+						p.dismiss();
+						g.doMove(play[0], play[1], false, true);
+					}else{
+						p.dismiss();
+						g.skipMove();
 					}
 				}
 			}
-			doMove(bestMove.getMove());
-		}else{
-			if(g.checkWin() != g.EMPTY){
-				this.findViewById(R.id.oth_GameOverAndTurn).setVisibility(View.INVISIBLE);
-				((TextView)this.findViewById(R.id.oth_gameOver)).setText((g.checkWin() == g.BLACK) ? "BLACK Wins!" : "White Wins");
-			}
-				
+			//p.dismiss();
 		}
+		
+	}
+	@Override
+	public void doComputerMove() {
+		//ProgressDialog d = new ProgressDialog(this);
+		//d.setCancelable(false);
+		//d.setMessage("Thinking...");
+		//d.show();
+		//MoveValue values[] = getNextMoveValues();
+		if(!g.gameOverHandler()){
+			ProgressDialog d;
+			d = ProgressDialog.show(this, "", "Thinking...", true, false);
+			Thread proc = new Thread(new  movesRun(d));
+			proc.start();
+		}
+//		 //= getNextMoveValues();
+//		proc.start();
+//		try{
+//			proc.join(5000);
+//		}catch(InterruptedException ie){
+//			ie.printStackTrace();
+//		}
+//		proc.stop();
+//		if(values != null && values.length > 0){
+//			
+//			MoveValue bestMove = values[0];
+//			Random gen = new Random();
+//			for (MoveValue val : values) {
+//				String bestMoveValue = bestMove.getValue();
+//				String valValue = val.getValue();
+//				int valRemoteness = val.getRemoteness();
+//				int bestMoveRemoteness = bestMove.getRemoteness();
+//				if (valValue.equals("lose")) {
+//					if (((bestMoveValue.equals("lose")) && 
+//							(valRemoteness < bestMoveRemoteness))
+//							|| (!bestMoveValue.equals("lose"))) {
+//						bestMove = val;
+//					} else if (bestMoveValue.equals("lose") && (valRemoteness == bestMoveRemoteness)) {
+//						double randomnum = gen.nextDouble();
+//						if (randomnum >= 0.5) {
+//							bestMove = val;
+//						}
+//					}
+//				} else if (valValue.equals("tie")) {
+//					if ((bestMoveValue.equals("tie")) && (valRemoteness > bestMoveRemoteness)
+//							|| (bestMoveValue.equals("lose"))) {
+//						bestMove = val;
+//					} else if (bestMoveValue.equals("tie") && (valRemoteness == bestMoveRemoteness)) {
+//						double randomnum = gen.nextDouble();
+//						if (randomnum >= 0.5) {
+//							bestMove = val;
+//						}
+//					}
+//				} else if ((bestMoveValue.equals("win")) && (valRemoteness > bestMoveRemoteness)) {
+//					bestMove = val;
+//				} else if (bestMoveValue.equals("win") && (valRemoteness == bestMoveRemoteness)) {
+//					double randomnum = gen.nextDouble();
+//					if (randomnum >= 0.5) {
+//						bestMove = val;
+//					}
+//				}
+//			}
+//			doMove(bestMove.getMove());	
+//		}else{
+//			if(!g.gameOverHandler()){
+//				//Toast.makeText(Othello.this, "Playing Randomly", Toast.LENGTH_SHORT).show();
+//				Stack< int[] > moves = g.listValid();
+//				int num = moves.size();
+//				if(num > 0){
+//					Random gen = new Random();
+//					int random = gen.nextInt(num);
+//					int[] play = moves.get(random);
+//					g.doMove(play[0], play[1], false, true);
+//				}else{
+//					g.skipMove();
+//				}
+//			}
+//		}
+//		d.dismiss();
 	}
 
 	@Override
@@ -257,16 +347,7 @@ public class Othello extends GameActivity {
 		}
 		board.append(";player=");
 		board.append((this.g.getTurn() == this.g.BLACK) ? "1" : "2");
-		//board.append(";width=");
-		//board.append(width);
-		//board.append(";height=");
-		//board.append(height);
-		board.append(";option=136");
-		
-		// Why are these here?
-		//board.append(";");
-		//board.append("pieces=4");
-		
+		board.append(";option=136"); // this is 4x4, What are other board sizes?
 		return board.toString();
 	}
 
@@ -338,6 +419,7 @@ public class Othello extends GameActivity {
 		TextView turnText;
 		ImageButton turnImage;
 		GUIGameBoard.LevelsView levels;
+		Runnable goCheck;
 		
 		public Game(int height, int width, Othello parent) {
 			this.parent = parent;
@@ -361,10 +443,51 @@ public class Othello extends GameActivity {
 			turnImage.setBackgroundDrawable(this.parent.blackPiece);
 			turnImage.setEnabled(false);
 			
+			goCheck = new Runnable(){
+				public void run(){
+					Game.this.gameOverHandler();
+				}
+			};
+			
 
 			
 		}
 		
+		public void skipMove() {
+			previousMoves.push(copyBoard());
+			nextMoves.empty();
+			currentMove++;
+			movesSoFar = currentMove;
+			hSlider.updateProgress(currentMove, movesSoFar);
+			h.post(Othello.this.swapMove);
+			//swapMove();
+			if(getTurn() == BLACK){
+				if(isPlayer2Computer){
+					h.post(Othello.this.c);
+				}
+			}else{
+				if(isPlayer1Computer){
+					h.post(Othello.this.c);
+				}
+			}
+			updatePreviews(false);
+			h.post(checkSkip);
+			//checkSkip();
+			
+			Thread server = new Thread(new Runnable(){
+				public void run() {
+					values = getNextMoveValues();
+					if((values != null) && (values.length > 0)){
+						previousValue = getBoardValue(values);
+						int remoteness = getRemoteness(previousValue, values);
+						updateVVH(previousValue, remoteness, false, isBlackTurn(), false);
+					}
+					updatePreviews(true);					
+				}
+			});
+			server.start();	
+		}
+
 		public int checkWin() {
 			int black,white;
 			black = white = 0;
@@ -456,7 +579,7 @@ public class Othello extends GameActivity {
 			else
 				turn = BLACK;
 			if(!quiet)
-				turnImage.setBackgroundDrawable((turn == BLACK) ? this.parent.blackPiece : this.parent.whitePiece);
+				parent.findViewById(R.id.oth_turnImage).setBackgroundDrawable((turn == BLACK) ? this.parent.blackPiece : this.parent.whitePiece);
 			
 		}
 		
@@ -491,7 +614,10 @@ public class Othello extends GameActivity {
 				}
 			});
 			server.start();
-			checkSkip();
+			h.post(checkSkip);
+			//checkSkip();
+			h.post(goCheck);
+			//this.gameOverHandler();
 		}
 
 		/**
@@ -505,9 +631,9 @@ public class Othello extends GameActivity {
 			// Remove the last move from the VisualValueHistory.
 			removeLastVVHNode();
 			if(g.gameOver){
-				g.gameOver = false;
-				turnTextView.setText("Turn: ");
+				turnTextView.setText("Player: ");
 				gameOverTextView.setText("");
+				this.undoGameOver();
 			}
 			this.currentMove--;
 			hSlider.updateProgress(currentMove, movesSoFar);
@@ -520,12 +646,14 @@ public class Othello extends GameActivity {
 						previousValue = getBoardValue(values);
 						int remoteness = getRemoteness(previousValue, values);
 						updateVVH(previousValue, remoteness, false, isBlackTurn(), false);
-					}
+					}gameOverHandler();
 					updatePreviews(true);					
 				}
 			});
 			server.start();
-			checkSkip();
+
+			h.post(checkSkip);
+			//checkSkip();
 		}
 
 		public void doMove(int row, int column, boolean isRedo, boolean isComputer){
@@ -545,7 +673,9 @@ public class Othello extends GameActivity {
 			this.levels.updateBlacks(countUp()[BLACK-1]);
 			this.levels.updateWhites(countUp()[WHITE-1]);
 			this.levels.postInvalidate();
-			swapMove();
+
+			h.post(Othello.this.swapMove);
+			//swapMove();
 			clearPreviews();
 			Thread server = new Thread(new Runnable(){
 				public void run() {
@@ -563,24 +693,67 @@ public class Othello extends GameActivity {
 		
 			currentMove++;
 			movesSoFar = currentMove;
-			hSlider.updateProgress(currentMove, movesSoFar);	
-			checkSkip();
+			hSlider.updateProgress(currentMove, movesSoFar);
+
+			h.post(checkSkip);
+			//checkSkip();
+			h.post(goCheck);
+	        //gameOverHandler();
+		}
+		
+		public Stack<int[]> listValid(){
+			Stack<int[]> ret = new Stack<int[]>();
+			for(int y = 1; y <= this.height; y++){
+				for(int x = 1; x <= this.width; x++){
+					if(this.moveValid(y, x)){
+						int[] t = new int[2];
+						t[0] = y;
+						t[1] = x;
+						ret.push(t);
+					}
+				}
+			}
+			return ret;
+		}
+		
+		public boolean gameOverHandler(){
 			int winner;
 			if((winner = g.checkWin()) != EMPTY){
-			
-				AlertDialog.Builder builder = new AlertDialog.Builder(this.parent);
-				builder.setMessage("Game over, " + ((winner == BLACK) ? "black" : "white") + " wins!")
-				       .setCancelable(false).setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-						
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.cancel();
-							
-						}
-				       });
-				AlertDialog alert = builder.create();
-				alert.show();
-				
-			}	
+				//Debug.stopMethodTracing();
+				String winmess = "";
+				if(winner == BLACK)
+					winmess = "Black Wins";
+				else if(winner == WHITE)
+					winmess = "White Wins";
+				else
+					winmess = "It's a tie!";
+				this.parent.findViewById(R.id.oth_GameOverAndTurn).setVisibility(View.INVISIBLE);
+				this.parent.findViewById(R.id.oth_gameOver).setVisibility(View.VISIBLE);
+				((TextView)this.parent.findViewById(R.id.oth_gameOver)).setText("Game Over, " + winmess);
+				//Toast.makeText(this.parent, "Game Over, " + winmess, Toast.LENGTH_LONG).show();
+//				AlertDialog.Builder builder = new AlertDialog.Builder(this.parent);
+//				builder.setMessage("Game over, " + winmess)
+//				       .setCancelable(false).setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+//						
+//						public void onClick(DialogInterface dialog, int which) {
+//							dialog.cancel();
+//							
+//						}
+//				       });
+//				AlertDialog alert = builder.create();
+//				alert.show();
+				this.gameOver = true;
+				return true;
+			}
+			return false;
+		}
+		
+		public void undoGameOver(){
+			if(this.gameOver == true){
+				this.parent.findViewById(R.id.oth_GameOverAndTurn).setVisibility(View.VISIBLE);
+				this.parent.findViewById(R.id.oth_gameOver).setVisibility(View.INVISIBLE);
+				this.gameOver = false;
+			}
 		}
 
 		public int[][] copyBoard(){
@@ -693,27 +866,19 @@ public class Othello extends GameActivity {
 				if((direction & UP) != 0){
 					if((direction & LEFT) != 0)
 						this.h.postDelayed(this.tiles[currentX][currentY].dF1, del);
-						//this.tiles[currentX][currentY].flipDiagonal1(aniSpeed);
 					else if((direction & RIGHT) != 0)
 						this.h.postDelayed(this.tiles[currentX][currentY].dF2, del);
-						//this.tiles[currentX][currentY].flipDiagonal2(aniSpeed);
 					else
 						this.h.postDelayed(this.tiles[currentX][currentY].v, del);
-						//this.tiles[currentX][currentY].flipVertical(aniSpeed);
 				}else if((direction & DOWN) != 0){
 					if((direction & LEFT) != 0)
-						//this.h.postAtTime(this.tiles[currentX][currentY].dF2, uptimeMillis() + del);
-						this.h.postDelayed(this.tiles[currentX][currentY].dF2, del);
-						//this.tiles[currentX][currentY].flipDiagonal2(aniSpeed);						
+						this.h.postDelayed(this.tiles[currentX][currentY].dF2, del);					
 					else if((direction & RIGHT) != 0)
 						this.h.postDelayed(this.tiles[currentX][currentY].dF1, del);
-						//this.tiles[currentX][currentY].flipDiagonal1(aniSpeed);
 					else
 						this.h.postDelayed(this.tiles[currentX][currentY].v, del);
-						//this.tiles[currentX][currentY].flipVertical(aniSpeed);
 				}else if((direction & LEFT) != 0 || ((direction & RIGHT) != 0)){
 					this.h.postDelayed(this.tiles[currentX][currentY].h, del);
-					//this.tiles[currentX][currentY].flipHorizontal(aniSpeed);
 				}
 				del += (aniSpeed/2);
 			}

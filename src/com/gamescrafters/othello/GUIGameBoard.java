@@ -139,7 +139,7 @@ public class GUIGameBoard {
 		w.getDecorView().getWindowVisibleDisplayFrame(r);
 		int size = orientation == Configuration.ORIENTATION_PORTRAIT ?
 				a.getWindowManager().getDefaultDisplay().getWidth() :
-					a.getWindowManager().getDefaultDisplay().getHeight() - r.top - a.findViewById(R.id.gm_undoButton).getHeight() - 15;		
+					a.getWindowManager().getDefaultDisplay().getHeight() - r.top -a.findViewById(R.id.gm_undoButton).getHeight() - 15;		
 //		int size = orientation == Configuration.ORIENTATION_PORTRAIT ?
 //				a.getWindowManager().getDefaultDisplay().getWidth() :
 //				table.getHeight() - a.findViewById(R.id.gm_undoButton).getHeight()
