@@ -14,7 +14,8 @@ import com.gamescrafters.gamesmanmobile.R;
 /**
  * A class representing the m x n table of tiles on which Connect 4 is played.
  * 
- * @author AlexD
+ * @author Rohit Poddar
+ * @author Anirudh Todi
  */
 public class GUIGameBoard {
 	int width;

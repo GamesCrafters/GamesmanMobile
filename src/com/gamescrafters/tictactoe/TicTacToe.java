@@ -204,20 +204,25 @@ public class TicTacToe extends GameActivity {
 			for (int i = 0; i < 3; i++) { 
 				int currentElem = boardRep [i][j];
 				if (currentElem == TicTacToe.Game.RED) {
-					board.append("o");
+					board.append("O");
 				} 
 				else if (currentElem == TicTacToe.Game.BLUE) {
-					board.append("x");
+					board.append("X");
 				} 
 				else {
-					board.append("_");
+					board.append("%20");
 				}
 			}
 		}
 		
 		board.append(";");
-		board.append("option=3");
+		board.append("width=3;height=3;pieces=3");
 		return board.toString();
+		
+		/* URL we're trying to use:
+		 * http://nyc.cs.berkeley.edu:8080/gcweb/service/gamesman/puzzles/ttt/getNextMoveValues;board=%20%20%20%20%20%20%20%20X;width=3;height=3;pieces=3
+		 * Untested	
+		 */
 	}
 
 	/**
@@ -225,11 +230,24 @@ public class TicTacToe extends GameActivity {
 	 */
 	@Override
 	public void doMove(String move) {
-		int mov = Integer.parseInt(move);
-		int row, col = 0;
+		char col = move.charAt(0);
+		char temp = move.charAt(1);
+		String rowString = temp + "";
+		int row = Integer.parseInt(rowString);
 		
-		col = (mov - 1) % 3;
-		row = (mov - 1) / 3;
+		if (col == 'A') {
+			col = 0;
+		}
+		else if (col == 'B') {
+			col = 1;
+		}
+		else {
+			col = 2;
+		}
+		
+		row = row - 1;
+		/*col = (mov - 1) % 3;
+		row = (mov - 1) / 3;*/
 			
 		g.doMove(col, row, false);
 		// g.doMove(Integer.parseInt(move), 0, false);
@@ -296,52 +314,7 @@ public class TicTacToe extends GameActivity {
 			g.undoMove();
 		}
 	}
-		
-	public void doComputerMove() {
-		MoveValue values[] = getNextMoveValues();
-		MoveValue bestMove = values[0];
-		Random gen = new Random();
-		
-		for (MoveValue val : values) {
-			String bestMoveValue = bestMove.getValue();
-			String valValue = val.getValue();
-			int valRemoteness = val.getRemoteness();
-			int bestMoveRemoteness = bestMove.getRemoteness();
-			
-			if (valValue.equals("lose")) {
-				if (((bestMoveValue.equals("lose")) && (valRemoteness > bestMoveRemoteness))	|| (!bestMoveValue.equals("lose"))) {
-					bestMove = val;
-				} 
-				else if (bestMoveValue.equals("lose") && (valRemoteness == bestMoveRemoteness)) {
-					double randomnum = gen.nextDouble();
-					if (randomnum >= 0.5) {
-						bestMove = val;
-					}
-				}
-			} 
-			else if (valValue.equals("tie")) {
-				if ((bestMoveValue.equals("tie")) && (valRemoteness < bestMoveRemoteness) || (bestMoveValue.equals("win"))) {
-					bestMove = val;
-				} 
-				else if (bestMoveValue.equals("tie") && (valRemoteness == bestMoveRemoteness)) {
-					double randomnum = gen.nextDouble();
-					if (randomnum >= 0.5) {
-						bestMove = val;
-					}
-				}
-			} 
-			else if ((bestMoveValue.equals("win")) && (valRemoteness < bestMoveRemoteness)) {
-				bestMove = val;
-			} 
-			else if (bestMoveValue.equals("win") && (valRemoteness == bestMoveRemoteness)) {
-				double randomnum = gen.nextDouble();
-				if (randomnum >= 0.5) {
-					bestMove = val;
-				}
-			}
-		}
-		doMove(bestMove.getMove());
-	}
+	
 
 	/**
 	 * A class that contains the internal state of the Connect 4 game,
