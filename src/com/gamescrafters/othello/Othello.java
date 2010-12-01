@@ -61,7 +61,7 @@ public class Othello extends GameActivity {
 	int delay;
 	int height,width;
 	int moveDelay;
-	Runnable c, swapMove, checkSkip;
+	Runnable c, swapMove, checkSkip, updatePreviews;
 
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState); 
@@ -117,6 +117,12 @@ public class Othello extends GameActivity {
 		checkSkip = new Runnable(){
 			public void run(){
 				g.checkSkip();
+			}
+		};
+		
+		updatePreviews = new Runnable(){
+			public void run(){
+				g.updatePreviews(false);
 			}
 		};
 		TextView skip = (TextView)this.findViewById(R.id.oth_skipTurnText);
@@ -347,7 +353,11 @@ public class Othello extends GameActivity {
 		}
 		board.append(";player=");
 		board.append((this.g.getTurn() == this.g.BLACK) ? "1" : "2");
-		board.append(";option=136"); // this is 4x4, What are other board sizes?
+		if(height == width && height == 4){
+			board.append(";option=136"); // this is 4x4, What are other board sizes?
+		}else{
+			board.append(";option=unknown");
+		}
 		return board.toString();
 	}
 
@@ -470,7 +480,8 @@ public class Othello extends GameActivity {
 					h.post(Othello.this.c);
 				}
 			}
-			updatePreviews(false);
+			h.post(updatePreviews);
+			//updatePreviews(false);
 			h.post(checkSkip);
 			//checkSkip();
 			
@@ -676,28 +687,37 @@ public class Othello extends GameActivity {
 
 			h.post(Othello.this.swapMove);
 			//swapMove();
+			
 			clearPreviews();
-			Thread server = new Thread(new Runnable(){
-				public void run() {
-					values = getNextMoveValues();
-					if((values != null) && (values.length > 0)){
-						previousValue = getBoardValue(values);
-						int remoteness = getRemoteness(previousValue, values);
-						updateVVH(previousValue, remoteness, false, isBlackTurn(), false);
+			if(isComputer || ((!Othello.this.isPlayer1Computer) && (!Othello.this.isPlayer2Computer))){
+				Thread server = new Thread(new Runnable(){
+					public void run() {
+						values = getNextMoveValues();
+						if((values != null) && (values.length > 0)){
+							previousValue = getBoardValue(values);
+							int remoteness = getRemoteness(previousValue, values);
+							updateVVH(previousValue, remoteness, false, isBlackTurn(), false);
+						}
+						updatePreviews(true);					
 					}
-					updatePreviews(true);					
-				}
-			});
-			updatePreviews(false);
-			server.start();
+				});
+				
+				h.post(updatePreviews);
+				server.start();
+				h.post(checkSkip);
+			}
 		
 			currentMove++;
 			movesSoFar = currentMove;
 			hSlider.updateProgress(currentMove, movesSoFar);
 
-			h.post(checkSkip);
+		
 			//checkSkip();
 			h.post(goCheck);
+			if(this.turn == BLACK && Othello.this.isPlayer1Computer)
+				h.post(Othello.this.c);
+			else if(this.turn == WHITE && Othello.this.isPlayer2Computer)
+				h.post(Othello.this.c);
 	        //gameOverHandler();
 		}
 		
