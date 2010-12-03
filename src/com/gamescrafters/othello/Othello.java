@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
 
 import com.gamescrafters.othello.GUIGameBoard;
 import com.gamescrafters.connect4.Connect4;
@@ -414,6 +415,7 @@ public class Othello extends GameActivity {
 							RIGHT = 1<<3;
 		
 
+		private final Semaphore doMove = new Semaphore(1);
 		private int turn = BLACK; // first player,black
 		int board[][]; 	// The internal state of the game. Either BLACK, WHITE, or EMPTY.
 		int height, width;
@@ -429,7 +431,8 @@ public class Othello extends GameActivity {
 		TextView turnText;
 		ImageButton turnImage;
 		GUIGameBoard.LevelsView levels;
-		Runnable goCheck;
+		Runnable goCheck, serverRun;
+		Thread server;
 		
 		public Game(int height, int width, Othello parent) {
 			this.parent = parent;
@@ -458,7 +461,23 @@ public class Othello extends GameActivity {
 					Game.this.gameOverHandler();
 				}
 			};
-			
+			serverRun = new Runnable(){
+				public void run() {
+					values = getNextMoveValues();
+					Thread worker = new Thread(new Runnable(){
+						public void run(){
+							if((values != null) && (values.length > 0)){
+								previousValue = getBoardValue(values);
+								int remoteness = getRemoteness(previousValue, values);
+								updateVVH(previousValue, remoteness, false, isBlackTurn(), false);
+							}
+						}
+					});
+					worker.start();
+					updatePreviews(true);					
+				}
+			};
+			server = new Thread(serverRun);
 
 			
 		}
@@ -485,17 +504,7 @@ public class Othello extends GameActivity {
 			h.post(checkSkip);
 			//checkSkip();
 			
-			Thread server = new Thread(new Runnable(){
-				public void run() {
-					values = getNextMoveValues();
-					if((values != null) && (values.length > 0)){
-						previousValue = getBoardValue(values);
-						int remoteness = getRemoteness(previousValue, values);
-						updateVVH(previousValue, remoteness, false, isBlackTurn(), false);
-					}
-					updatePreviews(true);					
-				}
-			});
+			Thread server = new Thread(serverRun);
 			server.start();	
 		}
 
@@ -657,7 +666,7 @@ public class Othello extends GameActivity {
 						previousValue = getBoardValue(values);
 						int remoteness = getRemoteness(previousValue, values);
 						updateVVH(previousValue, remoteness, false, isBlackTurn(), false);
-					}gameOverHandler();
+					}
 					updatePreviews(true);					
 				}
 			});
@@ -668,6 +677,27 @@ public class Othello extends GameActivity {
 		}
 
 		public void doMove(int row, int column, boolean isRedo, boolean isComputer){
+			try{
+				doMove.acquire();
+			}catch(InterruptedException ie){
+				ie.printStackTrace();
+				ie.printStackTrace();
+				AlertDialog.Builder builder = new AlertDialog.Builder(Othello.this);
+				builder.setMessage("An unexpected error occured! Restart game?")
+				       .setCancelable(false)
+				       .setPositiveButton("Pes", new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				        	   Othello.this.newGame();
+				           }
+				       })
+				       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				                Othello.this.finish();
+				           }
+				       });
+				AlertDialog alert = builder.create();
+				return;	
+			}
 			this.previousMoves.push(copyBoard());
 			this.nextMoves.empty();
 			this.tiles[row-1][column-1].setColor((turn == BLACK) ? Color.BLACK : Color.WHITE);
@@ -684,25 +714,38 @@ public class Othello extends GameActivity {
 			this.levels.updateBlacks(countUp()[BLACK-1]);
 			this.levels.updateWhites(countUp()[WHITE-1]);
 			this.levels.postInvalidate();
-
+			boolean computerNext = false;
+			//if(this.turn == WHITE && Othello.this.isPlayer1Computer)
+			//	computerNext = true;
+			//else if(this.turn == BLACK && Othello.this.isPlayer2Computer)
+			//	computerNext = true;
 			h.post(Othello.this.swapMove);
 			//swapMove();
 			
 			clearPreviews();
-			if(isComputer || ((!Othello.this.isPlayer1Computer) && (!Othello.this.isPlayer2Computer))){
-				Thread server = new Thread(new Runnable(){
-					public void run() {
-						values = getNextMoveValues();
-						if((values != null) && (values.length > 0)){
-							previousValue = getBoardValue(values);
-							int remoteness = getRemoteness(previousValue, values);
-							updateVVH(previousValue, remoteness, false, isBlackTurn(), false);
-						}
-						updatePreviews(true);					
-					}
-				});
-				
+			if(isComputer || ((!Othello.this.isPlayer1Computer) && (!Othello.this.isPlayer2Computer))){		
 				h.post(updatePreviews);
+				try{
+					server.join();
+				}catch(InterruptedException ie){
+					ie.printStackTrace();
+					AlertDialog.Builder builder = new AlertDialog.Builder(Othello.this);
+					builder.setMessage("An unexpected error occured! Restart game?")
+					       .setCancelable(false)
+					       .setPositiveButton("Pes", new DialogInterface.OnClickListener() {
+					           public void onClick(DialogInterface dialog, int id) {
+					        	   Othello.this.newGame();
+					           }
+					       })
+					       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+					           public void onClick(DialogInterface dialog, int id) {
+					                Othello.this.finish();
+					           }
+					       });
+					AlertDialog alert = builder.create();
+					return;
+				}
+				server = new Thread(serverRun);
 				server.start();
 				h.post(checkSkip);
 			}
@@ -714,11 +757,12 @@ public class Othello extends GameActivity {
 		
 			//checkSkip();
 			h.post(goCheck);
-			if(this.turn == BLACK && Othello.this.isPlayer1Computer)
+			if(Othello.this.isPlayer1Computer && Othello.this.isPlayer2Computer)
 				h.post(Othello.this.c);
-			else if(this.turn == WHITE && Othello.this.isPlayer2Computer)
-				h.post(Othello.this.c);
+			//if(computerNext)
+			//	h.post(Othello.this.c);
 	        //gameOverHandler();
+			doMove.release();
 		}
 		
 		public Stack<int[]> listValid(){
