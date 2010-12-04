@@ -90,7 +90,22 @@ public class GUIGameBoard {
 					a.getWindowManager().getDefaultDisplay().getHeight() - r.top - a.findViewById(R.id.gm_undoButton).getHeight() - 15;
 		int new_hei = (int)Math.floor((double)table.getHeight() / (double)width);
 		int new_wid = (int)Math.floor((double)size / (double)height);
-		
+
+//		ImageView bg = (ImageView)a.findViewById(R.id.oth_boardImage);
+//		bg.setMaxHeight(size);
+//		bg.setMaxWidth(size);
+//		bg.setImageResource(R.drawable.oth_felt4);
+//		bg.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+		//RelativeLayout obl = (RelativeLayout)a.findViewById(R.id.oth_boardLayout);
+//		obl.removeView(table);
+//		bl.addView(table,new_wid,new_hei);
+		table.getLayoutParams().height = size;
+		//table.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, new_hei));
+		//table.setMinimumHeight(new_hei);
+		//this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, theSizeIWant));
+		//table.setLayoutParams(TableLayout.LayoutParams(LayoutParams.FILL_PARENT, new_hei)));
+//		table.setBackgroundResource(R.drawable.oth_felt4);
+
 		for (int row=1; row<=height; row++) {
 			TableRow tr = new TableRow(a);
 			tr.setId(row+1024);
@@ -155,11 +170,12 @@ public class GUIGameBoard {
 		table.addView(g.levels,size,15);
 		LinearLayout orient = (LinearLayout)a.findViewById(R.id.oth_horizontalItems);
 		LinearLayout global = (LinearLayout)a.findViewById(R.id.oth_global);
+		
 		if(orientation == Configuration.ORIENTATION_LANDSCAPE){
 			table.setGravity(Gravity.LEFT);
-			View move = a.findViewById(R.id.oth_GameOverAndTurn);
-			View title = a.findViewById(R.id.oth_logo);
-			View goText = a.findViewById(R.id.oth_gameOver);
+			View move = global.findViewById(R.id.oth_GameOverAndTurn);
+			View title = global.findViewById(R.id.oth_logo);
+			View goText = global.findViewById(R.id.oth_gameOver);
 			if(move != null){
 				global.removeView(move);
 				global.removeView(title);
@@ -172,10 +188,10 @@ public class GUIGameBoard {
 			//global.setOrientation(LinearLayout.HORIZONTAL);
 		}else{
 			table.setGravity(Gravity.CENTER_HORIZONTAL);
-			View move = a.findViewById(R.id.oth_GameOverAndTurn);
-			View table = a.findViewById(R.id.oth_boardLayout);
-			View title = a.findViewById(R.id.oth_logo);
-			View goText = a.findViewById(R.id.oth_gameOver);
+			View move = orient.findViewById(R.id.oth_GameOverAndTurn);
+			View table = orient.findViewById(R.id.oth_boardLayout);
+			View title = orient.findViewById(R.id.oth_logo);
+			View goText = orient.findViewById(R.id.oth_gameOver);
 			if(move != null){
 				orient.removeView(move);
 				orient.removeView(title);
@@ -358,13 +374,18 @@ public class GUIGameBoard {
 		public void swapColor(){
 			if(this.tColor == Color.BLACK){
 				this.tColor = Color.WHITE;
+				//this.setImageResource(R.drawable.oth_simplewhite);
 				return;
 			}
 			this.tColor = Color.BLACK;
+			//this.setImageResource(R.drawable.oth_simpleblack);
 		}
 		
 		public void setColor(int c){
 			this.tColor = c;
+			if(tColor == Color.MAGENTA){
+				//this.setImageResource(R.drawable.oth_rec);
+			}
 		}
 		
 		public void setSmallColor(int c){

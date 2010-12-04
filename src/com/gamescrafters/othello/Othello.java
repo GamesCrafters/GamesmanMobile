@@ -89,13 +89,13 @@ public class Othello extends GameActivity {
 		this.initResources();
 		
 		this.isShowValues = true;
-		g = new Game(height, width, this);
-		if (this.gb == null)
+		if(this.g == null){
+			g = new Game(height, width, this);
+		}
+		if (this.gb == null){
 			gb = new GUIGameBoard(this);
-		else
-			gb.reset(g);
-
-		gb.initBoard();
+			gb.initBoard();
+		}
 		
 
 		this.setBoard(width, height);
