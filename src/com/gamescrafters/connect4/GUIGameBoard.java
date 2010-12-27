@@ -9,7 +9,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import com.gamescrafters.connect4.Connect4.Game;
+import com.gamescrafters.gamesmanmobile.GameActivity;
 import com.gamescrafters.gamesmanmobile.R;
+import com.gamescrafters.gamesmanmobile.RemoteGameValueService;
 
 /**
  * A class representing the m x n table of tiles on which Connect 4 is played.
@@ -140,7 +142,7 @@ public class GUIGameBoard {
 
 	/**
 	 * An OnClickListener that is attached to the tile image elements.
-	 * Calls doMove (or computerMove) on a click.
+	 * Calls doMove, doComputerMove, or playRandom on a click.
 	 */
 	class ColumnClickListener implements View.OnClickListener {
 		int column;
@@ -150,17 +152,26 @@ public class GUIGameBoard {
 		}
 
 		public void onClick(View v) {
+			boolean isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
 			if (!(a.isPlayer1Computer && a.isPlayer2Computer)) {
 				if (!g.gameOver && g.isBlueTurn()){
 					g.doMove(column, false);
 					//if game is still not over, and it's a computer's turn, computer moves
 					if (!g.gameOver && a.isPlayer2Computer) {
-						a.doComputerMove();
+						if (isDatabaseAvailable) {
+							a.doComputerMove();
+						} else {
+							a.playRandom();
+						}
 					}
 				} else {
 					g.doMove(column, false);
 					if (!g.gameOver && a.isPlayer1Computer) {
-						a.doComputerMove();
+						if (isDatabaseAvailable) {
+							a.doComputerMove();
+						} else {
+							a.playRandom();
+						}
 					}
 				}
 			}

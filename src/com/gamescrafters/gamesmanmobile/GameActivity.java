@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
-
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -25,7 +26,8 @@ import android.widget.ProgressBar;
  */
 public abstract class GameActivity extends Activity {
 	String gameName;
-	public  boolean isPlayer1Computer, isPlayer2Computer, isNetworkAvailable, isShowValues = false, isShowPrediction = false;
+	public  boolean isPlayer1Computer, isPlayer2Computer, isBlueTurn, isNetworkAvailable, isShowValues = false, isShowPrediction = false;
+	public boolean isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
 	protected Map<String, MoveValue[]> moveValues; // A map of boards to MoveValue[]. Keeps undos/redos from making web calls.
 	static public LinkedList<VVHNode> VVHList; // List of Visual Value History nodes added since the last VisualValueHistory update.
 	static public Intent GameIntent, VVHIntent; // Intents for the Connect4 Activity and the VisualValueHistory Activity.
@@ -34,7 +36,7 @@ public abstract class GameActivity extends Activity {
 	MenuItem moves, prediction;
 	protected HorizontalSlider hSlider;
 	private ImageButton undoButton, redoButton;
-	private static final int NEW_GAME = 0, TOGGLE_MOVE_VALUES = 1, TOGGLE_PREDICTION = 2, DISPLAY_VVH = 3;
+	private static final int NEW_GAME = 0, TOGGLE_MOVE_VALUES = 1, TOGGLE_PREDICTION = 2, DISPLAY_VVH = 3, SWITCH_PLAYERS = 4;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,7 +73,8 @@ public abstract class GameActivity extends Activity {
 		menu.add(0, NEW_GAME, 0, "New Game");
 		menu.add(0, TOGGLE_MOVE_VALUES, 0, "Toggle Move Values");
 		menu.add(0, TOGGLE_PREDICTION, 0, "Toggle Prediction");
-		menu.add(0, DISPLAY_VVH, 0, "Display Visual\nValue History");
+		menu.add(0, DISPLAY_VVH, 0, "Display VVH");
+		menu.add(0, SWITCH_PLAYERS, 0, "Switch Player");
 		return true;
 	} 
 
@@ -102,6 +105,9 @@ public abstract class GameActivity extends Activity {
 			break;
 		case DISPLAY_VVH:
 			updateVVHDisplay();
+			break;
+		case SWITCH_PLAYERS:
+			updatePlayerInfo();
 			break;
 		}
 		return true; 
@@ -135,6 +141,11 @@ public abstract class GameActivity extends Activity {
 
 	public abstract void newGame();
 
+	/**
+	 * Given a move, returns true if this move is valid and false otherwise.
+	 */
+	public abstract boolean isMoveInvalid(int move);
+	
 	/**
 	 * @return The type of the game (default "puzzles"). Override if otherwise.
 	 */
@@ -233,6 +244,75 @@ public abstract class GameActivity extends Activity {
 			else node = new VVHNode(previousValue, remoteness, isBlueTurn);
 			VVHList.add(node);
 	}
+	
+	/**
+	 * Updates the player information if the user decides to switch one or more players
+	 * from human to computer or vice versa.
+	 */
+	public void updatePlayerInfo() {
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		final CharSequence[] items = {"Player1 to Human", "Player2 to Human",
+									  "Player1 to Computer", "Player2 to Computer"};
+		                /*
+		                 * Player changes, if any
+		                 */
+		builder.setTitle("Switch Player");
+		       		builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+		       			public void onClick(DialogInterface dialog, int item) {
+		       				switch(item){
+		       				case 0:
+		       					isPlayer1Computer = false;
+		       					GameIntent.putExtra("isPlayer1Computer", false);
+		    					break;
+		       				case 1:
+		    					isPlayer2Computer = false;
+		    					GameIntent.putExtra("isPlayer2Computer", false);
+		    					break;
+		    				case 2:
+		    					isPlayer1Computer = true;
+		    					GameIntent.putExtra("isPlayer1Computer", true);
+		    					if (GameIntent.getBooleanExtra("isBlueTurn", false)) {
+		    						if (isDatabaseAvailable) {
+		    							if (isPlayer2Computer) {
+		    								updateUISmart();
+		    							} else {
+		    								doComputerMove();
+		    							}
+		    						} else {
+		    							if (isPlayer2Computer) {
+		    								updateUIRandom();
+		    							} else {
+		    								playRandom();
+		    							}
+		    						}
+		    					}
+		    					break;
+		    				case 3:
+		    					isPlayer2Computer = true;
+		    					GameIntent.putExtra("isPlayer2Computer", true);
+		    					if (GameIntent.getBooleanExtra("isBlueTurn", false)) {
+		    						if (isDatabaseAvailable) {
+		    							if (isPlayer1Computer) {
+		    								updateUISmart();
+		    							} else {
+		    								doComputerMove();
+		    							}
+		    						} else {
+		    							if (isPlayer1Computer) {
+		    								updateUIRandom();
+		    							} else {
+		    								playRandom();
+		    							}
+		    						}
+		    					}
+		    					break;
+		    		    	}
+		    		    	dialog.dismiss();
+		    		    }
+		    		});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
 
 	/**
 	 * Determines the value of the current board or position.
@@ -307,6 +387,18 @@ public abstract class GameActivity extends Activity {
 		}
 		return remoteness;
 	}
+	
+	/**
+	 * updates the UI with a smart computer move (i.e. move and remoteness values
+	 * are available and database is being used)
+	 */
+	public abstract void updateUISmart();
+	
+	/**
+	 * updates the UI with a random computer move
+	 * called when no connection to the database is available
+	 */
+	public abstract void updateUIRandom();
 
 	/**
 	 * Determines and executes the best possible move
@@ -352,6 +444,20 @@ public abstract class GameActivity extends Activity {
 			}
 		}
 		doMove(bestMove.getMove());
+	}
+	
+	/**
+	 * Plays a random computer move.
+	 * Used when there does not exist a connection to the database and no move or remoteness
+	 * values are available.
+	 */
+	public void playRandom() {
+		Random gen = new Random();
+		int numcols = GameIntent.getIntExtra("numCols", 7);
+		int randomcol = gen.nextInt(numcols);
+		if (!isMoveInvalid(randomcol)) {
+			doMove(randomcol + "");
+		}
 	}
 
 	/**

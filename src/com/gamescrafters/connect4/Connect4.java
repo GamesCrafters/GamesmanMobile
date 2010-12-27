@@ -53,8 +53,8 @@ public class Connect4 extends GameActivity {
 		Intent myIntent = GameIntent = getIntent();
 		isPlayer1Computer = myIntent.getBooleanExtra("isPlayer1Computer", false);
 		isPlayer2Computer = myIntent.getBooleanExtra("isPlayer2Computer", false);
-		int height = myIntent.getIntExtra("numRows", 4);
-		int width = myIntent.getIntExtra("numCols", 6);
+		int height = myIntent.getIntExtra("numRows", 6);
+		int width = myIntent.getIntExtra("numCols", 7);
 		delay = myIntent.getIntExtra("numDelay", 1);
 
 		/*
@@ -90,7 +90,11 @@ public class Connect4 extends GameActivity {
 	class CompPlays extends Handler {
 	
 		public void handleMessage(Message msg) {
-			Connect4.this.updateUI();
+			if (isDatabaseAvailable) {
+				Connect4.this.updateUI();
+			} else {
+				Connect4.this.updateUI2();
+			}
 		}
 		
 		public void sleep(long delay) {
@@ -103,6 +107,13 @@ public class Connect4 extends GameActivity {
 		if (!g.gameOver) {
 			compPlaying.sleep(delay*1000);
 			doComputerMove();
+		}
+	}
+	
+	private void updateUI2() {
+		if (!g.gameOver) {
+			compPlaying.sleep(delay*1000);
+			playRandom();
 		}
 	}
 	
@@ -172,6 +183,15 @@ public class Connect4 extends GameActivity {
 		turnTextView.setText("Turn:" );
 		turnImage.setBackgroundDrawable(bluePiece);
 		turnImage.setEnabled(false);
+		
+		/*
+		 * API moves
+		 */
+		if (isPlayer1Computer && isPlayer2Computer) {
+			updateUI2();
+		} else if (isPlayer1Computer) {
+			playRandom();
+		}
 	}
 
 	/**
@@ -416,7 +436,7 @@ public class Connect4 extends GameActivity {
 		 * @param isRedo Boolean if move is a redo move (true) or not (false).
 		 */
 		public void doMove(int move, boolean isRedo) {
-			if (!(isFull(move) || gameOver)) {
+			if (!(isMoveInvalid(move) || gameOver)) {
 				updateGameState(move); 
 				switchTurn();
 				if (isDatabaseAvailable)
@@ -502,16 +522,6 @@ public class Connect4 extends GameActivity {
 //				VVHList.add(node);
 //			}
 //		}
-	
-
-
-		/**
-		 * @param colnum The column number to check (0->width-1).
-		 * @return true or false, whether a column is full.
-		 */
-		private boolean isFull(int colnum) {
-			return board[height-1][colnum] != EMPTY;
-		}
 
 		/**
 		 * @return Whether or not it is blue's turn.
@@ -673,4 +683,24 @@ public class Connect4 extends GameActivity {
 
 
 	}
+
+	/**
+	 * @param move The column number to check (0->width-1).
+	 * @return true or false, whether a column is full.
+	 */
+	@Override
+	public boolean isMoveInvalid(int move) {		
+		return g.board[(g.height)-1][move] != Game.EMPTY;
+	}
+
+	@Override
+	public void updateUIRandom() {
+		Connect4.this.updateUI();
+	}
+
+	@Override
+	public void updateUISmart() {
+		Connect4.this.updateUI2();
+	}
+	
 } 

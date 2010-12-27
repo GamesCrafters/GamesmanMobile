@@ -26,12 +26,12 @@ public class Connect4Options extends Activity {
 		ArrayAdapter<CharSequence> column_a = ArrayAdapter.createFromResource(this, R.array.Connect4_Columns, android.R.layout.simple_spinner_item);
 		column_a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		select_columns.setAdapter(column_a);
-		select_columns.setSelection(5); // default to 6 columns
+		select_columns.setSelection(6); // default to 7 columns
 		select_rows = (Spinner) findViewById(R.id.c4_select_rows);
 		ArrayAdapter<CharSequence> row_a = ArrayAdapter.createFromResource(this, R.array.Connect4_Rows, android.R.layout.simple_spinner_item);
 		row_a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		select_rows.setAdapter(row_a);
-		select_rows.setSelection(4); // default to 5 rows
+		select_rows.setSelection(5); // default to 6 rows
 		
 		select_time = (Spinner) findViewById(R.id.c4_select_time);
 		ArrayAdapter<CharSequence> time_a = ArrayAdapter.createFromResource(this, R.array.Connect4_Time, android.R.layout.simple_spinner_item);

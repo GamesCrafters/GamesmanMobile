@@ -662,4 +662,22 @@ public class TicTacToe extends GameActivity {
 			return true;
 		}
 	}
+
+	@Override
+	public boolean isMoveInvalid(int move) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public void updateUIRandom() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateUISmart() {
+		// TODO Auto-generated method stub
+		
+	}
 } 
