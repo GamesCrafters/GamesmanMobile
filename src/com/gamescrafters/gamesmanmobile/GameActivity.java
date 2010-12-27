@@ -290,21 +290,22 @@ public abstract class GameActivity extends Activity {
 		    				case 3:
 		    					isPlayer2Computer = true;
 		    					GameIntent.putExtra("isPlayer2Computer", true);
-		    					if (GameIntent.getBooleanExtra("isBlueTurn", false)) {
-		    						if (isDatabaseAvailable) {
-		    							if (isPlayer1Computer) {
+		    					
+		    						if (isPlayer1Computer && isPlayer2Computer) {
+		    							if (isDatabaseAvailable) {
 		    								updateUISmart();
 		    							} else {
-		    								doComputerMove();
-		    							}
-		    						} else {
-		    							if (isPlayer1Computer) {
 		    								updateUIRandom();
+		    							}
+		    						}
+		    						if (isPlayer1Computer || isPlayer2Computer) {
+		    							if (isDatabaseAvailable) {
+		    								doComputerMove();
 		    							} else {
 		    								playRandom();
 		    							}
 		    						}
-		    					}
+		    				
 		    					break;
 		    		    	}
 		    		    	dialog.dismiss();
@@ -455,9 +456,10 @@ public abstract class GameActivity extends Activity {
 		Random gen = new Random();
 		int numcols = GameIntent.getIntExtra("numCols", 7);
 		int randomcol = gen.nextInt(numcols);
-		if (!isMoveInvalid(randomcol)) {
-			doMove(randomcol + "");
+		while (isMoveInvalid(randomcol)) {
+			randomcol = gen.nextInt(numcols);
 		}
+		doMove(randomcol + "");
 	}
 
 	/**

@@ -512,6 +512,4 @@ public class YInterface extends GameActivity {
 		
 	}
 
-
-
 }

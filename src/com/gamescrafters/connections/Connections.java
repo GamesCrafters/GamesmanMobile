@@ -217,13 +217,11 @@ public class Connections extends GameActivity {
 			
 	}
 
-
 	@Override
 	public boolean isMoveInvalid(int move) {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
 
 	@Override
 	public void updateUIRandom() {
@@ -231,10 +229,10 @@ public class Connections extends GameActivity {
 		
 	}
 
-
 	@Override
 	public void updateUISmart() {
 		// TODO Auto-generated method stub
 		
 	}
+
 }

@@ -560,6 +560,7 @@ public class Connect4 extends GameActivity {
 			return board[row][column];
 		}
 
+		
 		/**
 		 * Toggles the turn, and updates the picture for the turn field.
 		 */
@@ -567,7 +568,7 @@ public class Connect4 extends GameActivity {
 			turn = !turn;
 			if (!gameOver) turnImage.setBackgroundDrawable(isBlueTurn() ? bluePiece : redPiece);
 		}
-
+		
 		/**
 		 * Updates the gamestate given a column in which a piece was placed.
 		 * @param col The column in which the piece was placed.
@@ -695,12 +696,14 @@ public class Connect4 extends GameActivity {
 
 	@Override
 	public void updateUIRandom() {
-		Connect4.this.updateUI();
+		Connect4.this.updateUI2();
 	}
 
 	@Override
 	public void updateUISmart() {
-		Connect4.this.updateUI2();
+		Connect4.this.updateUI();
 	}
+
+
 	
 } 

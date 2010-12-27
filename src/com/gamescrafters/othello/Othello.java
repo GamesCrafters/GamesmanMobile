@@ -1027,4 +1027,5 @@ public class Othello extends GameActivity {
 		// TODO Auto-generated method stub
 		
 	}
+
 }
