@@ -106,14 +106,20 @@ public class Connect4 extends GameActivity {
 	private void updateUI() {
 		if (!g.gameOver) {
 			compPlaying.sleep(delay*1000);
-			doComputerMove();
+			if ((g.isBlueTurn() && isPlayer1Computer) || 
+					(!g.isBlueTurn() && isPlayer2Computer)) {
+				doComputerMove();
+			}
 		}
 	}
 	
 	private void updateUI2() {
 		if (!g.gameOver) {
 			compPlaying.sleep(delay*1000);
-			playRandom();
+			if ((g.isBlueTurn() && isPlayer1Computer) || 
+					(!g.isBlueTurn() && isPlayer2Computer)) {
+				playRandom();
+			}
 		}
 	}
 	

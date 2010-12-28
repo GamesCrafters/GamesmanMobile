@@ -271,41 +271,14 @@ public abstract class GameActivity extends Activity {
 		    				case 2:
 		    					isPlayer1Computer = true;
 		    					GameIntent.putExtra("isPlayer1Computer", true);
-		    					if (GameIntent.getBooleanExtra("isBlueTurn", false)) {
-		    						if (isDatabaseAvailable) {
-		    							if (isPlayer2Computer) {
-		    								updateUISmart();
-		    							} else {
-		    								doComputerMove();
-		    							}
-		    						} else {
-		    							if (isPlayer2Computer) {
-		    								updateUIRandom();
-		    							} else {
-		    								playRandom();
-		    							}
-		    						}
-		    					}
+		    					
+		    					switchToComputer();
 		    					break;
 		    				case 3:
 		    					isPlayer2Computer = true;
 		    					GameIntent.putExtra("isPlayer2Computer", true);
 		    					
-		    						if (isPlayer1Computer && isPlayer2Computer) {
-		    							if (isDatabaseAvailable) {
-		    								updateUISmart();
-		    							} else {
-		    								updateUIRandom();
-		    							}
-		    						}
-		    						if (isPlayer1Computer || isPlayer2Computer) {
-		    							if (isDatabaseAvailable) {
-		    								doComputerMove();
-		    							} else {
-		    								playRandom();
-		    							}
-		    						}
-		    				
+		    					switchToComputer();
 		    					break;
 		    		    	}
 		    		    	dialog.dismiss();
@@ -313,6 +286,27 @@ public abstract class GameActivity extends Activity {
 		    		});
 		AlertDialog alert = builder.create();
 		alert.show();
+	}
+	
+	/**
+	 * Helper method for updatePlayerInfo(). Handles case where at least one player
+	 * is a computer.
+	 */
+	public void switchToComputer() {
+		if (isPlayer1Computer && isPlayer2Computer) {
+			if (isDatabaseAvailable) {
+				updateUISmart();
+			} else {
+				updateUIRandom();
+			}
+		}
+		if (isPlayer1Computer || isPlayer2Computer) {
+			if (isDatabaseAvailable) {
+				doComputerMove();
+			} else {
+				playRandom();
+			}
+		}
 	}
 
 	/**
