@@ -126,7 +126,7 @@ public class GUIGameBoard {
 				iv.setImageResource(R.drawable.oth_felt);
 				RelativeLayout rl = new RelativeLayout(a);
 				rl.setId(getID(row,col));
-				rl.addView(iv);
+				//rl.addView(iv);
 				rl.addView(pv);
 				rl.addView(tv);
 				tr.addView(rl, new_wid, new_wid);
@@ -251,7 +251,7 @@ public class GUIGameBoard {
 		}
 
 	}
-	public class TileView extends View{
+	public class TileView extends ImageView{
 
 		int x,y;
 		int tColor;
@@ -265,6 +265,12 @@ public class GUIGameBoard {
 			this.x = x;
 			this.y = y;
 			this.tColor = c;
+			
+			if(tColor == Color.BLACK){
+				this.setImageResource(R.drawable.oth_simpleblack);
+			}else if(tColor == Color.WHITE){
+				this.setImageResource(R.drawable.oth_simplewhite);
+			}
 			
 			// Set Base animations
 			rotate45 = new RotateAnimation(45f,45f,
@@ -374,17 +380,19 @@ public class GUIGameBoard {
 		public void swapColor(){
 			if(this.tColor == Color.BLACK){
 				this.tColor = Color.WHITE;
-				//this.setImageResource(R.drawable.oth_simplewhite);
+				this.setImageResource(R.drawable.oth_simplewhite);
 				return;
 			}
 			this.tColor = Color.BLACK;
-			//this.setImageResource(R.drawable.oth_simpleblack);
+			this.setImageResource(R.drawable.oth_simpleblack);
 		}
 		
 		public void setColor(int c){
 			this.tColor = c;
-			if(tColor == Color.MAGENTA){
-				//this.setImageResource(R.drawable.oth_rec);
+			if(tColor == Color.BLACK){
+				this.setImageResource(R.drawable.oth_simpleblack);
+			}else{
+				this.setImageResource(R.drawable.oth_simplewhite);
 			}
 		}
 		
@@ -417,13 +425,24 @@ public class GUIGameBoard {
 			p.setColor(Color.TRANSPARENT);
 			canvas.drawPaint(p);
 			if(this.tColor != Color.TRANSPARENT){
-				p.setColor(this.tColor);
-				p.setStyle(Style.FILL);
-				canvas.drawCircle(getWidth()/2, getHeight()/2, (((getWidth()/2)*90)/100), p);
-			}else if(this.pColor != Color.TRANSPARENT && this.small){
-				p.setColor(this.pColor);
-				p.setStyle(Style.FILL);
-				canvas.drawCircle(getWidth()/2, getHeight()/2, (((getWidth()/2)*30)/100), p);
+				//p.setColor(this.tColor);
+				//p.setStyle(Style.FILL);
+				//canvas.drawCircle(getWidth()/2, getHeight()/2, (((getWidth()/2)*90)/100), p);
+			}else if(this.small){
+				if(pColor == Color.MAGENTA){
+					this.setImageResource(R.drawable.oth_rec_scaled);
+				}else if(pColor == Color.RED){
+					this.setImageResource(R.drawable.oth_lose_scaled);
+				}else if(pColor == Color.YELLOW){
+					this.setImageResource(R.drawable.oth_tie_scaled);
+				}else if(pColor == Color.GREEN){
+					this.setImageResource(R.drawable.oth_win_scaled);
+				}else{
+					this.setImageResource(R.drawable.oth_empty);
+				}
+				//p.setColor(this.pColor);
+				//p.setStyle(Style.FILL);
+				//canvas.drawCircle(getWidth()/2, getHeight()/2, (((getWidth()/2)*30)/100), p);
 			}
 		}
 		

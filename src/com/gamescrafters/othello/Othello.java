@@ -150,12 +150,12 @@ public class Othello extends GameActivity {
 	 */
 	private void initResources(){
 		Resources res = getResources();
-		this.whitePiece = res.getDrawable(R.drawable.oth_whitepiece);
-		this.blackPiece = res.getDrawable(R.drawable.oth_blackpiece);
+		//this.whitePiece = res.getDrawable(R.drawable.oth_whitepiece);
+		//this.blackPiece = res.getDrawable(R.drawable.oth_blackpiece);
 
-		this.turnTextView = (TextView) findViewById(R.id.oth_turn); 
-		this.turnImage = (ImageButton) findViewById(R.id.oth_turnImage);
-		this.gameOverTextView = (TextView) findViewById(R.id.oth_gameOver);	
+		//this.turnTextView = (TextView) findViewById(R.id.oth_turn); 
+		//this.turnImage = (ImageButton) findViewById(R.id.oth_turnImage);
+		//this.gameOverTextView = (TextView) findViewById(R.id.oth_gameOver);	
 	}
 	
 	/**
