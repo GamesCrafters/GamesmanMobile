@@ -193,7 +193,7 @@ public abstract class GameActivity extends Activity {
 	public abstract void updateValuesDisplay();
 
 	/**
-	 * Displays the Visual Value History for this Connect4 game.
+	 * Displays the Visual Value History for this game.
 	 */
 	public void updateVVHDisplay() {
 		this.startActivity(VVHIntent);

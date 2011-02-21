@@ -55,7 +55,8 @@ public class Connect4 extends GameActivity {
 		isPlayer2Computer = myIntent.getBooleanExtra("isPlayer2Computer", false);
 		int height = myIntent.getIntExtra("numRows", 6);
 		int width = myIntent.getIntExtra("numCols", 7);
-		delay = myIntent.getIntExtra("numDelay", 1);
+		String sdelay = myIntent.getStringExtra("numDelay");
+		delay = Integer.parseInt(sdelay);
 
 		/*
 		 * Initialize dialog boxes and popups here

@@ -3,9 +3,11 @@ package com.gamescrafters.connect4;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
@@ -14,7 +16,7 @@ import com.gamescrafters.gamesmanmobile.R;
 public class Connect4Options extends Activity {
 	Spinner select_rows;
 	Spinner select_columns;
-	Spinner select_time;
+	EditText select_time;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -33,11 +35,8 @@ public class Connect4Options extends Activity {
 		select_rows.setAdapter(row_a);
 		select_rows.setSelection(5); // default to 6 rows
 		
-		select_time = (Spinner) findViewById(R.id.c4_select_time);
-		ArrayAdapter<CharSequence> time_a = ArrayAdapter.createFromResource(this, R.array.Connect4_Time, android.R.layout.simple_spinner_item);
-		time_a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		select_time.setAdapter(time_a);
-		select_time.setSelection(0);
+		select_time = (EditText) findViewById(R.id.c4_select_time);
+		
 		OnClickListener mylistener = new OnClickListener() {
 			public void onClick(View v) {
 				Intent myIntent = new Intent(Connect4Options.this, Connect4.class); // used to launch your new activity
@@ -47,7 +46,7 @@ public class Connect4Options extends Activity {
 				myIntent.putExtra("isPlayer2Computer", ((RadioButton) findViewById(R.id.c4_RadioButtonComputer2)).isChecked());
 				myIntent.putExtra("numRows", select_rows.getSelectedItemPosition()+1);
 				myIntent.putExtra("numCols", select_columns.getSelectedItemPosition()+1);
-				myIntent.putExtra("numDelay", select_time.getSelectedItemPosition()+1);
+				myIntent.putExtra("numDelay", select_time.getText().toString());
 
 				Connect4Options.this.startActivity(myIntent);
 			}
