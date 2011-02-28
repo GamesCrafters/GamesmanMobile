@@ -9,23 +9,6 @@
 		android:text="Connect 4" android:textColor="@color/solid_yellow"
 		android:textSize="30dip" />
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	<RelativeLayout android:id="@+id/c4_RelativeLayout03"
 		android:layout_width="wrap_content" android:layout_height="wrap_content">
 		<LinearLayout android:id="@+id/c4_LinearLayout04"
@@ -34,10 +17,8 @@
 			<RelativeLayout android:id="@+id/c4_RelativeLayout02"
 				android:layout_height="wrap_content" android:layout_width="250dip">
 				<TableLayout android:id="@+id/c4_gametable"
-					android:layout_width="fill_parent" android:shrinkColumns="*"
-					android:layout_height="wrap_content" android:paddingTop="5dip">
-
-
+					android:layout_width="fill_parent" 
+					android:layout_height="fill_parent" android:paddingTop="5dip">
 
 				</TableLayout>
 			</RelativeLayout>

@@ -37,7 +37,8 @@ public abstract class GameActivity extends Activity {
 	protected HorizontalSlider hSlider;
 	private ImageButton undoButton, redoButton;
 	private static final int NEW_GAME = 0, TOGGLE_MOVE_VALUES = 1, TOGGLE_PREDICTION = 2, DISPLAY_VVH = 3, SWITCH_PLAYERS = 4;
-
+	private static final int VVHTAG = 11111;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_activity_layout);
@@ -56,7 +57,12 @@ public abstract class GameActivity extends Activity {
 		VVHList = new LinkedList<VVHNode>();
 		
 	}
-	
+	@Override
+	public void onBackPressed()
+	{
+		this.finishActivity(VVHTAG);
+		super.onBackPressed();
+	}
 	@Override
 	public void onConfigurationChanged(Configuration newConfig){
 		super.onConfigurationChanged(newConfig);
@@ -196,7 +202,7 @@ public abstract class GameActivity extends Activity {
 	 * Displays the Visual Value History for this game.
 	 */
 	public void updateVVHDisplay() {
-		this.startActivity(VVHIntent);
+		this.startActivityForResult(VVHIntent,VVHTAG);
 	}
 
 	/**

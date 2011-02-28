@@ -39,7 +39,10 @@ public class VisualValueHistory extends Activity {
     		
 		VVHNodes = new LinkedList<VVHNode>();
     }
-    
+    public void onBackPressed()
+    {
+    	this.startActivity(GameActivity.GameIntent);
+    }
     @Override
     protected void onResume() {
     	super.onResume();

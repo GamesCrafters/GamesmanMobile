@@ -12,6 +12,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.gamescrafters.Y.menu;
 import com.gamescrafters.connect4.Connect4Options;
 import com.gamescrafters.connections.ConnectionsOptions;
+import com.gamescrafters.onetwoten.OneTwoTen;
 import com.gamescrafters.othello.OthelloOptions;
 import com.gamescrafters.tictactoe.TicTacToeOptions;
 
@@ -52,6 +53,10 @@ public class GamesmanMobile extends TabActivity {
 					break;
 				case 4:
 					myIntent = new Intent(GamesmanMobile.this, TicTacToeOptions.class);
+					GamesmanMobile.this.startActivity(myIntent);
+					break;
+				case 5:
+					myIntent = new Intent(GamesmanMobile.this, OneTwoTen.class);
 					GamesmanMobile.this.startActivity(myIntent);
 					break;
 				}
