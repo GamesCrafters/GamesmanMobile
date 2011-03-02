@@ -24,6 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Button;
 import android.widget.TextView;
@@ -66,6 +67,8 @@ public class Othello extends GameActivity {
 
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState); 
+	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		this.setGameView(R.layout.othello_game);
 		
 		Intent thisIntent = getIntent();

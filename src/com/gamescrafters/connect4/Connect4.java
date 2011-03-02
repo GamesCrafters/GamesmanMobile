@@ -5,11 +5,14 @@ import java.util.Stack;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -46,9 +49,14 @@ public class Connect4 extends GameActivity {
 
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState); 
+		super.onCreate(savedInstanceState);
+	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		setGameView(R.layout.connect4_game);
 
+		
+		
+		
 		//Retrieve data passed from previous activity.
 		Intent myIntent = GameIntent = getIntent();
 		isPlayer1Computer = myIntent.getBooleanExtra("isPlayer1Computer", false);
@@ -87,9 +95,15 @@ public class Connect4 extends GameActivity {
 			alert.show();
 		}
 	}
-	
+	//Trying to fix the warning dialog from reopening every time the orientation is switched
+	//The code requires that you add  android:configChanges = "orientation" to the android manifest
+	/*public void onConfigurationChanged(Configuration config)
+	{
+		super.onConfigurationChanged(config);
+		setGameView(R.layout.connect4_game);
+		//System.out.println(getResources().getConfiguration().orientation==Configuration.ORIENTATION_PORTRAIT);
+	}*/  
 	class CompPlays extends Handler {
-	
 		public void handleMessage(Message msg) {
 			if (isDatabaseAvailable) {
 				Connect4.this.updateUI();
@@ -97,7 +111,6 @@ public class Connect4 extends GameActivity {
 				Connect4.this.updateUI2();
 			}
 		}
-		
 		public void sleep(long delay) {
 			this.removeMessages(0);
 			sendMessageDelayed(obtainMessage(0), delay);

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.gamescrafters.gamesmanmobile.GameActivity;
@@ -21,6 +22,8 @@ public class Connections extends GameActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setGameView(R.layout.connections_game);
         
         //grab board size from Connection_Options

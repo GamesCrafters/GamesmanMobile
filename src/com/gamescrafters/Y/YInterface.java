@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -40,6 +41,8 @@ public class YInterface extends GameActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		setGameView(R.layout.y_board);
 		//firstID = R.id.y_B0;      //ID of first button
 		numButtons = 18;        //total number of Buttons

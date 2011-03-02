@@ -10,9 +10,9 @@
 		android:textSize="30dip" />
 	<TableLayout android:id="@+id/c4_gametable"
 		android:layout_width="fill_parent" android:shrinkColumns="*"
-		android:paddingTop="5dip" android:layout_height="275dip"
+		android:paddingTop="0dip" android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true" android:layout_centerVertical="true"
-		android:gravity="center_vertical|center_horizontal">
+		android:gravity="top|center_horizontal">
 
 
 

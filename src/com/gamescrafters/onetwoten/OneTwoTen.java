@@ -8,6 +8,7 @@ import java.util.Stack;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.gamescrafters.gamesmanmobile.GameActivity;
@@ -34,6 +35,8 @@ public class OneTwoTen extends GameActivity{
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		setGameView(R.layout.onetwoten_game);
 		myGUI = new GUIOneTwoTen(this,HEIGHT);
 		

@@ -71,7 +71,8 @@ public class GUIGameBoard {
 	public void initBoard() {
 		int swidth = a.getWindowManager().getDefaultDisplay().getWidth();
 		int sheight = a.getWindowManager().getDefaultDisplay().getHeight();
-		int max_height = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? (int)(swidth*.9) : (int)(swidth*.9);
+		System.out.println("Height = " + sheight);
+		int max_height = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? (int)(swidth) : (int)(sheight-80);
 		int new_height = max_height / height;
 		for (int row=height-1; row>=0; row--) {
 			TableRow tr = new TableRow(a);

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -18,6 +19,8 @@ public class OthelloOptions extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		setContentView(R.layout.othello_options);
 
 		findViewById(R.id.oth_PlayOthelloButton).setOnClickListener(new OnClickListener(){

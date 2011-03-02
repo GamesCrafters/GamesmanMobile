@@ -14,7 +14,7 @@
 			</intent-filter>
 		</activity>
 		<activity android:name="com.gamescrafters.connect4.Connect4Options" android:label="@string/app_name"></activity>
-		<activity android:name="com.gamescrafters.connect4.Connect4" android:label="@string/app_name">
+		<activity android:name="com.gamescrafters.connect4.Connect4" android:label="@string/app_name" >
 		</activity>
 	
 <activity android:name=".VisualValueHistory"></activity>

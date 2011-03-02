@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 public class VisualValueHistory extends Activity {
 	private LinkedList<VVHNode> VVHNodes; // A LinkedList<VVHNode> containing VVHNodes, each of which is a position made in the game.
@@ -29,6 +30,8 @@ public class VisualValueHistory extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         VVHview = new VVHView(this);
         setContentView(VVHview);
     	Display screen = getWindowManager().getDefaultDisplay();
