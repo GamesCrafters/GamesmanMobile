@@ -80,7 +80,7 @@ public class Connect4 extends GameActivity {
 				});
 		
 		initResources();
-		isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
+		isDatabaseAvailable = isDBAvailable();
 		if (isDatabaseAvailable)
 		{
 			setBoard(width, height);
@@ -238,7 +238,7 @@ public class Connect4 extends GameActivity {
 		g.updateRemoteness();
 		g.updateValues();
 		if (values != null && values.length != 0) {
-			isNetworkAvailable = true;
+			isDatabaseAvailable = true;
 			previousValue = getBoardValue(values);
 			int remoteness = getRemoteness(previousValue, values);
 			clearVVH();
@@ -246,7 +246,7 @@ public class Connect4 extends GameActivity {
 		}
 		
 		//computer vs. computer
-		if (isNetworkAvailable)
+		if (isDatabaseAvailable)
 		{
 			if (isPlayer1Computer && isPlayer2Computer) {
 				updateUI();
@@ -520,7 +520,7 @@ public class Connect4 extends GameActivity {
 				if (remoteness != -1)
 					remoteTextView.setText(previousValue + " in " + (remoteness+1) + " moves");
 				else remoteTextView.setText("Prediction not available.");
-			} else if (!isNetworkAvailable) {
+			} else if (!isDatabaseAvailable) {
 				remoteTextView.setText("Prediction not available.");
 			} else {
 				remoteTextView.setText((previousValue.equals("win") ? "lose" : "tie") + " in 0 moves");

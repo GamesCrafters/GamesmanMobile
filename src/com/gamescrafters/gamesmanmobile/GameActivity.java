@@ -26,7 +26,7 @@ import android.widget.ProgressBar;
  */
 public abstract class GameActivity extends Activity {
 	String gameName;
-	public  boolean isPlayer1Computer, isPlayer2Computer, isBlueTurn, isNetworkAvailable, isShowValues = false, isShowPrediction = false;
+	public  boolean isPlayer1Computer, isPlayer2Computer, isBlueTurn, isShowValues = false, isShowPrediction = false;
 	public boolean isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
 	protected Map<String, MoveValue[]> moveValues; // A map of boards to MoveValue[]. Keeps undos/redos from making web calls.
 	static public LinkedList<VVHNode> VVHList; // List of Visual Value History nodes added since the last VisualValueHistory update.
@@ -38,6 +38,8 @@ public abstract class GameActivity extends Activity {
 	private ImageButton undoButton, redoButton;
 	private static final int NEW_GAME = 0, TOGGLE_MOVE_VALUES = 1, TOGGLE_PREDICTION = 2, DISPLAY_VVH = 3, SWITCH_PLAYERS = 4;
 	private static final int VVHTAG = 11111;
+	private Thread dbChecker;
+	private Runnable dbUpdater;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,6 +58,22 @@ public abstract class GameActivity extends Activity {
 		// Create a new VVHList.
 		VVHList = new LinkedList<VVHNode>();
 		
+		/*
+		 * Run this thread in the background to continuously check for
+		 * database connection.
+		 */
+		//TODO: what if internet fails during game?
+		//what if get internet connection back during game?
+		//notify user?
+		dbUpdater = new Runnable() {
+			public void run() {
+				isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
+			}
+		};
+		dbChecker = new Thread(dbUpdater);
+		dbChecker.setDaemon(true);
+		dbChecker.setPriority(Thread.MIN_PRIORITY);
+		dbChecker.start();
 	}
 	@Override
 	public void onBackPressed()
@@ -460,6 +478,10 @@ public abstract class GameActivity extends Activity {
 			randomcol = gen.nextInt(numcols);
 		}
 		doMove(randomcol + "");
+	}
+	
+	public boolean isDBAvailable() {
+		return isDatabaseAvailable;
 	}
 
 	/**

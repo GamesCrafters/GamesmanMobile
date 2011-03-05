@@ -166,7 +166,7 @@ public class Connections extends GameActivity {
 			if (remoteness != -1)
 				remoteTextView.setText(previousValue + " in " + (remoteness+1) + " moves");
 			else remoteTextView.setText("Prediction not available.");
-		} else if (!isNetworkAvailable) {
+		} else if (!isDatabaseAvailable) {
 			remoteTextView.setText("Prediction not available.");
 		} else {
 			remoteTextView.setText((previousValue.equals("win") ? "lose" : "tie") + " in 0 moves");

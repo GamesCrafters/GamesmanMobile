@@ -90,6 +90,7 @@ public class RemoteGameValueService  {
 	 */
 	public static boolean isInternetAvailable()
 	{
+		boolean result = false;
 		try {
 			URL url = new URL("http://nyc.cs.berkeley.edu");
 			HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
@@ -99,13 +100,13 @@ public class RemoteGameValueService  {
 			urlc.connect();
 			if (urlc.getResponseCode() == 200)
 			{
-				return true;
+				result = true;
 			}
 		} catch (MalformedURLException e1) {
 			e1.printStackTrace();
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
-		return false;
+		return result;
 	}
 }

@@ -153,7 +153,7 @@ public class TicTacToe extends GameActivity {
 		g.updateValues();
 		
 		if (values != null && values.length != 0) {
-			isNetworkAvailable = true;
+			isDatabaseAvailable = true;
 			previousValue = getBoardValue(values);
 			int remoteness = getRemoteness(previousValue, values);
 			clearVVH();
@@ -493,7 +493,7 @@ public class TicTacToe extends GameActivity {
 				else
 					remoteTextView.setText("Prediction not available.");
 			} 
-			else if (!isNetworkAvailable) {
+			else if (!isDatabaseAvailable) {
 				remoteTextView.setText("Prediction not available.");
 			} 
 			else {

@@ -44,7 +44,7 @@
 					<TextView android:id="@+id/c4_menuoptions"
 						android:layout_width="fill_parent" android:layout_height="wrap_content"
 						android:gravity="center_horizontal" android:textSize="15dip"
-						android:text="Press MENU for more options." />
+						android:text="Press MENU for more options." android:layout_alignParentBottom="true"/>
 		</RelativeLayout>
 		</LinearLayout>
 		
