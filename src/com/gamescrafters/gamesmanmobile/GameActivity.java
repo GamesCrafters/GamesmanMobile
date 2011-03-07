@@ -52,9 +52,9 @@ public abstract class GameActivity extends Activity {
 		 * instance.
 		 */
 		GameIntent = getIntent();
-		GameIntent.setFlags(131072);
+		GameIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		VVHIntent = new Intent(this, VisualValueHistory.class);
-		VVHIntent.setFlags(131072);
+		VVHIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		// Create a new VVHList.
 		VVHList = new LinkedList<VVHNode>();
 		
