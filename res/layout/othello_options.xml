@@ -91,9 +91,13 @@
 </RadioGroup><RadioGroup android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/oth_p2mode" android:orientation="horizontal"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/oth_p2tv" android:text="Player 2: "></TextView><RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Human" android:id="@+id/oth_humanP2" android:checked="true"></RadioButton><RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Computer" android:id="@+id/oth_compP2"></RadioButton>
 
 </RadioGroup><LinearLayout android:id="@+id/LinearLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:orientation="vertical"><TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/oth_boardTitle"></TextView><Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:id="@+id/oth_selectBoardSize" android:entries="@array/oth_boardSizes" android:prompt="@string/oth_boardTitle"></Spinner>
-</LinearLayout><Button android:layout_height="wrap_content" android:clickable="true"
-		android:layout_width="wrap_content" android:text="Play Othello"
-		android:id="@+id/oth_PlayOthelloButton" android:layout_gravity="center_horizontal"></Button>
+
+<Button android:layout_gravity="center_horizontal" android:layout_width="wrap_content" android:clickable="true" android:layout_height="wrap_content" android:text="Play Othello" android:id="@+id/oth_PlayOthelloButton"></Button>
+<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="true" android:id="@+id/oth_PlayOthello2Button" android:text="Play Othello2" android:layout_gravity="center_horizontal"></Button>
+</LinearLayout>
+
+
+
 
 
 

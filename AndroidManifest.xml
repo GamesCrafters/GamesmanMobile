@@ -28,6 +28,7 @@
 <activity android:name="com.gamescrafters.tictactoe.TicTacToe"></activity>
 <activity android:name="com.gamescrafters.onetwoten.OneTwoTen" android:screenOrientation="portrait"></activity>
 
+<activity android:name="com.gamescrafters.othello.Othello2"></activity>
 </application>
 	<uses-sdk android:minSdkVersion="4" />
 

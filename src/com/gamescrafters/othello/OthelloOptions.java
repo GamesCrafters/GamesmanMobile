@@ -37,6 +37,21 @@ public class OthelloOptions extends Activity{
 				
 			}
 		});
+		
+		findViewById(R.id.oth_PlayOthello2Button).setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				Intent myIntent = new Intent(OthelloOptions.this, Othello2.class);
+				
+				myIntent.putExtra("isPlayer1Computer", ((RadioButton) findViewById(R.id.oth_compP1)).isChecked()); 
+				myIntent.putExtra("isPlayer2Computer", ((RadioButton) findViewById(R.id.oth_compP2)).isChecked());
+				myIntent.putExtra("dimension", ((Spinner)findViewById(R.id.oth_selectBoardSize)).getSelectedItem().toString());
+
+				OthelloOptions.this.startActivity(myIntent);
+				
+				
+				
+			}
+		});
 
 	}
 }
