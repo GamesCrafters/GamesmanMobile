@@ -28,19 +28,20 @@
 		android:layout_height="wrap_content" android:gravity="center_horizontal"
 		android:text="Connect 4" android:textColor="@color/solid_yellow"
 		android:textSize="30dip"/>
-						<TextView android:id="@+id/c4_turn" android:layout_height="wrap_content"
-							android:textSize="18dip" android:gravity="right"
-							android:layout_below="@id/c4_gametable" android:layout_width="wrap_content" />
-						<ImageButton android:id="@+id/c4_turnImage"
-							android:layout_width="40dip" android:layout_height="40dip"
-							android:layout_toRightOf="@id/c4_turn" />
+					<TextView android:id="@+id/c4_turn" android:layout_height="wrap_content"
+						android:textSize="18dip" android:gravity="right"
+						android:layout_below="@id/c4_logo" android:layout_width="wrap_content" />
+					<ImageButton android:id="@+id/c4_turnImage"
+						android:layout_width="40dip" android:layout_height="40dip"
+						android:layout_toRightOf="@id/c4_turn" android:layout_below="@id/c4_logo"/>
 					<TextView android:id="@+id/c4_gameOver" android:layout_width="fill_parent"
 						android:layout_height="wrap_content" android:textSize="18dip"
 						android:gravity="center" android:layout_alignBaseline="@+id/c4_turn" />
 					<TextView android:id="@+id/c4_remoteness"
 						android:layout_width="fill_parent" android:layout_below="@id/c4_turn"
 						android:layout_height="wrap_content" android:gravity="center_horizontal"
-						android:textSize="18dip" />
+						android:textSize="18dip" android:layout_alignParentBottom = "true"/>
+						
 					<TextView android:id="@+id/c4_menuoptions"
 						android:layout_width="fill_parent" android:layout_height="wrap_content"
 						android:gravity="center_horizontal" android:textSize="15dip"
