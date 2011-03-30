@@ -88,7 +88,7 @@
 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/c4_TextView01" android:text="Time Delay"></TextView>
 <Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/c4_select_time" android:layout_marginLeft="10dip"></Spinner>
 -->
-</LinearLayout><TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Time Delay"></TextView><EditText android:id="@+id/c4_select_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="true" android:inputType="number" android:text="0"></EditText><Button android:layout_height="wrap_content" android:clickable="true"
+</LinearLayout><TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Time Delay"></TextView><EditText android:id="@+id/c4_select_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number" android:text="0" android:clickable="false"></EditText><Button android:layout_height="wrap_content" android:clickable="true"
 		android:layout_width="wrap_content" android:text="Play Connect 4"
 		android:id="@+id/c4_PlayConnect4Button" android:layout_gravity="center_horizontal"></Button>
 
