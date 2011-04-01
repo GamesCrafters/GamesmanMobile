@@ -8,16 +8,31 @@
 	android:orientation="vertical" android:gravity="center_horizontal">
 	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/oth2_title" android:text="Othello"></TextView>
 <LinearLayout android:id="@+id/LinearLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content">
-<ImageView android:src="@drawable/oth_felt4" android:id="@+id/ImageView01" android:layout_height="fill_parent" android:layout_width="fill_parent" android:scaleType="fitXY"></ImageView>
 
-	<TableLayout android:layout_height="wrap_content" android:id="@+id/oth2_gameBoard" android:layout_width="wrap_content"></TableLayout>
+
+
+
 	
+	
+
 </LinearLayout>
 
 
 
 
 
+
+
+
+
+
+
+
+
+<RelativeLayout android:id="@+id/RelativeLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content">
+<ImageView android:id="@+id/ImageView01" android:layout_height="fill_parent" android:src="@drawable/oth_felt4" android:scaleType="fitXY" android:layout_width="fill_parent"></ImageView>
+<TableLayout android:id="@+id/oth2_gameBoard" android:layout_width="wrap_content" android:layout_height="5dip"></TableLayout>
+</RelativeLayout>
 
 
 

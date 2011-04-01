@@ -76,6 +76,16 @@ public class Othello2 extends GameActivity {
 	int width;
 	int moveDelay;
 	static int animsRunning;
+	static final int BLACK = 1;
+	static final int WHITE = 2;
+	static final int TIE = 3;
+	
+	static final int EMPTY = 0;
+	
+	final static int	UP = 1<<0,
+						DOWN = 1<<1,
+						LEFT = 1<<2,
+						RIGHT = 1<<3;
 	
 	Drawable blankPreview, losePreview, winPreview, tiePreview, emptyTile, blackTile, whiteTile;
 	
@@ -106,7 +116,6 @@ public class Othello2 extends GameActivity {
 		this.isPlayer1Computer = thisIntent.getBooleanExtra("isPlayer1Computer", this.isPlayer1Computer);
 		this.isPlayer2Computer = thisIntent.getBooleanExtra("isPlayer2Computer", this.isPlayer2Computer);
 		
-	
 		
 		this.initResources();
 		
@@ -121,6 +130,11 @@ public class Othello2 extends GameActivity {
 		
 		this.board = new int[height][width];
 		this.tiles = new TileView[height][width];
+		
+		this.board[height/2][width/2] = BLACK;
+		this.board[height/2-1][width/2] = WHITE;
+		this.board[height/2][width/2-1] = WHITE;
+		this.board[height/2-1][width/2-1] = BLACK;
 
 		
 		gameTable = (TableLayout) this.findViewById(R.id.oth2_gameBoard);
@@ -195,7 +209,7 @@ public class Othello2 extends GameActivity {
 		//RelativeLayout obl = (RelativeLayout)a.findViewById(R.id.oth_boardLayout);
 //		obl.removeView(table);
 //		bl.addView(table,new_wid,new_hei);
-		gameTable.getLayoutParams().height = size;
+		gameTable.getLayoutParams().height = size + 15;
 		//table.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, new_hei));
 		//table.setMinimumHeight(new_hei);
 		//this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, theSizeIWant));
@@ -208,9 +222,9 @@ public class Othello2 extends GameActivity {
 			tr.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			for (int col=1; col<=width; col++) {
 				int c = Color.TRANSPARENT;
-				if(this.board[row-1][col-1] == Othello.Game.BLACK)
+				if(this.board[row-1][col-1] == Othello2.BLACK)
 					c = Color.BLACK;
-				else if(this.board[row-1][col-1] == Othello.Game.WHITE)
+				else if(this.board[row-1][col-1] == Othello2.WHITE)
 					c = Color.WHITE;
 				TileView tv = new TileView(this, row, col, c);
 				//tv.setSmallColor(g.previewColor(row, col,false));
@@ -403,9 +417,11 @@ public class Othello2 extends GameActivity {
 			this.tColor = c;
 			
 			if(tColor == Color.BLACK){
-				this.setImageDrawable(Othello2.this.blackTile);
+				//this.setImageDrawable(Othello2.this.blackTile);
+				this.setImageResource(R.drawable.oth_simpleblack);
 			}else if(tColor == Color.WHITE){
-				this.setImageDrawable(Othello2.this.whiteTile);
+				//this.setImageDrawable(Othello2.this.whiteTile);
+				this.setImageResource(R.drawable.oth_simplewhite);
 			}
 			
 			// Set Base animations
