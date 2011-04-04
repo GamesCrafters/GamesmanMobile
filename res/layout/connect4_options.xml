@@ -49,10 +49,13 @@
 		<RadioGroup android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="horizontal"
 			android:id="@+id/c4_group1">
-			<TextView android:id="@+id/c4_TextView01"
+			<!--  <TextView android:id="@+id/c4_TextView01"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:text="Player 1:           ">
-			</TextView>
+			</TextView>-->
+			<EditText android:id="@+id/c4_enter_name1" android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" android:text="Player 1" android:clickable="true" android:inputType="text" android:width="100dip">
+			</EditText>
 			<RadioButton android:id="@+id/c4_RadioButtonHuman1"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:clickable="true" android:text="Human" android:checked="true">
@@ -70,10 +73,13 @@
 		<RadioGroup android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="horizontal"
 			android:id="@+id/c4_group2">
-			<TextView android:id="@+id/c4_TextView01"
+			<!-- <TextView android:id="@+id/c4_TextView01"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:text="Player 2:           ">
-			</TextView>
+			</TextView>-->
+			<EditText android:id="@+id/c4_enter_name2" android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" android:text="Player 2" android:clickable="true" android:inputType="text" android:width="100dip">
+			</EditText>
 			<RadioButton android:id="@+id/c4_RadioButtonHuman2"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:clickable="true" android:text="Human" android:checked="true"></RadioButton>
@@ -84,11 +90,9 @@
 		</RadioGroup>
 	</LinearLayout>
 	<LinearLayout android:layout_height="wrap_content" android:id="@+id/c4_Select_Delay" android:layout_width="wrap_content" android:gravity="center_vertical|center_horizontal" android:orientation="horizontal">
-<!--
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/c4_TextView01" android:text="Time Delay"></TextView>
-<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/c4_select_time" android:layout_marginLeft="10dip"></Spinner>
--->
-</LinearLayout><TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Time Delay"></TextView><EditText android:id="@+id/c4_select_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number" android:text="0" android:clickable="false"></EditText><Button android:layout_height="wrap_content" android:clickable="true"
+</LinearLayout><TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Time Delay"></TextView>
+<EditText android:id="@+id/c4_select_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number" android:text="0" android:clickable="false"></EditText>
+<Button android:layout_height="wrap_content" android:clickable="true"
 		android:layout_width="wrap_content" android:text="Play Connect 4"
 		android:id="@+id/c4_PlayConnect4Button" android:layout_gravity="center_horizontal"></Button>
 
