@@ -19,6 +19,8 @@ public class Connect4Options extends Activity {
 	Spinner select_rows;
 	Spinner select_columns;
 	EditText select_time;
+	EditText player_1;
+	EditText player_2;
 	RadioButton comp1;
 	RadioButton comp2;
 	TextView time;
@@ -43,6 +45,8 @@ public class Connect4Options extends Activity {
 		select_rows.setSelection(5); // default to 6 rows
 		
 		select_time = (EditText) findViewById(R.id.c4_select_time);
+		player_1 = (EditText) findViewById(R.id.c4_enter_name1);
+		player_2 = (EditText) findViewById(R.id.c4_enter_name2);
 		time = (TextView) findViewById(R.id.TextView01);
 		comp1 = (RadioButton) findViewById(R.id.c4_RadioButtonComputer1);
 		comp2 = (RadioButton) findViewById(R.id.c4_RadioButtonComputer2);
@@ -59,6 +63,8 @@ public class Connect4Options extends Activity {
 				myIntent.putExtra("numRows", select_rows.getSelectedItemPosition()+1);
 				myIntent.putExtra("numCols", select_columns.getSelectedItemPosition()+1);
 				myIntent.putExtra("numDelay", select_time.getText().toString());
+				myIntent.putExtra("player1_name", player_1.getText().toString());
+				myIntent.putExtra("player2_name", player_2.getText().toString());
 
 				Connect4Options.this.startActivity(myIntent);
 			}

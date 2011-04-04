@@ -63,8 +63,6 @@ public abstract class GameActivity extends Activity {
 		 * database connection.
 		 */
 		//TODO: what if internet fails during game?
-		//what if get internet connection back during game?
-		//notify user?
 		dbUpdater = new Runnable() {
 			public void run() {
 				isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
@@ -275,8 +273,10 @@ public abstract class GameActivity extends Activity {
 	 */
 	public void updatePlayerInfo() {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		final CharSequence[] items = {"Player1 to Human", "Player2 to Human",
-									  "Player1 to Computer", "Player2 to Computer"};
+		String player_1 = GameIntent.getStringExtra("player1_name");
+		String player_2 = GameIntent.getStringExtra("player2_name");
+		final CharSequence[] items = {player_1 + " to Human", player_2 + " to Human",
+									player_1 + " Computer", player_2 + " to Computer"};
 		                /*
 		                 * Player changes, if any
 		                 */
