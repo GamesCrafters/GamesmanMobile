@@ -29,7 +29,8 @@ public class GUIOneTwoTen{
 	}
 	public void initBoard()
 	{
-		int max_height = o.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 480 : 280;
+		int sheight = o.getWindowManager().getDefaultDisplay().getHeight();
+		int max_height = o.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? (int)(sheight*.65) : 280;
 		// ^ not needed: screenOrientation is set to portrait in the manifest
 		int new_height = max_height / height;
 		for(int i = height-1; i>=0; i--)// go from top to bottom because the first image will appear at the top of the screen

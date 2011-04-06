@@ -225,6 +225,7 @@ public class OneTwoTen extends GameActivity{
 		myCurrentMoveNumber = 0;
 		hSlider.updateProgress(myCurrentMoveNumber, myMovesSoFar);
 		myBottomText.setText("");
+		clearVVH();
 		updateValuesDisplay();
 		if(isPlayer1Computer)
 			playSmart();

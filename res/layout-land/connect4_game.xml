@@ -16,7 +16,7 @@
 			<RelativeLayout android:id="@+id/c4_RelativeLayout02"
 				android:layout_height="wrap_content" android:layout_width="fill_parent">
 				<TableLayout android:id="@+id/c4_gametable"
-					android:layout_width="wrap_content" 
+					android:layout_width="350dip" 
 					android:layout_height="fill_parent" android:paddingTop="5dip">
 
 				</TableLayout>
@@ -38,9 +38,9 @@
 						android:layout_height="wrap_content" android:textSize="18dip"
 						android:gravity="center" android:layout_alignBaseline="@+id/c4_turn" />
 					<TextView android:id="@+id/c4_remoteness"
-						android:layout_width="fill_parent" android:layout_below="@id/c4_turn"
+						android:layout_width="fill_parent" android:layout_above="@id/c4_menuoptions"
 						android:layout_height="wrap_content" android:gravity="center_horizontal"
-						android:textSize="18dip" android:layout_alignParentBottom = "true"/>
+						android:textSize="18dip"/>
 						
 					<TextView android:id="@+id/c4_menuoptions"
 						android:layout_width="fill_parent" android:layout_height="wrap_content"
