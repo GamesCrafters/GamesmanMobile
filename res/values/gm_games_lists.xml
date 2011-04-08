@@ -7,6 +7,7 @@
 <item>Othello\n<small><small><small><i>Beta</i></small></small></small></item>
 <item>Tic Tac Toe\n<small><small><small><i>In Development</i></small></small></small></item>
 <item>1,2....10</item>
+<item>QuickCross</item>
 </string-array>
 <string-array name="get_more">
 <item>Hi</item>

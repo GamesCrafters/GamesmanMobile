@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+   <LinearLayout 
+    	xmlns:android="http://schemas.android.com/apk/res/android" 
+    	android:layout_height="fill_parent" android:background="@color/bg_blue" 
+    	android:layout_width="fill_parent" android:orientation="vertical">
+    	<TextView android:id="@+id/quickcross_logo" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:gravity="center_horizontal"
+			android:text="QuickCross" android:textColor="@color/solid_yellow"
+			android:textSize="30dip" />
+ 		<TableLayout android:id="@+id/quickcross_gametable"
+			android:layout_width="fill_parent" android:shrinkColumns="*"
+			android:paddingTop="5dip" android:layout_height="300dip"
+			android:layout_centerHorizontal="true" android:layout_centerVertical="true"
+			android:gravity="center_vertical|center_horizontal">
+			</TableLayout>
+		<TextView android:id="@+id/quickcross_gameover" android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:gravity="center_horizontal"
+			android:textColor="@color/solid_yellow" android:textSize="25dip"/>
+   	 </LinearLayout>
