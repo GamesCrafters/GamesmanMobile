@@ -159,6 +159,7 @@ public class GUIGameBoard {
 		}
 
 		public void onClick(View v) {
+			//TODO: fix this call
 			boolean isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
 			if (!(a.isPlayer1Computer && a.isPlayer2Computer)) {
 				if (!g.gameOver && g.isBlueTurn()){

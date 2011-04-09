@@ -84,6 +84,7 @@ public class GUIQuickCross {
 		temp[2] = "H";
 		temp[3] = "P";
 		qc.doMove(temp);
+		return;
 	}
 	
 	public void updateGraphics(int[][] board)
@@ -96,26 +97,29 @@ public class GUIQuickCross {
 				{
 					System.out.println("HERE");
 					ImageView iv = ((ImageView)table.findViewById(getID(row,col)));
-					LayerDrawable temp = (LayerDrawable) iv.getDrawable();
-					temp.setDrawableByLayerId(2, r.getDrawable(qc_horiz));
-					iv.setImageDrawable(temp);
+					//LayerDrawable temp = (LayerDrawable) iv.getDrawable();
+					//temp.setDrawableByLayerId(2, r.getDrawable(qc_horiz));
+					//iv.setImageDrawable(temp);
+					iv.setImageResource(qc_horiz);
 					
 				}
 				else if(board[row][col]==QuickCross.VERT)
 				{
 					
 					ImageView iv = ((ImageView)table.findViewById(getID(row,col)));
-					LayerDrawable temp = (LayerDrawable) iv.getDrawable();
-					temp.setDrawableByLayerId(2, r.getDrawable(qc_vert));
-					iv.setImageDrawable(temp);
+					//LayerDrawable temp = (LayerDrawable) iv.getDrawable();
+					//temp.setDrawableByLayerId(2, r.getDrawable(qc_vert));
+					//iv.setImageDrawable(temp);
+					iv.setImageResource(qc_vert);
 				}
 				else
 				{
 					System.out.println("HERE3");
 					ImageView iv = ((ImageView)table.findViewById(getID(row,col)));
-					LayerDrawable temp = (LayerDrawable) iv.getDrawable();
-					temp.setDrawableByLayerId(2, r.getDrawable(qc_neutralh));
-					iv.setImageDrawable(temp);
+					//LayerDrawable temp = (LayerDrawable) iv.getDrawable();
+					//temp.setDrawableByLayerId(2, r.getDrawable(qc_neutralh));
+					//iv.setImageDrawable(temp);
+					iv.setImageResource(qc_neutralh);
 				}	
 			}
 		}

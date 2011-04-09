@@ -58,11 +58,16 @@ public abstract class GameActivity extends Activity {
 		// Create a new VVHList.
 		VVHList = new LinkedList<VVHNode>();
 		
+		startDBThread();
+	}
+	
+	private void startDBThread() {
 		/*
 		 * Run this thread in the background to continuously check for
 		 * database connection.
 		 */
 		//TODO: what if internet fails during game?
+		//TODO: periodic?
 		dbUpdater = new Runnable() {
 			public void run() {
 				isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
@@ -73,6 +78,7 @@ public abstract class GameActivity extends Activity {
 		dbChecker.setPriority(Thread.MIN_PRIORITY);
 		dbChecker.start();
 	}
+	
 	@Override
 	public void onBackPressed()
 	{
@@ -101,18 +107,6 @@ public abstract class GameActivity extends Activity {
 	} 
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-//		CharSequence title = item.getTitle();
-//		if (title.equals("New Game")) {
-//			newGame();
-//		} else if (title.equals("Toggle Move Values")){
-//			isShowValues = !isShowValues;
-//			updateValuesDisplay();
-//		} else if (title.equals("Toggle Prediction")) {
-//			isShowPrediction = !isShowPrediction;
-//			updatePredictionDisplay();
-//		} else {
-//			updateVVHDisplay();
-//		}
 		switch(item.getItemId()){
 		case NEW_GAME:
 			newGame();

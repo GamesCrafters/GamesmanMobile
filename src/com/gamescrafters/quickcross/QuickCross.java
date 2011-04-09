@@ -95,7 +95,6 @@ public class QuickCross extends GameActivity{
 	
 	//not done
 	public void doMove(String[] move) {
-		updateVisualDisplay();
 		if(!isMoveInvalid(move))
 		{
 			//qc.updateGraphics(board);
@@ -112,7 +111,6 @@ public class QuickCross extends GameActivity{
 			{ 
 				bottomText.setText("Game over.\n" + (player1Turn ? "Player1" : "Player2") + " wins!");
 				player1Turn = !player1Turn;
-				return;
 			}
 			else
 			{
@@ -120,6 +118,8 @@ public class QuickCross extends GameActivity{
 				bottomText.setText((player1Turn? "Player1" : "Player2") + "'s Turn");
 			}
 		}
+		
+		updateVisualDisplay();
 	}
 
 

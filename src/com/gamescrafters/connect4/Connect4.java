@@ -103,6 +103,15 @@ public class Connect4 extends GameActivity {
 		setGameView(R.layout.connect4_game);
 		//System.out.println(getResources().getConfiguration().orientation==Configuration.ORIENTATION_PORTRAIT);
 	}*/  
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		//TODO finish this method
+		savedInstanceState.putBoolean("player1", isPlayer1Computer);
+		savedInstanceState.putBoolean("player2", isPlayer2Computer);
+		super.onSaveInstanceState(savedInstanceState);
+	}
+	
 	class CompPlays extends Handler {
 		public void handleMessage(Message msg) {
 			if (isDatabaseAvailable) {
@@ -145,6 +154,8 @@ public class Connect4 extends GameActivity {
 	public void onRestoreInstanceState(Bundle savedInstanceState) 
 	{// TODO fix!!! very inefficient!
 		super.onRestoreInstanceState(savedInstanceState);
+		isPlayer1Computer = savedInstanceState.getBoolean("player1");
+		isPlayer2Computer = savedInstanceState.getBoolean("player2");
 		Connect4 old = (Connect4) getLastNonConfigurationInstance();
 		isShowValues = old.isShowValues;
 		isShowPrediction = old.isShowPrediction;
