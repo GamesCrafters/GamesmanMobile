@@ -70,7 +70,8 @@ public abstract class GameActivity extends Activity {
 		//TODO: periodic?
 		dbUpdater = new Runnable() {
 			public void run() {
-				isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
+				while (true)
+					isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
 			}
 		};
 		dbChecker = new Thread(dbUpdater);

@@ -107,9 +107,10 @@ public class Connect4 extends GameActivity {
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		//TODO finish this method
-		savedInstanceState.putBoolean("player1", isPlayer1Computer);
-		savedInstanceState.putBoolean("player2", isPlayer2Computer);
 		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putBoolean("isPlayer1Computer", isPlayer1Computer);
+		savedInstanceState.putBoolean("isPlayer2Computer", isPlayer2Computer);
+		//savedInstanceState.put
 	}
 	
 	class CompPlays extends Handler {
@@ -154,8 +155,8 @@ public class Connect4 extends GameActivity {
 	public void onRestoreInstanceState(Bundle savedInstanceState) 
 	{// TODO fix!!! very inefficient!
 		super.onRestoreInstanceState(savedInstanceState);
-		isPlayer1Computer = savedInstanceState.getBoolean("player1");
-		isPlayer2Computer = savedInstanceState.getBoolean("player2");
+		isPlayer1Computer = savedInstanceState.getBoolean("isPlayer1Computer");
+		isPlayer2Computer = savedInstanceState.getBoolean("isPlayer2Computer2");
 		Connect4 old = (Connect4) getLastNonConfigurationInstance();
 		isShowValues = old.isShowValues;
 		isShowPrediction = old.isShowPrediction;
