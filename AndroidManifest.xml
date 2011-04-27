@@ -6,7 +6,7 @@
 
 	<uses-permission android:name="android.permission.INTERNET" />
 
-	<application android:theme="@android:style/Theme.NoTitleBar" android:icon="@drawable/gm_logo" android:debuggable="false">
+	<application android:theme="@android:style/Theme.NoTitleBar" android:icon="@drawable/gm_logo" android:debuggable="true">
 		<activity android:label="@string/app_name" android:name=".GamesmanMobile" android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />

@@ -36,7 +36,7 @@ public class Connect4 extends GameActivity {
 	private ImageButton turnImage;
 	private Drawable bluePiece, redPiece;
 	private CompPlays compPlaying = new CompPlays();
-	
+
 	Game g = null;
 	GUIGameBoard gb;
 	MoveValue[] values = null;
@@ -50,13 +50,13 @@ public class Connect4 extends GameActivity {
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		setGameView(R.layout.connect4_game);
 
-		
-		
-		
+
+
+
 		//Retrieve data passed from previous activity.
 		Intent myIntent = GameIntent = getIntent();
 		isPlayer1Computer = myIntent.getBooleanExtra("isPlayer1Computer", false);
@@ -77,8 +77,8 @@ public class Connect4 extends GameActivity {
 			{
 				dialog.dismiss();
 			}
-				});
-		
+		});
+
 		initResources();
 		isDatabaseAvailable = isDBAvailable();
 		if (isDatabaseAvailable)
@@ -103,7 +103,7 @@ public class Connect4 extends GameActivity {
 		setGameView(R.layout.connect4_game);
 		//System.out.println(getResources().getConfiguration().orientation==Configuration.ORIENTATION_PORTRAIT);
 	}*/  
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		//TODO finish this method
@@ -112,7 +112,7 @@ public class Connect4 extends GameActivity {
 		savedInstanceState.putBoolean("isPlayer2Computer", isPlayer2Computer);
 		//savedInstanceState.put
 	}
-	
+
 	class CompPlays extends Handler {
 		public void handleMessage(Message msg) {
 			if (isDatabaseAvailable) {
@@ -126,7 +126,7 @@ public class Connect4 extends GameActivity {
 			sendMessageDelayed(obtainMessage(0), delay);
 		}
 	};
-	
+
 	private void updateUI() {
 		if (!g.gameOver) {
 			compPlaying.sleep(delay*1000);
@@ -136,7 +136,7 @@ public class Connect4 extends GameActivity {
 			}
 		}
 	}
-	
+
 	private void updateUI2() {
 		if (!g.gameOver) {
 			compPlaying.sleep(delay*1000);
@@ -146,7 +146,7 @@ public class Connect4 extends GameActivity {
 			}
 		}
 	}
-	
+
 	@Override
 	public void newGame() {
 		setBoard(g.width, g.height);
@@ -180,7 +180,7 @@ public class Connect4 extends GameActivity {
 		previousMoves = old.previousMoves;
 		nextMoves = old.nextMoves;
 		moveValues = old.moveValues;
-		*/
+		 */
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class Connect4 extends GameActivity {
 		remoteTextView = (TextView) findViewById(R.id.c4_remoteness);
 		gameOverTextView = (TextView) findViewById(R.id.c4_gameOver);	
 	}
-	
+
 	/**
 	 * Allows user to play Connect4 without Internet.
 	 * No remoteness or game values are available.
@@ -211,11 +211,11 @@ public class Connect4 extends GameActivity {
 			gb = new GUIGameBoard(this);
 		else gb.reset(g);
 		gb.initBoard();
-		
+
 		turnTextView.setText("Turn:" );
 		turnImage.setBackgroundDrawable(bluePiece);
 		turnImage.setEnabled(false);
-		
+
 		/*
 		 * API moves
 		 */
@@ -242,7 +242,7 @@ public class Connect4 extends GameActivity {
 		turnTextView.setText("Turn: ");
 		turnImage.setBackgroundDrawable(bluePiece);
 		turnImage.setEnabled(false);
-		
+
 		gameOverTextView.setText("");
 		if (getLastNonConfigurationInstance() == null) {
 			values = getNextMoveValues();
@@ -256,7 +256,7 @@ public class Connect4 extends GameActivity {
 			clearVVH();
 			updateVVH(previousValue, remoteness, g.gameOver, g.isBlueTurn(), g.isTie());
 		}
-		
+
 		//computer vs. computer
 		if (isDatabaseAvailable)
 		{
@@ -281,12 +281,12 @@ public class Connect4 extends GameActivity {
 	public String getGameName() {
 		return GAME_NAME;
 	}
-	
+
 	@Override
 	public int getNumMovesSoFar() {
 		return g.getNumMovesSoFar();
 	}
-	
+
 	@Override
 	public int getCurrentMove() {
 		return g.currentMove;
@@ -345,7 +345,7 @@ public class Connect4 extends GameActivity {
 	public void updatePredictionDisplay() {
 		g.updateRemoteness();
 	}
-	
+
 	/**
 	 * Redo a move. If no next moves, does nothing.
 	 */
@@ -362,7 +362,7 @@ public class Connect4 extends GameActivity {
 			redoHelper();
 		}
 	}
-	
+
 	private void redoHelper() {
 		if (!nextMoves.isEmpty()) {
 			int col = nextMoves.pop();
@@ -399,6 +399,8 @@ public class Connect4 extends GameActivity {
 		final static boolean RED_TURN = true;
 		final static int RED = 1;
 		final static int BLUE = 2;
+		final static int BLUEHL = 3;
+		final static int REDHL = 4;
 		final static int EMPTY = 0;
 
 		boolean turn = BLUE_TURN; // first player, blue
@@ -415,9 +417,9 @@ public class Connect4 extends GameActivity {
 			previousMoves = new Stack<Integer>();
 			movesSoFar = 0;
 			currentMove = 0;
-			
+
 			nextMoves = new Stack<Integer>();
-			
+
 		}
 
 		/**
@@ -450,16 +452,16 @@ public class Connect4 extends GameActivity {
 			nextMoves.push(col);
 		}
 
-//		public void goToMoveN(int N) {
-//			if (0 <= N && N <= movesSoFar) {
-//				while (N < currentMove) {
-//					undoMove();
-//				}
-//				while (N > currentMove) {
-//					redoMove();
-//				}
-//			}
-//		}
+		//		public void goToMoveN(int N) {
+		//			if (0 <= N && N <= movesSoFar) {
+		//				while (N < currentMove) {
+		//					undoMove();
+		//				}
+		//				while (N > currentMove) {
+		//					redoMove();
+		//				}
+		//			}
+		//		}
 
 		/**
 		 * Checks if the move (column number) is valid, and performs the move if it is.
@@ -526,7 +528,7 @@ public class Connect4 extends GameActivity {
 			} else if ((values != null) && (values.length != 0)) {
 				previousValue = getBoardValue(values);
 
-				
+
 				int remoteness = getRemoteness(previousValue, values);
 
 				if (remoteness != -1)
@@ -539,21 +541,21 @@ public class Connect4 extends GameActivity {
 			}
 		}
 
-//		private void updateVVH () {
-//			VVHNode node;
-//			if ((values != null) && (values.length != 0)) {
-//				previousValue = getBoardValue(values);
-//				
-//				int remoteness = getRemoteness(previousValue, values);
-//				if (remoteness == -1) return;
-//				if (gameOver && isTie())
-//				node = new VVHNode("gameover-tie", remoteness, !isBlueTurn());
-//				else if (gameOver)
-//					node = new VVHNode("gameover", remoteness, !isBlueTurn());
-//				else node = new VVHNode(previousValue, remoteness, isBlueTurn());
-//				VVHList.add(node);
-//			}
-//		}
+		//		private void updateVVH () {
+		//			VVHNode node;
+		//			if ((values != null) && (values.length != 0)) {
+		//				previousValue = getBoardValue(values);
+		//				
+		//				int remoteness = getRemoteness(previousValue, values);
+		//				if (remoteness == -1) return;
+		//				if (gameOver && isTie())
+		//				node = new VVHNode("gameover-tie", remoteness, !isBlueTurn());
+		//				else if (gameOver)
+		//					node = new VVHNode("gameover", remoteness, !isBlueTurn());
+		//				else node = new VVHNode(previousValue, remoteness, isBlueTurn());
+		//				VVHList.add(node);
+		//			}
+		//		}
 
 		/**
 		 * @return Whether or not it is blue's turn.
@@ -592,7 +594,7 @@ public class Connect4 extends GameActivity {
 			return board[row][column];
 		}
 
-		
+
 		/**
 		 * Toggles the turn, and updates the picture for the turn field.
 		 */
@@ -600,15 +602,15 @@ public class Connect4 extends GameActivity {
 			turn = !turn;
 			if (!gameOver) turnImage.setBackgroundDrawable(isBlueTurn() ? bluePiece : redPiece);
 		}
-		
+
 		/**
 		 * Updates the gamestate given a column in which a piece was placed.
 		 * @param col The column in which the piece was placed.
 		 */
 		private void updateGameState(int col) { 
-			int currentY;
+			int currentY = 0;
 
-			for (currentY = 0; currentY < height; currentY++) {
+			/*for (currentY = 0; currentY < height; currentY++) {
 				if (board[currentY][col] == EMPTY) {
 					break;
 				}
@@ -619,10 +621,93 @@ public class Connect4 extends GameActivity {
 			} else {
 				board[currentY][col] = BLUE;
 				gb.updateTile(BLUE, currentY, col);
+			} */
+			if (isRedTurn()) {
+				for (currentY = 0; currentY < height; currentY++) {
+					if (board[currentY][col] == REDHL) {
+						board[currentY][col] = RED;
+						gb.updateTile(RED, currentY, col);
+						break;
+					}
+				}
+			}
+			else {
+				for (currentY = 0; currentY < height; currentY++) {
+					if (board[currentY][col] == BLUEHL) {
+						board[currentY][col] = BLUE;
+						gb.updateTile(BLUE, currentY, col);
+						break;
+					}
+				}
 			}
 			checkBoard(currentY, col);
 		}
 
+		public int moveAnim(int col, int currcol, float x, float currx,int width, int totalwidth) {
+			int currentY;
+			boolean stop = false;
+			float diff = currx - x;
+			if (diff > 0) {
+				while (diff > width-10) {
+					diff -= width;
+					if (col < totalwidth - 1)
+						col++;
+				}
+			}
+			else {
+				diff = diff *-1;
+				while (diff > width - 10) {
+					diff -= width;
+					if (col > 0)
+						col--;
+				}
+			}
+			for (currentY = 0; currentY < height; currentY++) {
+				if (board[currentY][col] == REDHL || board[currentY][col] == BLUEHL) {
+					stop = true;
+					break;
+				}
+				if (board[currentY][col] == EMPTY) {
+					break;
+				}
+			}
+			if (!stop && currentY < height) {
+				if (isRedTurn()) {
+					board[currentY][col] = REDHL;
+					gb.updateTile(REDHL, currentY, col);
+				} else {
+					board[currentY][col] = BLUEHL;
+					gb.updateTile(BLUEHL, currentY, col);
+				}
+			}
+			if (col != currcol) {
+				for (currentY = 0; currentY < height; currentY++) {
+					if (board[currentY][currcol] == REDHL || board[currentY][currcol] == BLUEHL) {
+						board[currentY][currcol] = EMPTY;
+						gb.updateTile(EMPTY, currentY, currcol);
+						break;
+					}
+					
+				}
+			}
+			return col;
+		}
+		public void upAnim(int col) {
+			int currentY;
+
+			for (currentY = 0; currentY < height; currentY++) {
+				if (board[currentY][col] == EMPTY) {
+					break;
+				}
+			}
+			if (isRedTurn()) {
+				board[currentY-1][col] = EMPTY;
+				gb.updateTile(EMPTY, currentY-1, col);
+			} else {
+				board[currentY-1][col] = EMPTY;
+				gb.updateTile(EMPTY, currentY-1, col);
+			}
+		}
 		/**
 		 * Checks if there are N in a row pieces.
 		 * @param row The row of the piece just placed.
@@ -722,8 +807,9 @@ public class Connect4 extends GameActivity {
 	 * @return true or false, whether a column is full.
 	 */
 	@Override
-	public boolean isMoveInvalid(int move) {		
-		return g.board[(g.height)-1][move] != Game.EMPTY;
+	public boolean isMoveInvalid(int move) {	
+		boolean valid = (g.board[(g.height)-1][move] == Game.EMPTY || g.board[(g.height)-1][move] == Game.BLUEHL || g.board[(g.height)-1][move] == Game.REDHL);
+		return !valid;
 	}
 
 	@Override
@@ -737,5 +823,5 @@ public class Connect4 extends GameActivity {
 	}
 
 
-	
+
 } 

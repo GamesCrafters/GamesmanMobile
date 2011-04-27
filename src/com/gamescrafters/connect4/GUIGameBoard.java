@@ -1,6 +1,9 @@
 package com.gamescrafters.connect4;
 
+import java.util.LinkedList;
+
 import android.content.res.Configuration;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -29,7 +32,10 @@ public class GUIGameBoard {
 	int tile = R.drawable.c4_tile;
 	int toptile = R.drawable.c4_toptile;
 	int blue_tile = R.drawable.c4_blue_tile;
+	int blue_tilehl = R.drawable.c4_blue_tilehl;
 	int red_tile = R.drawable.c4_red_tile;
+	int red_tilehl = R.drawable.c4_red_tilehl;
+
 	int top_tile_ids[] = {R.drawable.c4_toptile, R.drawable.c4_toptile_green, 
 			R.drawable.c4_toptile_yellow, R.drawable.c4_toptile_red,
 			R.drawable.c4_blue_top, R.drawable.c4_blue_top_green,
@@ -88,11 +94,13 @@ public class GUIGameBoard {
 				iv.setAdjustViewBounds(true);
 				iv.setMaxHeight(new_height);
 				iv.setId(getID(row, col));
-				iv.setOnClickListener(new ColumnClickListener(col));
+				//iv.setOnClickListener(new ColumnClickListener(col));
+				iv.setOnTouchListener(new ColumnTouchListener(col,a,g));
 				tr.addView(iv);
 			}
 			table.addView(tr);
 		}
+		
 	}
 	
 	/**
@@ -141,49 +149,84 @@ public class GUIGameBoard {
 		else if (piece == Connect4.Game.BLUE) {
 			((ImageView) table.findViewById(getID(row, column))).setImageResource(blue_tile);
 		}
-		else {
+		else if (piece == Connect4.Game.RED){
 			((ImageView) table.findViewById(getID(row, column))).setImageResource(red_tile);
 		}
+		else if (piece == Connect4.Game.BLUEHL) {
+			((ImageView) table.findViewById(getID(row, column))).setImageResource(blue_tilehl);
+		}
+		else
+			((ImageView) table.findViewById(getID(row, column))).setImageResource(red_tilehl);
 
 	}
 
+	class ColumnTouchListener implements View.OnTouchListener {
+		int col;
+		int currcol;
+		int twidth;
+		Connect4 connect;
+		Game G;
+		float x, y;
+		public ColumnTouchListener(int c, Connect4 con, Game game) {
+			col = c;
+			currcol = c;
+			twidth = width;
+			G = game;
+			connect = con;
+		}
+		public boolean onTouch(View v, MotionEvent event) {
+			float currx = event.getX();
+			float curry = event.getY();
+			int w = v.getWidth();
+			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+				//g.moveAnim(col);
+				x = currx;
+				y = curry;
+				if (!G.gameOver)
+					currcol  = G.moveAnim(col,currcol,x,currx,w,twidth);
+				return true;
+			}
+			
+			if (event.getAction() == MotionEvent.ACTION_MOVE) {
+				if (!G.gameOver)
+					currcol  = G.moveAnim(col,currcol,x,currx,w,twidth);
+				return true;
+			}
+			if (event.getAction() == MotionEvent.ACTION_UP) {
+				//g.upAnim(currcol);
+				boolean isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
+				if (!(connect.isPlayer1Computer && connect.isPlayer2Computer)) {
+					if (!G.gameOver && G.isBlueTurn()){
+						G.doMove(currcol, false);
+						//if game is still not over, and it's a computer's turn, computer moves
+						if (!G.gameOver && connect.isPlayer2Computer) {
+							if (isDatabaseAvailable) {
+								connect.doComputerMove();
+							} else {
+								connect.playRandom();
+							}
+						}
+					} else {
+						G.doMove(currcol, false);
+						if (!G.gameOver && connect.isPlayer1Computer) {
+							if (isDatabaseAvailable) {
+								connect.doComputerMove();
+							} else {
+								connect.playRandom();
+							}
+						}
+					}
+				}
+				return true;
+			}
+			return true;
+		}
+	}
 	/**
 	 * An OnClickListener that is attached to the tile image elements.
 	 * Calls doMove, doComputerMove, or playRandom on a click.
 	 */
-	class ColumnClickListener implements View.OnClickListener {
-		int column;
+	
 
-		public ColumnClickListener(int col_num) {
-			column = col_num;
-		}
-
-		public void onClick(View v) {
-			//TODO: fix this call
-			boolean isDatabaseAvailable = RemoteGameValueService.isInternetAvailable();
-			if (!(a.isPlayer1Computer && a.isPlayer2Computer)) {
-				if (!g.gameOver && g.isBlueTurn()){
-					g.doMove(column, false);
-					//if game is still not over, and it's a computer's turn, computer moves
-					if (!g.gameOver && a.isPlayer2Computer) {
-						if (isDatabaseAvailable) {
-							a.doComputerMove();
-						} else {
-							a.playRandom();
-						}
-					}
-				} else {
-					g.doMove(column, false);
-					if (!g.gameOver && a.isPlayer1Computer) {
-						if (isDatabaseAvailable) {
-							a.doComputerMove();
-						} else {
-							a.playRandom();
-						}
-					}
-				}
-			}
-		}
-
-	}
+	
 }
