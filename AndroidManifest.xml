@@ -27,6 +27,7 @@
 <activity android:name="com.gamescrafters.tictactoe.TicTacToeOptions"></activity>
 <activity android:name="com.gamescrafters.tictactoe.TicTacToe"></activity>
 <activity android:name="com.gamescrafters.onetwoten.OneTwoTen" android:screenOrientation="portrait"></activity>
+<activity android:name="com.gamescrafters.pegsolitaire.PegSolitaire" android:screenOrientation="portrait"></activity>
 <activity android:name="com.gamescrafters.quickcross.QuickCross" android:screenOrientation="portrait"></activity>
 <activity android:name="com.gamescrafters.othello.Othello2"></activity>
 </application>

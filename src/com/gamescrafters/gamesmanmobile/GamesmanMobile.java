@@ -15,6 +15,7 @@ import com.gamescrafters.connect4.Connect4Options;
 import com.gamescrafters.connections.ConnectionsOptions;
 import com.gamescrafters.onetwoten.OneTwoTen;
 import com.gamescrafters.othello.OthelloOptions;
+import com.gamescrafters.pegsolitaire.PegSolitaire;
 import com.gamescrafters.quickcross.QuickCross;
 import com.gamescrafters.tictactoe.TicTacToeOptions;
 
@@ -65,6 +66,10 @@ public class GamesmanMobile extends TabActivity {
 					break;
 				case 6:
 					myIntent = new Intent(GamesmanMobile.this, QuickCross.class);
+					GamesmanMobile.this.startActivity(myIntent);
+					break;
+				case 7:
+					myIntent = new Intent(GamesmanMobile.this, PegSolitaire.class);
 					GamesmanMobile.this.startActivity(myIntent);
 					break;
 				}
