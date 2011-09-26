@@ -48,11 +48,10 @@
 		android:layout_width="fill_parent">
 		<RadioGroup android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="horizontal"
-			android:id="@+id/ttt_group1">
-			<TextView android:id="@+id/ttt_TextView01"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:text="Player 1:           ">
-			</TextView>
+			android:id="@+id/ttt_group1" android:weightSum="1">
+			<EditText android:id="@+id/ttt_enter_name1" android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" android:text="Left" android:clickable="true" android:inputType="text" android:width="100dip">
+			</EditText>
 			<RadioButton android:id="@+id/ttt_RadioButtonHuman1"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:clickable="true" android:text="Human" android:checked="true">
@@ -69,11 +68,10 @@
 		android:layout_width="fill_parent">
 		<RadioGroup android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="horizontal"
-			android:id="@+id/ttt_group2">
-			<TextView android:id="@+id/ttt_TextView01"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:text="Player 2:           ">
-			</TextView>
+			android:id="@+id/ttt_group2" android:weightSum="1">
+			<EditText android:id="@+id/ttt_enter_name2" android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" android:text="Right" android:clickable="true" android:inputType="text" android:width="100dip">
+			</EditText>
 			<RadioButton android:id="@+id/ttt_RadioButtonHuman2"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:clickable="true" android:text="Human" android:checked="true"></RadioButton>
