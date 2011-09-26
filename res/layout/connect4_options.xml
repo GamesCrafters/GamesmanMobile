@@ -54,7 +54,7 @@
 				android:text="Player 1:           ">
 			</TextView>-->
 			<EditText android:id="@+id/c4_enter_name1" android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" android:text="Player 1" android:clickable="true" android:inputType="text" android:width="100dip">
+			android:layout_height="wrap_content" android:text="Left" android:clickable="true" android:inputType="text" android:width="100dip">
 			</EditText>
 			<RadioButton android:id="@+id/c4_RadioButtonHuman1"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
 				android:text="Player 2:           ">
 			</TextView>-->
 			<EditText android:id="@+id/c4_enter_name2" android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" android:text="Player 2" android:clickable="true" android:inputType="text" android:width="100dip">
+			android:layout_height="wrap_content" android:text="Right" android:clickable="true" android:inputType="text" android:width="100dip">
 			</EditText>
 			<RadioButton android:id="@+id/c4_RadioButtonHuman2"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
