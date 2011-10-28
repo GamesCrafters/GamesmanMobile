@@ -38,7 +38,7 @@ public class Connect4 extends GameActivity {
 	private CompPlays compPlaying = new CompPlays();
 
 	Game g = null;
-	GUIGameBoard gb;
+	GUIGameBoard gb = null;
 	MoveValue[] values = null;
 	String previousValue = "win";
 	int delay;
@@ -471,7 +471,8 @@ public class Connect4 extends GameActivity {
 		 */
 		public void doMove(int move, boolean isRedo) {
 			if (!(isMoveInvalid(move) || gameOver)) {
-				updateGameState(move); 
+				updateGameState(move);
+				checkBoard(findEmptyRowInColumn(move) - 1, move);
 				switchTurn();
 				if (isDatabaseAvailable)
 				{
@@ -608,90 +609,42 @@ public class Connect4 extends GameActivity {
 		 * @param col The column in which the piece was placed.
 		 */
 		private void updateGameState(int col) { 
-			int currentY = 0;
-
-			/*for (currentY = 0; currentY < height; currentY++) {
-				if (board[currentY][col] == EMPTY) {
-					break;
+			commitCell(findEmptyRowInColumn(col), col);
+		}
+		
+		public int findEmptyRowInColumn(int column) {
+			for (int row = height - 1; row >= 0; row--) {
+				if (board[row][column] == BLUE || board[row][column] == RED) {
+					return row + 1;
 				}
 			}
+			return 0;
+		}
+		
+		public void highlightCell(int row, int column){
 			if (isRedTurn()) {
-				board[currentY][col] = RED;
-				gb.updateTile(RED, currentY, col);
-			} else {
-				board[currentY][col] = BLUE;
-				gb.updateTile(BLUE, currentY, col);
-			} */
-			if (isRedTurn()) {
-				for (currentY = 0; currentY < height; currentY++) {
-					if (board[currentY][col] == REDHL) {
-						board[currentY][col] = RED;
-						gb.updateTile(RED, currentY, col);
-						break;
-					}
-				}
+				gb.updateTile(REDHL, row, column);
 			}
 			else {
-				for (currentY = 0; currentY < height; currentY++) {
-					if (board[currentY][col] == BLUEHL) {
-						board[currentY][col] = BLUE;
-						gb.updateTile(BLUE, currentY, col);
-						break;
-					}
-				}
+				gb.updateTile(BLUEHL, row, column);
 			}
-			checkBoard(currentY, col);
 		}
-
-		public int moveAnim(int col, int currcol, float x, float currx,int width, int totalwidth) {
-			int currentY;
-			boolean stop = false;
-			float diff = currx - x;
-			if (diff > 0) {
-				while (diff > width-10) {
-					diff -= width;
-					if (col < totalwidth - 1)
-						col++;
-				}
+		
+		public void dehighlightCell(int row, int column) {
+			gb.updateTile(EMPTY, row, column);
+		}
+		
+		public void commitCell(int row, int column) {
+			if (isRedTurn()) {
+				board[row][column] = RED;
+				gb.updateTile(RED, row, column);
 			}
 			else {
-				diff = diff *-1;
-				while (diff > width - 10) {
-					diff -= width;
-					if (col > 0)
-						col--;
-				}
+				board[row][column] = BLUE;
+				gb.updateTile(BLUE, row, column);
 			}
-			for (currentY = 0; currentY < height; currentY++) {
-				if (board[currentY][col] == REDHL || board[currentY][col] == BLUEHL) {
-					stop = true;
-					break;
-				}
-				if (board[currentY][col] == EMPTY) {
-					break;
-				}
-			}
-			if (!stop && currentY < height) {
-				if (isRedTurn()) {
-					board[currentY][col] = REDHL;
-					gb.updateTile(REDHL, currentY, col);
-				} else {
-					board[currentY][col] = BLUEHL;
-					gb.updateTile(BLUEHL, currentY, col);
-				}
-			}
-			if (col != currcol) {
-				for (currentY = 0; currentY < height; currentY++) {
-					if (board[currentY][currcol] == REDHL || board[currentY][currcol] == BLUEHL) {
-						board[currentY][currcol] = EMPTY;
-						gb.updateTile(EMPTY, currentY, currcol);
-						break;
-					}
-					
-				}
-			}
-			return col;
 		}
+		
 		public void upAnim(int col) {
 			int currentY;
 
@@ -808,8 +761,7 @@ public class Connect4 extends GameActivity {
 	 */
 	@Override
 	public boolean isMoveInvalid(int move) {	
-		boolean valid = (g.board[(g.height)-1][move] == Game.EMPTY || g.board[(g.height)-1][move] == Game.BLUEHL || g.board[(g.height)-1][move] == Game.REDHL);
-		return !valid;
+		return g.findEmptyRowInColumn(move) == g.width;
 	}
 
 	@Override
