@@ -1,7 +1,5 @@
 package com.gamescrafters.connect4;
 
-import java.util.LinkedList;
-
 import android.content.res.Configuration;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import com.gamescrafters.connect4.Connect4.Game;
-import com.gamescrafters.gamesmanmobile.GameActivity;
 import com.gamescrafters.gamesmanmobile.R;
 import com.gamescrafters.gamesmanmobile.RemoteGameValueService;
 
@@ -189,6 +186,18 @@ public class GUIGameBoard {
 
 	}
 
+	/**
+	 * OnTouchListener that implements the events that occur with certain gestures
+	 * on a column of the Connect4 Board.
+	 *
+	 * Gestures implemented include:
+	 * ACTION_DOWN: When a finger is placed on a column,
+	 * 	a highlighted version of the piece appears.
+	 * ACTION_MOVE: When a finger moves to another column,
+	 * 	the highlighted version of the piece will move as well.
+	 * ACTION_UP: When a finger is removed from being on a column,
+	 * 	if the move is valid, that column will be registered as a move
+	 */
 	private class ColumnTouchListener implements View.OnTouchListener {
 		int col;
 		int currcol = 0;
@@ -218,7 +227,7 @@ public class GUIGameBoard {
 
 			if (event.getAction() == MotionEvent.ACTION_MOVE) {
 				if (!G.gameOver){
-					//currcol = G.moveAnim(col, currcol, x, currx, w, width);
+					// Recalculating the new currcol
 					int newCurrent = currcol;
 					if (currx >= 0) {
 						newCurrent += (currx / w) - currcol + col;
@@ -226,6 +235,7 @@ public class GUIGameBoard {
 					else if (currx < 0) {
 						newCurrent += (currx / w) + col - currcol;
 					}
+					
 					if (newCurrent != currcol) {
 						int emptySpaceHeight = G.findEmptyRowInColumn(currcol);
 						if (emptySpaceHeight != G.height) {
@@ -242,7 +252,6 @@ public class GUIGameBoard {
 			}
 
 			if (event.getAction() == MotionEvent.ACTION_UP) {
-				// g.upAnim(currcol);
 				boolean isDatabaseAvailable = RemoteGameValueService
 						.isInternetAvailable();
 				if (!(connect.isPlayer1Computer && connect.isPlayer2Computer)) {
@@ -273,9 +282,5 @@ public class GUIGameBoard {
 			return true;
 		}
 	}
-	/**
-	 * An OnClickListener that is attached to the tile image elements. Calls
-	 * doMove, doComputerMove, or playRandom on a click.
-	 */
 
 }

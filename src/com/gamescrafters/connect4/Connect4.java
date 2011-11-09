@@ -612,6 +612,11 @@ public class Connect4 extends GameActivity {
 			commitCell(findEmptyRowInColumn(col), col);
 		}
 		
+		/**
+		 * Finds the first available row in a given column
+		 * @param column The column of the board to find the first available row
+		 * @return An integer telling where the first available row is in a given column.
+		 */
 		public int findEmptyRowInColumn(int column) {
 			for (int row = height - 1; row >= 0; row--) {
 				if (board[row][column] == BLUE || board[row][column] == RED) {
@@ -621,6 +626,12 @@ public class Connect4 extends GameActivity {
 			return 0;
 		}
 		
+		/**
+		 * Places a highlighted piece into the GUI at the corresponding point.
+		 * The board is not affected.
+		 * @param row The row of the space to place highlighted piece.
+		 * @param column The column of the space to place highlighted piece.
+		 */
 		public void highlightCell(int row, int column){
 			if (isRedTurn()) {
 				gb.updateTile(REDHL, row, column);
@@ -630,10 +641,22 @@ public class Connect4 extends GameActivity {
 			}
 		}
 		
+		/**
+		 * Removes the highlighted piece from the GUI.
+		 * The board is not affected.
+		 * @param row The row of the piece currently highlighted.
+		 * @param column The column of the piece currently highlighted.
+		 */
 		public void dehighlightCell(int row, int column) {
 			gb.updateTile(EMPTY, row, column);
 		}
 		
+		/**
+		 * Registers the current cell to be used as the player's move,
+		 * the board and the GUI are updated with the corresponding piece.
+		 * @param row The row of the piece just placed.
+		 * @param column The column of the piece just placed.
+		 */
 		public void commitCell(int row, int column) {
 			if (isRedTurn()) {
 				board[row][column] = RED;
@@ -644,23 +667,7 @@ public class Connect4 extends GameActivity {
 				gb.updateTile(BLUE, row, column);
 			}
 		}
-		
-		public void upAnim(int col) {
-			int currentY;
 
-			for (currentY = 0; currentY < height; currentY++) {
-				if (board[currentY][col] == EMPTY) {
-					break;
-				}
-			}
-			if (isRedTurn()) {
-				board[currentY-1][col] = EMPTY;
-				gb.updateTile(EMPTY, currentY-1, col);
-			} else {
-				board[currentY-1][col] = EMPTY;
-				gb.updateTile(EMPTY, currentY-1, col);
-			}
-		}
 		/**
 		 * Checks if there are N in a row pieces.
 		 * @param row The row of the piece just placed.
@@ -757,7 +764,7 @@ public class Connect4 extends GameActivity {
 
 	/**
 	 * @param move The column number to check (0->width-1).
-	 * @return true or false, whether a column is full.
+	 * @return A boolean whether a column is full.
 	 */
 	@Override
 	public boolean isMoveInvalid(int move) {	
