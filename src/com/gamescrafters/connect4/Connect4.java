@@ -42,7 +42,6 @@ public class Connect4 extends GameActivity {
 	MoveValue[] values = null;
 	String previousValue = "win";
 	int delay;
-	boolean isDatabaseAvailable;
 	AlertDialog.Builder builder;
 	Stack<Integer> previousMoves, nextMoves; // Stacks of previousMoves and nextMoves, which is used to undo and redo moves.
 
@@ -80,8 +79,7 @@ public class Connect4 extends GameActivity {
 		});
 
 		initResources();
-		isDatabaseAvailable = isDBAvailable();
-		if (isDatabaseAvailable)
+		if (isDBAvailable())
 		{
 			setBoard(width, height);
 		} else {
@@ -115,7 +113,7 @@ public class Connect4 extends GameActivity {
 
 	class CompPlays extends Handler {
 		public void handleMessage(Message msg) {
-			if (isDatabaseAvailable) {
+			if (isDBAvailable()) {
 				Connect4.this.updateUI();
 			} else {
 				Connect4.this.updateUI2();
@@ -231,7 +229,9 @@ public class Connect4 extends GameActivity {
 	 * @param width The width of the board to construct.
 	 * @param height The height of the board to construct.
 	 */
-	private void setBoard(int width, int height) { 
+	private void setBoard(int width, int height) {
+		boolean dbAvailable = false;
+		
 		g = new Game(height, width);
 		if (gb == null)
 			gb = new GUIGameBoard(this);
@@ -250,7 +250,7 @@ public class Connect4 extends GameActivity {
 		g.updateRemoteness();
 		g.updateValues();
 		if (values != null && values.length != 0) {
-			isDatabaseAvailable = true;
+			dbAvailable = true;
 			previousValue = getBoardValue(values);
 			int remoteness = getRemoteness(previousValue, values);
 			clearVVH();
@@ -258,7 +258,7 @@ public class Connect4 extends GameActivity {
 		}
 
 		//computer vs. computer
-		if (isDatabaseAvailable)
+		if (dbAvailable)
 		{
 			if (isPlayer1Computer && isPlayer2Computer) {
 				updateUI();
@@ -474,7 +474,7 @@ public class Connect4 extends GameActivity {
 				updateGameState(move);
 				checkBoard(findEmptyRowInColumn(move) - 1, move);
 				switchTurn();
-				if (isDatabaseAvailable)
+				if (isDBAvailable())
 				{
 					values = getNextMoveValues();
 					updateRemoteness();
@@ -535,7 +535,7 @@ public class Connect4 extends GameActivity {
 				if (remoteness != -1)
 					remoteTextView.setText(previousValue + " in " + (remoteness+1) + " moves");
 				else remoteTextView.setText("Prediction not available.");
-			} else if (!isDatabaseAvailable) {
+			} else if (!isDBAvailable()) {
 				remoteTextView.setText("Prediction not available.");
 			} else {
 				remoteTextView.setText((previousValue.equals("win") ? "lose" : "tie") + " in 0 moves");

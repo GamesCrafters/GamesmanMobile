@@ -252,8 +252,7 @@ public class GUIGameBoard {
 			}
 
 			if (event.getAction() == MotionEvent.ACTION_UP) {
-				boolean isDatabaseAvailable = RemoteGameValueService
-						.isInternetAvailable();
+				boolean isDatabaseAvailable = connect.isDBAvailable();
 				if (!(connect.isPlayer1Computer && connect.isPlayer2Computer)) {
 					if (!G.gameOver && G.isBlueTurn()) {
 						G.doMove(currcol, false);
