@@ -402,6 +402,9 @@ public class Connect4 extends GameActivity {
 		final static int BLUEHL = 3;
 		final static int REDHL = 4;
 		final static int EMPTY = 0;
+		
+		final static int topHalf = 1;
+		final static int botHalf = 2;
 
 		boolean turn = BLUE_TURN; // first player, blue
 		int board[][]; 	// The internal state of the game. Either RED, BLUE, or EMPTY.

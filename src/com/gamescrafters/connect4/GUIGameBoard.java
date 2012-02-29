@@ -180,9 +180,22 @@ public class GUIGameBoard {
 		} else if (piece == Connect4.Game.BLUEHL) {
 			((ImageView) table.findViewById(getID(row, column)))
 					.setImageResource(blue_tilehl);
-		} else
+		} else if (piece == Connect4.Game.REDHL){
 			((ImageView) table.findViewById(getID(row, column)))
 					.setImageResource(red_tilehl);
+		} else if (piece == Connect4.Game.RED + Connect4.Game.topHalf){
+			((ImageView) table.findViewById(getID(row, column)))
+			.setImageResource(red_tilehl);
+		} else if (piece == Connect4.Game.BLUE + Connect4.Game.topHalf){
+			((ImageView) table.findViewById(getID(row, column)))
+			.setImageResource(blue_tilehl);
+		} else if (piece == Connect4.Game.RED + Connect4.Game.botHalf){
+			((ImageView) table.findViewById(getID(row, column)))
+			.setImageResource(red_tilehl);
+		} else if (piece == Connect4.Game.BLUE + Connect4.Game.botHalf){
+			((ImageView) table.findViewById(getID(row, column)))
+			.setImageResource(blue_tilehl);
+		}
 
 	}
 
