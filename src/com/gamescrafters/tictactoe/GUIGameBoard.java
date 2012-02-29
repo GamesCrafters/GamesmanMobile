@@ -21,7 +21,7 @@ public class GUIGameBoard {
 	int width;
 	int height;
 	TableLayout table;
-	TicTacToe a;
+	TicTacToe ttt_game;
 	Game g;
 	
 	int tile = R.drawable.ttt_empty;
@@ -37,10 +37,10 @@ public class GUIGameBoard {
 			R.drawable.c4_red_top, R.drawable.c4_red_top_green,
 			R.drawable.c4_red_top_yellow, R.drawable.c4_red_top_red};; // {T,G,Y,R, BT,BG,BY,BR, RT,RG,RY,RR}
 
-	public GUIGameBoard (TicTacToe a) {
-		this.table = (TableLayout) a.findViewById(R.id.ttt_gametable);
-		this.a = a;
-		this.g = a.g;
+	public GUIGameBoard (TicTacToe ttt_game) {
+		this.table = (TableLayout) ttt_game.findViewById(R.id.ttt_gametable);
+		this.ttt_game = ttt_game;
+		this.g = ttt_game.g;
 		width = g.width;
 		height = g.height;
 	}
@@ -69,13 +69,13 @@ public class GUIGameBoard {
 	 * Initializes the GUI board tiles.
 	 */
 	public void initBoard() {
-		int max_height = a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 270 : 200;
+		int max_height = ttt_game.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 270 : 200;
 		int new_height = max_height / height;
 		for (int row = height-1; row>=0; row--) {
-			TableRow tr = new TableRow(a);
+			TableRow tr = new TableRow(ttt_game);
 			tr.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			for (int col=0; col<width; col++) {
-				ImageView iv = new ImageView(a);
+				ImageView iv = new ImageView(ttt_game);
 				// iv.setImageResource(row==height-1 ? toptile : tile);
 				//iv.setImageResource(R.drawable.ttt_bluex);
 				//iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -156,17 +156,17 @@ public class GUIGameBoard {
 		}
 
 		public void onClick(View v) {
-			if (!(a.isPlayer1Computer && a.isPlayer2Computer)) {
+			if (!(ttt_game.isPlayer1Computer && ttt_game.isPlayer2Computer)) {
 				if (!g.gameOver && g.isBlueTurn()){
 					g.doMove(column, row, false);
 					//if game is still not over, and it's a computer's turn, computer moves
-					if (!g.gameOver && a.isPlayer2Computer) {
-						a.doComputerMove();
+					if (!g.gameOver && ttt_game.isPlayer2Computer) {
+						ttt_game.doComputerMove();
 					}
 				} else {
 					g.doMove(column, row, false);
-					if (!g.gameOver && a.isPlayer1Computer) {
-						a.doComputerMove();
+					if (!g.gameOver && ttt_game.isPlayer1Computer) {
+						ttt_game.doComputerMove();
 					}
 				}
 			}
