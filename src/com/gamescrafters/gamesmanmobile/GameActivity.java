@@ -472,7 +472,7 @@ public abstract class GameActivity extends Activity {
 		while (isMoveInvalid(randomcol)) {
 			randomcol = gen.nextInt(numcols);
 		}
-		doMove(randomcol + "");
+		doMove(String.valueOf(randomcol));
 	}
 	
 	public boolean isDBAvailable() {
