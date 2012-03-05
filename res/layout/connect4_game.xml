@@ -25,7 +25,7 @@
 			android:gravity="center" android:id="@+id/c4_TurnLayout">
 			<TextView android:id="@+id/c4_turn" android:layout_height="wrap_content"
 				android:textSize="18dip" android:gravity="right"
-				android:layout_below="@id/c4_gametable" android:layout_width="wrap_content" />
+				android:layout_below="@id/c4_gametable" android:layout_width="wrap_content"/>
 			<ImageButton android:id="@+id/c4_turnImage"
 				android:layout_width="40dip" android:layout_height="40dip"
 				android:layout_toRightOf="@id/c4_turn" />
