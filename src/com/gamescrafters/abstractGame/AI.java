@@ -1,26 +1,27 @@
 package com.gamescrafters.abstractGame;
-
+/**
+ * This is the ai class. It uses the mutableboard as a temporary thinking 
+ * module.
+ * @author ali
+ *
+ */
 public abstract class AI extends Player {
 	private final String myName = "@ai";
 	private Board myBoard;
+	private MutableBoard myMutableBoard;
 	
+	/**X sets difficulty of with what precision to calculate the
+	 * moves. Once it's calculated, set location and piece to the calculated
+	 * ones.
+	 */
 	public void moveCalculator(int x) {
-		//x sets difficulty of with what precision to calculate the
-		//location and piece.
 		Object location;
 		Piece piece;
 		myBoard.placePiece(location, piece);
 	}
 	
-	public String getMyName() {
-		return myName;
-	}
-	
-	public void setBoard(Board board) {
-		myBoard = board;
-	}
-	
-	public Board getBoard() {
-		return myBoard;
+	/**This would suppress giving the ai a name.
+	 */
+	public void setMyName(String name) {
 	}
 }
