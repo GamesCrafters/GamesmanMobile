@@ -1,6 +1,8 @@
 package com.gamescrafters.abstractGame;
 /**
- * The ai uses this class to test moves on.
+ * The ai uses this class to test moves on. I'm not sure how to actually
+ * implement this class as in terms of abstraction since it would have
+ * to be an extension of the specific game's board.
  * @author ali
  *
  */
