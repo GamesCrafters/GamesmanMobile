@@ -10,11 +10,13 @@ public abstract class Game {
 	// Will add in the arguments later
 	public abstract void displayBoard();
 	
-	public abstract boolean isPlayerTurn();
+	public boolean isPlayer1Turn() {
+		return player1Turn;
+	}
 	
-	public abstract boolean isValidMove();
+	public abstract boolean isValidMove(Object location, Piece piece);
 	
-	public abstract void makeMove();
+	public abstract void makeMove(Object location, Piece piece);
 	
 	public abstract int gameOver(); //Maybe return 1 for win, 0 for lose, 2 for draw, or something
 
