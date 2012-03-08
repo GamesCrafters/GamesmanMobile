@@ -9,7 +9,7 @@ package com.gamescrafters.abstractGame;
  */
 public abstract class Piece {
 	
-	protected String myName;
+	private String myName;
 	
 	public Piece(String s) {
 		myName = s;
@@ -19,8 +19,8 @@ public abstract class Piece {
 		return myName;
 	}
 
-	public void setName(String myName) {
-		this.myName = myName;
+	public void setName(String name) {
+		this.myName = name;
 	}
 	
 	
