@@ -14,4 +14,6 @@ public interface Board {
 	
 	public abstract boolean isGameOver();
 	
+	public abstract String toString();
+	
 }

@@ -22,6 +22,6 @@ public abstract class AI extends Player {
 	
 	/**This would suppress giving the ai a name.
 	 */
-	public void setMyName(String name) {
+	public void setName(String name) {
 	}
 }

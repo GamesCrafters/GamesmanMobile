@@ -8,11 +8,11 @@ public class Player {
 		myBoard.placePiece(location, piece);
 	}
 	
-	public void setMyName(String name) {
+	public void setName(String name) {
 		myName = name;
 	}
 	
-	public String getMyName() {
+	public String getName() {
 		return myName;
 	}
 	

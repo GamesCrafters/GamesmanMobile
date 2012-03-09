@@ -1,6 +1,10 @@
 package com.gamescrafters.abstractGame;
 
-public abstract class Game {
+import com.gamescrafters.gamesmanmobile.GameActivity;
+
+public abstract class Game{
+	
+	private String myName;
 	private Board myBoard;
 	private Player player1;
 	private Player player2;
@@ -31,32 +35,40 @@ public abstract class Game {
 
 	// Automatically-generated getters/setters:
 	
-	public Board getMyBoard() {
+	public Board getBoard() {
 		return myBoard;
 	}
 
-	public void setMyBoard(Board myBoard) {
-		this.myBoard = myBoard;
+	public void setBoard(Board board) {
+		myBoard = board;
 	}
 
 	public Player getPlayer1() {
 		return player1;
 	}
 
-	public void setPlayer1(Player player1) {
-		this.player1 = player1;
+	public void setPlayer1(Player player) {
+		player1 = player;
 	}
 
 	public Player getPlayer2() {
 		return player2;
 	}
 
-	public void setPlayer2(Player player2) {
-		this.player2 = player2;
+	public void setPlayer2(Player player) {
+		player2 = player;
 	}
 
-	public void setPlayer1Turn(boolean player1Turn) {
-		this.player1Turn = player1Turn;
+	public void setPlayer1Turn(boolean ifPlayer1Turn) {
+		player1Turn = ifPlayer1Turn;
+	}
+
+	public String getName() {
+		return myName;
+	}
+
+	public void setName(String name) {
+		myName = name;
 	}
 	
 	
