@@ -15,8 +15,8 @@ public abstract class AI extends Player {
 	 * ones.
 	 */
 	public void moveCalculator(int x) {
-		Object location;
-		Piece piece;
+		Object location = null;
+		Piece piece = null;
 		myBoard.placePiece(location, piece);
 	}
 	
