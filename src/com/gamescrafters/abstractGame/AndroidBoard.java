@@ -4,7 +4,7 @@ import com.gamescrafters.gamesmanmobile.GameActivity;
 
 import android.widget.TableLayout;
 
-public abstract class AndroidBoard implements Board{
+public abstract class AndroidBoard extends Board{
 
 	private int myHeight;
 	private int myWidth;

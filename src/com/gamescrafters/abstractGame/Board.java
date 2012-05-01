@@ -1,6 +1,8 @@
 package com.gamescrafters.abstractGame;
 
-public interface Board {
+public abstract class Board {
+	
+	private Object myBoard;
 	
 	public abstract void initBoard();
 	
@@ -14,6 +16,14 @@ public interface Board {
 	
 	public abstract boolean isGameOver();
 	
+	public Object getMyBoard() {
+		return myBoard;
+	}
+
+	public void setMyBoard(Object board) {
+		myBoard = board;
+	}
+
 	public abstract String toString();
 	
 }

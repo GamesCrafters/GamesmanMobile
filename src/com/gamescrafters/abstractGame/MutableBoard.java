@@ -6,7 +6,7 @@ package com.gamescrafters.abstractGame;
  * @author ali
  *
  */
-abstract class MutableBoard implements Board{
+abstract class MutableBoard extends Board{
 	
 	    /** A new, empty MutableBoard. */
 	    MutableBoard() {
