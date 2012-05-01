@@ -72,6 +72,18 @@ public abstract class AndroidGame extends GameActivity {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void startGame() {
+		while (!myGame.isGameOver()) {
+			myGame.getCurrentPlayer().makeMove(getInput(), (Piece)getInput());
+			myGame.changeTurn();
+		}
+	}
+	
+	//Needs to be implemented.  Used to get input from the android device
+	public Object getInput() {
+		return null;
+	}
 
 	public Game getGame() {
 		return myGame;

@@ -4,8 +4,12 @@ public class Player {
 	private String myName;
 	private Board myBoard;
 
-	public void makeMove(Object location, Piece piece) {
-		myBoard.placePiece(location, piece);
+	public boolean makeMove(Object location, Piece piece) {
+		if (myBoard.isValid(location, piece)) {
+			myBoard.placePiece(location, piece);
+			return true;
+		}
+		return false;
 	}
 	
 	public void setName(String name) {

@@ -9,12 +9,16 @@ public abstract class Board {
 	public abstract void placePiece(Object location, Piece piece);
 	
 	public abstract Piece removePiece(Object location, Piece piece);
+		
+	public abstract boolean isValid(Object location, Piece piece);
 	
-	public abstract void updateBoard(Object location, Piece piece);
+	public boolean isGameOver() {
+		return hasPlayerWon() || hasTie();
+	}
 	
-	public abstract boolean isValid(Object location);
+	public abstract boolean hasPlayerWon();
 	
-	public abstract boolean isGameOver();
+	public abstract boolean hasTie();
 	
 	public Object getMyBoard() {
 		return myBoard;

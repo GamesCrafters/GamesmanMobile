@@ -31,7 +31,7 @@ abstract class MutableBoard extends Board{
 			
 		}
 
-		public boolean isGameOver() {
+		public boolean hasPlayerWon() {
 			// TODO Auto-generated method stub
 			return false;
 		}

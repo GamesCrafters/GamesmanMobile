@@ -26,13 +26,7 @@ public class TicTacToeBoard extends Board {
 		return returnedPiece;
 	}
 	
-	public void updateBoard(Object location, Piece piece) {
-		//Not quite sure what updateBoard is for, so for now it'll placePiece.
-		
-		
-	}
-	
-	public boolean isValid(Object point) {
+	public boolean isValid(Object point, Piece piece) {
 		//Checks to make sure the location isn't out of bounds
 		//then checks to make sure the space is empty.
 		TicTacToeLocation location = (TicTacToeLocation) point;
@@ -44,7 +38,7 @@ public class TicTacToeBoard extends Board {
 			return true;
 	}
 	
-	public boolean isGameOver() {
+	public boolean hasPlayerWon() {
 
 		for(int w = 0; w < width-2; w++) {
 			for(int h = 0; h < height-2; h++) {
@@ -76,6 +70,21 @@ public class TicTacToeBoard extends Board {
 			}
 		}
 		return false;
+	}
+	
+
+
+	@Override
+	public boolean hasTie() {
+		// TODO Auto-generated method stub
+		for (int h = 0; h < height; h++) {
+			for (int w = 0; w < width; w++) {
+				if (gameBoard[w][h] == null) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	public String toString() {
